@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DCC RPG - Générateur d'Entonnoir (Niveau 0) • Officiel VF</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=MedievalSharp&display=swap"
+    rel="stylesheet">
+  <style>
+    /* DCC RPG Level 0 Generator - Stylesheet */
+
+    :root {
+      --bg-primary: #121214;
+      --bg-secondary: #1a1a1e;
+      --bg-card: #222228;
+      --bg-card-parchment: #fdfbf7;
+      --border-color: #3b3a42;
+      --border-gold: #c29d53;
+      --text-main: #e6e4df;
+      --text-muted: #9c9993;
+      --accent-red: #a31d1d;
+      --accent-red-hover: #c42626;
+      --accent-gold: #e2ba6a;
+      --accent-gold-dark: #91712a;
+      --accent-green: #2e7d32;
+      --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      --font-serif: "Cinzel", "Palatino", "Georgia", serif;
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: "Courier New", Courier, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header & Controls */
+    header.app-header {
+      background: linear-gradient(180deg, #1f1f26 0%, #141418 100%);
+      border-bottom: 2px solid var(--accent-gold-dark);
+      padding: 1.25rem 2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .title-group h1 {
+      font-family: var(--font-serif);
+      color: var(--accent-gold);
+      font-size: 1.6rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .title-group p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-style: italic;
+    }
+
+    .actions-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      user-select: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(180deg, #b82525 0%, #851313 100%);
+      color: #fff;
+      border-color: #d13c3c;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(180deg, #d42c2c 0%, #9e1919 100%);
+      transform: translateY(-1px);
+    }
+
+    .btn-gold {
+      background: linear-gradient(180deg, #c59b48 0%, #947125 100%);
+      color: #121212;
+      border-color: #ecd08c;
+      font-weight: 700;
+    }
+
+    .btn-gold:hover {
+      background: linear-gradient(180deg, #d6aa53 0%, #a8812c 100%);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background-color: #2c2b33;
+      color: #e2e1dc;
+      border-color: #4a4954;
+    }
+
+    .btn-secondary:hover {
+      background-color: #3b3a45;
+      border-color: #636270;
+    }
+
+    .btn-danger {
+      background-color: #4a1919;
+      color: #ffb5b5;
+      border-color: #7d2626;
+    }
+
+    .btn-danger:hover {
+      background-color: #692121;
+    }
+
+    .btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    /* Dice Roller Bar */
+    .dice-bar {
+      background-color: #16161a;
+      border-bottom: 1px solid #2d2c35;
+      padding: 0.5rem 2rem;
+    }
+
+    .dice-bar-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .dice-chain-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .dice-buttons {
+      display: flex;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+    }
+
+    .die-btn {
+      background: #25242c;
+      color: #d1cfc7;
+      border: 1px solid #3c3a47;
+      padding: 0.25rem 0.55rem;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .die-btn:hover {
+      background: var(--accent-gold-dark);
+      color: #fff;
+      border-color: var(--accent-gold);
+    }
+
+    .die-btn.special-funky {
+      border-color: #6c5421;
+      color: #e5c378;
+    }
+
+    .dice-log-banner {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--accent-gold);
+      background: #111114;
+      padding: 0.2rem 0.7rem;
+      border-radius: 4px;
+      border: 1px solid #33323d;
+      min-height: 28px;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Main Container */
+    main.main-content {
+      max-width: 1400px;
+      margin: 1.5rem auto;
+      padding: 0 1.5rem;
+      flex: 1;
+      width: 100%;
+    }
+
+    /* Stats Summary Banner */
+    .stats-bar {
+      background: #1c1c22;
+      border: 1px solid #34333d;
+      padding: 0.75rem 1.25rem;
+      border-radius: 6px;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+
+    .stats-bar-count {
+      font-weight: bold;
+      color: var(--accent-gold);
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    /* Characters Grid */
+    .roster-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.1rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 1rem;
+      background: #1a1a20;
+      border: 2px dashed #3a3945;
+      border-radius: 8px;
+    }
+
+    .empty-state h2 {
+      font-family: var(--font-serif);
+      color: var(--accent-gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Character Card */
+    .char-card {
+      background-color: #1f1e24;
+      border: 1px solid #3d3b47;
+      border-top: 4px solid var(--accent-gold-dark);
+      border-radius: 6px;
+      padding: 1rem;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      position: relative;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+
+    .char-card:hover {
+      border-color: #5d5a6d;
+    }
+
+    .char-card.status-mort {
+      border-top-color: #701c1c;
+      opacity: 0.75;
+      background-color: #181517;
+    }
+
+    .char-card.status-mort .card-name-input {
+      text-decoration: line-through;
+      color: #9c6c6c;
+    }
+
+    /* Card Header */
+    .card-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      border-bottom: 1px solid #33323e;
+      padding-bottom: 0.55rem;
+    }
+
+    .card-name-input {
+      font-family: var(--font-serif);
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      background: transparent;
+      border: none;
+      border-bottom: 1px dashed transparent;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.2s;
+      padding: 0.1rem 0;
+    }
+
+    .card-name-input:focus {
+      border-bottom-color: var(--accent-gold);
+      background: #16151a;
+    }
+
+    .card-identity-line {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.85rem;
+    }
+
+    .char-occupation {
+      color: #fff;
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .card-subline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .badge-race {
+      background: #2d2c38;
+      color: #d1cfd8;
+      padding: 0.1rem 0.45rem;
+      border-radius: 3px;
+      font-weight: 600;
+      font-size: 0.75rem;
+    }
+
+    /* Statut déduit automatiquement des PV */
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: 1px solid transparent;
+      user-select: none;
+    }
+
+    .badge-status.status-vivant {
+      background: rgba(46, 125, 50, 0.25);
+      color: #79d47d;
+      border-color: #2c6e30;
+    }
+
+    .badge-status.status-blesse {
+      background: rgba(255, 193, 7, 0.18);
+      color: #ffc107;
+      border-color: #8f6f09;
+    }
+
+    .badge-status.status-mort {
+      background: rgba(184, 37, 37, 0.3);
+      color: #ff7676;
+      border-color: #8c2626;
+    }
+
+    /* Vitals Row (HP, CA, Vitesse, Init) */
+    .vitals-row {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr 1fr;
+      gap: 0.5rem;
+      background: #18171d;
+      padding: 0.6rem;
+      border-radius: 5px;
+      border: 1px solid #2e2c38;
+      text-align: center;
+    }
+
+    .vital-box {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .vital-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .vital-val {
+      font-size: 1.15rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      color: #fff;
+    }
+
+    .hp-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+      margin-top: 0.1rem;
+    }
+
+    .hp-btn {
+      background: #2b2a36;
+      color: #fff;
+      border: 1px solid #434152;
+      width: 20px;
+      height: 20px;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      line-height: 1;
+    }
+
+    .hp-btn:hover {
+      background: var(--accent-red);
+    }
+
+    /* Ability Scores 6-Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.35rem;
+      background: #16151a;
+      border: 1px solid #2e2c38;
+      border-radius: 5px;
+      padding: 0.5rem 0.25rem;
+      text-align: center;
+    }
+
+    .stat-item {
+      cursor: pointer;
+      padding: 0.2rem 0;
+      border-radius: 3px;
+      transition: background 0.15s;
+    }
+
+    .stat-item:hover {
+      background: #2c2a38;
+    }
+
+    .stat-name {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .stat-score {
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      color: #fff;
+    }
+
+    .stat-mod {
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+
+    .mod-pos {
+      color: #68cf74;
+    }
+
+    .mod-neg {
+      color: #f26b6b;
+    }
+
+    .mod-zero {
+      color: #8c8982;
+    }
+
+    /* Saves Row */
+    .saves-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.4rem;
+      text-align: center;
+      font-size: 0.8rem;
+    }
+
+    .save-item {
+      background: #18171d;
+      border: 1px solid #2e2c38;
+      border-radius: 4px;
+      padding: 0.3rem 0.4rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .save-item:hover {
+      background: #2d2b38;
+    }
+
+    .save-label {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .save-val {
+      font-family: var(--font-mono);
+      font-weight: bold;
+    }
+
+    /* Section Box */
+    .card-section {
+      background: #17161c;
+      border-radius: 5px;
+      border: 1px solid #2a2935;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.82rem;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .weapon-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .weapon-info {
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .weapon-damage {
+      font-family: var(--font-mono);
+      color: var(--accent-gold);
+    }
+
+    .attack-btn {
+      background: #2f2e3d;
+      border: 1px solid #4a485e;
+      color: #e4e2ed;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .attack-btn:hover {
+      background: var(--accent-red);
+      color: #fff;
+      border-color: #ff5555;
+    }
+
+    .lucky-text {
+      color: #e1ded6;
+    }
+
+    .lucky-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .gear-list {
+      font-size: 0.8rem;
+      color: #ccc9c0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .gear-money {
+      color: #e6a753;
+      font-weight: 600;
+      margin-top: 0.2rem;
+    }
+
+    /* Card Footer Actions */
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      padding-top: 0.4rem;
+      border-top: 1px solid #2f2d3a;
+    }
+
+    .card-notes-input {
+      resize: vertical;
+      min-height: 2.2rem;
+      line-height: 1.3;
+      width: 100%;
+      background: #141318;
+      border: 1px solid #2e2c38;
+      border-radius: 4px;
+      color: #b8b5ac;
+      font-size: 0.75rem;
+      padding: 0.3rem 0.5rem;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .card-notes-input:focus {
+      border-color: var(--accent-gold-dark);
+    }
+
+    /* Interactive Roll Toast */
+    .roll-toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #1d1c24;
+      border: 2px solid var(--accent-gold);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      z-index: 100;
+      min-width: 280px;
+      animation: slideUp 0.2s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .toast-header {
+      font-size: 0.75rem;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.3rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .toast-body {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .toast-detail {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    /* ========================================================= */
+    /* IMPRESSION / PDF A4 FORMAT DCC (4 personnages par page)  */
+    /* ========================================================= */
+
+    @media print {
+      body {
+        background: #fff !important;
+        color: #000 !important;
+        font-size: 10pt;
+        margin: 0;
+        padding: 0;
+      }
+
+      header.app-header,
+      .dice-bar,
+      .stats-bar,
+      .empty-state,
+      .actions-toolbar,
+      .roll-toast,
+      .card-footer,
+      .hp-controls,
+      .attack-btn {
+        display: none !important;
+      }
+
+      main.main-content {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+      }
+
+      /* Grille 2x2 stricte par feuille A4 avec lignes de découpe */
+      .roster-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        grid-auto-rows: 49vh !important;
+        gap: 0 !important;
+        page-break-after: auto;
+      }
+
+      .char-card {
+        background: #fff !important;
+        color: #000 !important;
+        border: 1px dashed #444 !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0.8rem !important;
+        margin: 0 !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        height: 100% !important;
+        overflow: hidden;
+      }
+
+      .char-card.status-mort {
+        opacity: 1 !important;
+        background: #fff !important;
+      }
+
+      .card-name-input {
+        color: #000 !important;
+        font-size: 11pt !important;
+        border: none !important;
+      }
+
+      .card-status-select {
+        display: none !important;
+      }
+
+      .vital-val,
+      .stat-score,
+      .save-val,
+      .weapon-info {
+        color: #000 !important;
+      }
+
+      .vitals-row,
+      .stats-grid,
+      .save-item,
+      .card-section {
+        background: #f7f7f7 !important;
+        border: 1px solid #aaa !important;
+        color: #000 !important;
+      }
+
+      .section-label,
+      .dice-chain-label,
+      .title-group h1 {
+        color: #000 !important;
+      }
+
+      .mod-pos,
+      .mod-neg,
+      .mod-zero {
+        color: #000 !important;
+      }
+
+      .badge-race {
+        background: #ddd !important;
+        color: #000 !important;
+        border: 1px solid #999;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- En-tête de l'application -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="title-group">
+        <h1>⚔️ DCC RPG • L'Entonnoir</h1>
+        <p>Générateur &amp; Gestionnaire officiel de Niveau 0 (VF Akileos) <span class="app-version"
+            style="font-size: 0.85em; opacity: 0.8; font-weight: bold; color: var(--accent-gold);">v1.0.2</span></p>
+      </div>
+
+      <div class="actions-toolbar">
+        <button id="btnGenOne" class="btn btn-primary" title="Créer un nouveau paysan">
+          <span>+1</span> Paysan
+        </button>
+        <button id="btnGenFour" class="btn btn-gold" title="Générer les 4 paysans d'un joueur">
+          <span>⚡</span> Escouade (4)
+        </button>
+        <button id="btnGenSixteen" class="btn btn-secondary" title="Générer 16 paysans pour toute une table de jeu">
+          <span>🎲</span> Table entière (16)
+        </button>
+        <button id="btnPrint" class="btn btn-secondary"
+          title="Imprimer ou enregistrer en PDF (Grille 2x2 prête à découper)">
+          <span>🖨️</span> Imprimer / PDF
+        </button>
+        <button id="btnExportJson" class="btn btn-secondary" title="Télécharger la liste au format JSON">
+          <span>💾</span> Sauvegarder
+        </button>
+        <button id="btnImportJson" class="btn btn-secondary" title="Recharger une sauvegarde JSON">
+          <span>📂</span> Importer
+        </button>
+        <input type="file" id="fileInput" accept=".json" style="display: none;" />
+        <button id="btnClearAll" class="btn btn-danger" title="Vider la table">
+          <span>🗑️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Lanceur de dés DCC & Chaîne de dés -->
+  <section class="dice-bar">
+    <div class="dice-bar-content">
+      <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+        <span class="dice-chain-label">Chaîne de Dés DCC :</span>
+        <div id="diceButtons" class="dice-buttons">
+          <!-- Injecté dynamiquement par JS -->
+        </div>
+      </div>
+      <div id="diceLogBanner" class="dice-log-banner">
+        Cliquez sur un dé, une caractéristique ou une arme pour faire un jet !
+      </div>
+    </div>
+  </section>
+
+  <!-- Contenu Principal -->
+  <main class="main-content">
+
+    <!-- Barre d'état des effectifs -->
+    <div class="stats-bar">
+      <div>
+        <span>Total de recrues : <strong id="charCount" class="stats-bar-count">0</strong></span>
+        <span style="margin: 0 0.5rem; color: #555;">|</span>
+        <span>Encore en vie : <strong id="aliveCount" class="stats-bar-count" style="color: #68cf74;">0</strong></span>
+      </div>
+      <div style="color: var(--text-muted); font-size: 0.8rem; font-style: italic;">
+        💡 Astuce : Cliquez sur les caractéristiques, sauvegardes ou armes pour lancer les dés en direct.
+      </div>
+    </div>
+
+    <!-- Message si liste vide -->
+    <div id="emptyState" class="empty-state" style="display: none;">
+      <h2>Le cimetière est vide... pour l'instant !</h2>
+      <p>Aucun paysan n'attend son funeste destin. Cliquez sur <strong>+1 Paysan</strong> ou <strong>Escouade
+          (4)</strong> pour commencer l'aventure.</p>
+    </div>
+
+    <!-- Grille des personnages -->
+    <div id="rosterGrid" class="roster-grid">
+      <!-- Les fiches de personnages sont injectées ici -->
+    </div>
+
+  </main>
+
+  <script>
+    /**
+     * DCC RPG - Assistant & Générateur d'Entonnoir Niveau 0
+     * Règles Officielles DCC RPG (VF Akileos)
+     * Fichier bundle autonome
+     */
+    (function () {
+      "use strict";
+
+      // ==========================================
+      // 1. DATA (Règles officielles DCC RPG VF)
+      // ==========================================
+
+      const ABILITY_MODIFIERS = {
+        3: -3,
+        4: -2,
+        5: -2,
+        6: -1,
+        7: -1,
+        8: -1,
+        9: 0,
+        10: 0,
+        11: 0,
+        12: 0,
+        13: 1,
+        14: 1,
+        15: 1,
+        16: 2,
+        17: 2,
+        18: 3
+      };
+
+      function getModifier(score) {
+        if (score <= 3) return -3;
+        if (score >= 18) return 3;
+        return ABILITY_MODIFIERS[score] ?? 0;
+      }
+
+      function formatModifier(mod) {
+        return mod >= 0 ? `+${mod}` : `${mod}`;
+      }
+
+      // Table 1-2 : Augure de naissance et jet de chance (1d30) - Officiel DCC RPG
+      const LUCKY_SIGNS = [
+        { roll: 1, name: "Âpre hiver", description: "Tous les jets d'attaque", category: "Attaque" },
+        { roll: 2, name: "Le taureau", description: "Jets d'attaque au corps à corps", category: "Attaque" },
+        { roll: 3, name: "Jour faste", description: "Jets d'attaque à distance", category: "Attaque" },
+        { roll: 4, name: "Élevé par les loups", description: "Jets d'attaque à mains nues", category: "Attaque" },
+        { roll: 5, name: "Conçu à cheval", description: "Jets d'attaque monté", category: "Attaque" },
+        { roll: 6, name: "Né sur le champ de bataille", description: "Tous les jets de dégâts", category: "Dégâts" },
+        { roll: 7, name: "La voie de l'ours", description: "Jets de dégâts au corps à corps", category: "Dégâts" },
+        { roll: 8, name: "Œil de faucon", description: "Jets de dégâts à distance", category: "Dégâts" },
+        { roll: 9, name: "Chasseur en meute", description: "Jets d'attaque et de dégâts avec l'arme de départ du Niv. 0", category: "Combat" },
+        { roll: 10, name: "Né sous le métier à tisser", description: "Tests de compétences (y compris de voleur)", category: "Compétence" },
+        { roll: 11, name: "Ruse du renard", description: "Détection et désamorçage des pièges", category: "Compétence" },
+        { roll: 12, name: "Trèfle à quatre feuilles", description: "Détection des portes secrètes", category: "Perception" },
+        { roll: 13, name: "Septième fils", description: "Épreuves de sort", category: "Magie" },
+        { roll: 14, name: "Tempête déchaînée", description: "Jets de dégâts des sorts", category: "Magie" },
+        { roll: 15, name: "Cœur vertueux", description: "Renvoi des impies", category: "Magie" },
+        { roll: 16, name: "Survivant de la peste", description: "Guérison magique reçue", category: "Survie" },
+        { roll: 17, name: "Signe faste", description: "Tous les jets de sauvegarde", category: "Sauvegarde" },
+        { roll: 18, name: "Ange gardien", description: "Jets de sauvegarde contre les pièges", category: "Sauvegarde" },
+        { roll: 19, name: "Morsure d'araignée", description: "Jets de sauvegarde contre le poison", category: "Sauvegarde" },
+        { roll: 20, name: "Frappé par la foudre", description: "Jets de sauvegarde de Réflexes", category: "Sauvegarde" },
+        { roll: 21, name: "A survécu à la famine", description: "Jets de sauvegarde de Vigueur", category: "Sauvegarde" },
+        { roll: 22, name: "Tentation repoussée", description: "Jets de sauvegarde de Volonté", category: "Sauvegarde" },
+        { roll: 23, name: "Demeure enchantée", description: "Classe d'Armure (CA)", category: "Défense" },
+        { roll: 24, name: "Vitesse du cobra", description: "Jet d'Initiative", category: "Combat" },
+        { roll: 25, name: "Moisson généreuse", description: "Points de vie (s'applique à chaque niveau)", category: "Survie" },
+        { roll: 26, name: "Bras du guerrier", description: "Jets sur la table de coups critiques", category: "Critique" },
+        { roll: 27, name: "Maison impie", description: "Jets de corruption", category: "Magie" },
+        { roll: 28, name: "L'étoile brisée", description: "Jets sur la table de maladresses", category: "Critique" },
+        { roll: 29, name: "Chant d'oiseau", description: "Nombre de langues connues", category: "Général" },
+        { roll: 30, name: "Enfant sauvage", description: "Vitesse de déplacement (+/- 1,5m par point)", category: "Déplacement" }
+      ];
+
+      // Table 3-4 : Équipement de départ adventice (1d24) - Officiel DCC RPG
+      const STARTING_EQUIPMENT = [
+        "Bougie",
+        "Chaîne (3 m)",
+        "Coffre vide",
+        "Corde (15 m)",
+        "Craie (1 morceau)",
+        "Eau bénite (1 fiole)",
+        "Flasque vide",
+        "Gourde",
+        "Grappin",
+        "Huile (1 flasque)",
+        "Lanterne",
+        "Marteau (petit)",
+        "Miroir de poche",
+        "Outils de voleur",
+        "Perche (3 m)",
+        "Pied-de-biche",
+        "Pointe en fer (1 unité)",
+        "Rations (par jour)",
+        "Sac (grand)",
+        "Sac (petit)",
+        "Sac à dos",
+        "Silex et amadou",
+        "Symbole sacré",
+        "Torche (1 unité)"
+      ];
+
+      // Table 1-3 : Métier (1d100) - Officiel DCC RPG
+      const OCCUPATIONS = [
+        { roll: [1], title: "Alchimiste", race: "Humain", weapon: "Bâton", damage: "1d4", goods: "Huile (1 flasque)" },
+        { roll: [2], title: "Dresseur d'animaux", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Poney" },
+        { roll: [3], title: "Armurier", race: "Humain", weapon: "Marteau", damage: "1d4", goods: "Casque de fer" },
+        { roll: [4], title: "Astrologue", race: "Humain", weapon: "Dague", damage: "1d4", goods: "Longue-vue" },
+        { roll: [5], title: "Barbier", race: "Humain", weapon: "Rasoir", damage: "1d4", goods: "Ciseaux" },
+        { roll: [6, 7, 8], title: "Forgeron", race: "Humain", weapon: "Marteau", damage: "1d4", goods: "Tenailles en acier" },
+        { roll: [9, 10], title: "Garde de caravane", race: "Humain", weapon: "Épée courte", damage: "1d6", goods: "Toile de lin (1 mètre)" },
+        { roll: [11], title: "Fromager", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Fromage puant (1 meule)" },
+        { roll: [12], title: "Cordonnier", race: "Humain", weapon: "Alêne", damage: "1d4", goods: "Chausse-pied" },
+        { roll: [13], title: "Confiseur", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Sucre raffiné (500 g)" },
+        { roll: [14, 15], title: "Tonnelier", race: "Humain", weapon: "Pied-de-biche", damage: "1d4", goods: "Tonneau vide" },
+        { roll: [16], title: "Marchand des quatre-saisons", race: "Humain", weapon: "Couteau", damage: "1d4", goods: "Panier de fruits" },
+        { roll: [17, 18], title: "Artisan", race: "Humain", weapon: "Marteau", damage: "1d4", goods: "Argile (500 g)" },
+        { roll: [19, 20], title: "Terrassier", race: "Humain", weapon: "Pelle", damage: "1d4", goods: "Sac de terre fine" },
+        { roll: [21, 22], title: "Débardeur", race: "Humain", weapon: "Gaffe", damage: "1d4", goods: "Crochet de manutention" },
+        { roll: [23, 24], title: "Apothicaire nain", race: "Nain", weapon: "Gourdin", damage: "1d4", goods: "Fiole d'acier" },
+        { roll: [25, 26], title: "Forgeron nain", race: "Nain", weapon: "Marteau", damage: "1d4", goods: "Mithril (30 g)" },
+        { roll: [27], title: "Coffretier nain", race: "Nain", weapon: "Ciseau à bois", damage: "1d4", goods: "Morceau de bois noble (1 kg)" },
+        { roll: [28, 29], title: "Éleveur nain", race: "Nain", weapon: "Bâton", damage: "1d4", goods: "Truie d'élevage" },
+        { roll: [30, 31], title: "Mineur nain", race: "Nain", weapon: "Pioche", damage: "1d6", goods: "Lanterne de mineur" },
+        { roll: [32, 33], title: "Myciculteur nain", race: "Nain", weapon: "Pelle", damage: "1d4", goods: "Sac de spores luminescents" },
+        { roll: [34], title: "Dératiseur nain", race: "Nain", weapon: "Gourdin", damage: "1d4", goods: "Filet et rat mort" },
+        { roll: [35], title: "Tailleur de pierre nain", race: "Nain", weapon: "Marteau", damage: "1d4", goods: "Bloc de pierre taillée (5 kg)" },
+        { roll: [36, 37], title: "Artisan elfe", race: "Elfe", weapon: "Bâton", damage: "1d4", goods: "Soie brodée (1 mètre)" },
+        { roll: [38], title: "Avocat elfe", race: "Elfe", weapon: "Stylet", damage: "1d4", goods: "Livre de lois elfiques" },
+        { roll: [39], title: "Cirier elfe", race: "Elfe", weapon: "Ciseaux", damage: "1d4", goods: "Chandelles en cire d'abeille (x12)" },
+        { roll: [40], title: "Fauconnier elfe", race: "Elfe", weapon: "Dague", damage: "1d4", goods: "Faucon de chasse dressé" },
+        { roll: [41], title: "Forestier elfe", race: "Elfe", weapon: "Bâton", damage: "1d4", goods: "Herbes rares séchées (1 sachet)" },
+        { roll: [42], title: "Souffleur de verre elfe", race: "Elfe", weapon: "Marteau", damage: "1d4", goods: "Billes de verre coloré" },
+        { roll: [43], title: "Navigateur elfe", race: "Elfe", weapon: "Arc court", damage: "1d6", goods: "Longue-vue en laiton" },
+        { roll: [44], title: "Sage elfe", race: "Elfe", weapon: "Dague", damage: "1d4", goods: "Rouleau de parchemin vierge" },
+        { roll: [45], title: "Fermier (moutons)", race: "Humain", weapon: "Fourche", damage: "1d6", goods: "Mouton docile" },
+        { roll: [46], title: "Fermier (chèvres)", race: "Humain", weapon: "Fourche", damage: "1d6", goods: "Chèvre têtue" },
+        { roll: [47], title: "Fermier (poules)", race: "Humain", weapon: "Fourche", damage: "1d6", goods: "Poule vivante" },
+        { roll: [48], title: "Fermier (canards)", race: "Humain", weapon: "Fourche", damage: "1d6", goods: "Canard criard" },
+        { roll: [49], title: "Fermier (oies)", race: "Humain", weapon: "Fourche", damage: "1d6", goods: "Oie agressive" },
+        { roll: [50], title: "Fermier (porcs)", race: "Humain", weapon: "Fourche", damage: "1d6", goods: "Porcelet glouton" },
+        { roll: [51], title: "Fermier (bovins)", race: "Humain", weapon: "Fourche", damage: "1d6", goods: "Vache laitière" },
+        { roll: [52], title: "Fermier (blé)", race: "Humain", weapon: "Fourche", damage: "1d6", goods: "Sac de grain de blé" },
+        { roll: [53], title: "Fermier (navets)", race: "Humain", weapon: "Fourche", damage: "1d6", goods: "Sac de navets (10 kg)" },
+        { roll: [54], title: "Fermier (pommes de terre)", race: "Humain", weapon: "Fourche", damage: "1d6", goods: "Sac de pommes de terre" },
+        { roll: [55], title: "Diseur de bonne aventure", race: "Humain", weapon: "Dague", damage: "1d4", goods: "Jeu de tarots divinatoires" },
+        { roll: [56], title: "Joueur compulsif", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Paire de dés pipés en ivoire" },
+        { roll: [57], title: "Vidangeur de fosses (Gongfarmer)", race: "Humain", weapon: "Truelle", damage: "1d4", goods: "Sac de fiente d'aisances" },
+        { roll: [58], title: "Fossoyeur", race: "Humain", weapon: "Pelle", damage: "1d4", goods: "Bêche usée et crâne inconnu" },
+        { roll: [59], title: "Mendiant juré", race: "Humain", weapon: "Fronde", damage: "1d4", goods: "Paire de béquilles en bois" },
+        { roll: [60], title: "Boucher de volaille halfelin", race: "Halfelin", weapon: "Hachette", damage: "1d6", goods: "Viande de poulet salée (2,5 kg)" },
+        { roll: [61], title: "Teinturier halfelin", race: "Halfelin", weapon: "Bâton", damage: "1d4", goods: "Coupon d'étoffe pourpre (1 mètre)" },
+        { roll: [62], title: "Gantier halfelin", race: "Halfelin", weapon: "Alêne", damage: "1d4", goods: "Gants en cuir doux" },
+        { roll: [63], title: "Bohémien halfelin", race: "Halfelin", weapon: "Fronde", damage: "1d4", goods: "Bourse de verroterie et breloques" },
+        { roll: [64], title: "Chapelier halfelin", race: "Halfelin", weapon: "Ciseaux", damage: "1d4", goods: "Chapeaux fins à plumes (lot de 3)" },
+        { roll: [65], title: "Marinier halfelin", race: "Halfelin", weapon: "Couteau", damage: "1d4", goods: "Corde de chanvre goudronnée (15 m)" },
+        { roll: [66], title: "Tailleur halfelin", race: "Halfelin", weapon: "Ciseaux", damage: "1d4", goods: "Aiguilles et bobines de fil fin" },
+        { roll: [67], title: "Commerçant halfelin", race: "Halfelin", weapon: "Gourdin", damage: "1d4", goods: "Balance de trébuchet miniature" },
+        { roll: [68], title: "Vagabond halfelin", race: "Halfelin", weapon: "Gourdin", damage: "1d4", goods: "Écuelle en bois de mendiant" },
+        { roll: [69], title: "Guérisseur", race: "Humain", weapon: "Bâton", damage: "1d4", goods: "Eau bénite (1 petite fiole)" },
+        { roll: [70], title: "Herboriste", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Herbes médicinales (1 sachet)" },
+        { roll: [71], title: "Berger", race: "Humain", weapon: "Bâton", damage: "1d4", goods: "Chien de troupeau" },
+        { roll: [72], title: "Marchand", race: "Humain", weapon: "Dague", damage: "1d4", goods: "4 po, 14 pa, 27 pc" },
+        { roll: [73], title: "Mendiant", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Fromage" },
+        { roll: [74, 75], title: "Mendiant de guilde", race: "Humain", weapon: "Fronde", damage: "1d4", goods: "Béquilles" },
+        { roll: [76], title: "Ménestrel", race: "Humain", weapon: "Dague", damage: "1d4", goods: "Ukulélé" },
+        { roll: [77], title: "Mercenaire", race: "Humain", weapon: "Épée longue", damage: "1d8", goods: "Armure de peau" },
+        { roll: [78], title: "Meunier/Boulanger", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Farine (500 g)" },
+        { roll: [79], title: "Nain apothicaire", race: "Nain", weapon: "Matraque", damage: "1d4", goods: "Flacon en acier" },
+        { roll: [80], title: "Nain coffretier", race: "Nain", weapon: "Burin", damage: "1d4", goods: "Bois (5 kg)" },
+        { roll: [81], title: "Nain éleveur", race: "Nain", weapon: "Bâton", damage: "1d4", goods: "Truie" },
+        { roll: [82], title: "Nain forgeron", race: "Nain", weapon: "Marteau", damage: "1d4", goods: "Mithril (30 g)" },
+        { roll: [83, 84], title: "Nain maçon", race: "Nain", weapon: "Marteau", damage: "1d4", goods: "Pierre (5 kg)" },
+        { roll: [85, 86], title: "Nain mineur", race: "Nain", weapon: "Pioche", damage: "1d4", goods: "Lanterne" },
+        { roll: [87], title: "Nain myciculteur", race: "Nain", weapon: "Pelle", damage: "1d4", goods: "Sacoche" },
+        { roll: [88], title: "Nain ratier", race: "Nain", weapon: "Gourdin", damage: "1d4", goods: "Filet" },
+        { roll: [89], title: "Noble", race: "Humain", weapon: "Épée longue", damage: "1d8", goods: "Anneau d'or (10 po)" },
+        { roll: [90], title: "Orphelin", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Poupée de chiffon" },
+        { roll: [91], title: "Palefrenier", race: "Humain", weapon: "Bâton", damage: "1d4", goods: "Bride" },
+        { roll: [92], title: "Scribe", race: "Humain", weapon: "Fléchette", damage: "1d4", goods: "Parchemin (10 feuilles)" },
+        { roll: [93], title: "Serrurier", race: "Humain", weapon: "Dague", damage: "1d4", goods: "Outils de précision" },
+        { roll: [94], title: "Serviteur", race: "Humain", weapon: "Bâton", damage: "1d4", goods: "Médaillon" },
+        { roll: [95], title: "Soldat", race: "Humain", weapon: "Lance", damage: "1d8", goods: "Bouclier" },
+        { roll: [96], title: "Tisserand", race: "Humain", weapon: "Dague", damage: "1d4", goods: "Vêtements de qualité" },
+        { roll: [97], title: "Tonnelier", race: "Humain", weapon: "Pied-de-biche", damage: "1d4", goods: "Tonneau" },
+        { roll: [98, 99], title: "Trappeur", race: "Humain", weapon: "Fronde", damage: "1d4", goods: "Fourrure de blaireau" },
+        { roll: [100], title: "Vidangeur de latrines", race: "Humain", weapon: "Truelle", damage: "1d4", goods: "Sac d'excréments" }
+      ];
+
+      const FIRST_NAMES = {
+        male: [
+          "Aldous", "Barnabé", "Barthélemy", "Baudouin", "Clovis", "Cuthbert", "Duncan", "Enguerrand",
+          "Eustache", "Gauvain", "Gervais", "Gontran", "Guichard", "Hardouin", "Lambert", "Lothaire",
+          "Mayeul", "Morvan", "Nicodème", "Odo", "Perceval", "Philémon", "Raimbaud", "Raoul",
+          "Renaud", "Théobald", "Thibault", "Warin", "Wulfric", "Yves"
+        ],
+        female: [
+          "Agathe", "Alix", "Agnès", "Béatrice", "Berthe", "Clothilde", "Constance", "Douce",
+          "Edwige", "Ermengarde", "Gisèle", "Guenièvre", "Héloïse", "Isabeau", "Jehanne", "Mahaut",
+          "Mélisande", "Odile", "Pétronille", "Radegonde", "Sibylle", "Tiphaine", "Yolande", "Ysende"
+        ]
+      };
+
+      const SURNAMES = [
+        "le Chauve", "le Borgne", "Brise-Fer", "aux Doigts Noirs", "le Boiteux", "Pied-Léger",
+        "le Hardi", "Gros-Ventre", "de la Fange", "du Val-Perdu", "Grisepierre", "Sans-Sous",
+        "le Malchanceux", "Dent-de-Loup", "Poing-Rude", "Coupe-Gorge", "le Chétif", "le Bègue",
+        "Belle-Voix", "du Moulin", "Basse-Fosse", "Cul-Terreux", "le Pâle", "le Téméraire"
+      ];
+
+      // ==========================================
+      // 2. DICE (Moteur de dés DCC)
+      // ==========================================
+
+      const DICE_CHAIN = [3, 4, 5, 6, 7, 8, 10, 12, 14, 16, 20, 24, 30];
+
+      function roll(sides) {
+        return Math.floor(Math.random() * sides) + 1;
+      }
+
+      function rollSum(count, sides) {
+        let total = 0;
+        const rolls = [];
+        for (let i = 0; i < count; i++) {
+          const val = roll(sides);
+          rolls.push(val);
+          total += val;
+        }
+        return { total, rolls };
+      }
+
+      function stepDiceChain(currentDie, steps) {
+        const currentIndex = DICE_CHAIN.indexOf(currentDie);
+        if (currentIndex === -1) return currentDie;
+        const newIndex = Math.max(0, Math.min(DICE_CHAIN.length - 1, currentIndex + steps));
+        return DICE_CHAIN[newIndex];
+      }
+
+      // ==========================================
+      // 3. GENERATOR (Génération officielle Niveau 0)
+      // ==========================================
+
+      function generateRandomName(race = 'Humain') {
+        const gender = Math.random() < 0.5 ? 'male' : 'female';
+        const list = FIRST_NAMES[gender];
+        const firstName = list[Math.floor(Math.random() * list.length)];
+        const surname = SURNAMES[Math.floor(Math.random() * SURNAMES.length)];
+        return `${firstName} ${surname}`;
+      }
+
+      function generateLevelZeroCharacter(customOptions = {}) {
+        const strengthRoll = rollSum(3, 6);
+        const agilityRoll = rollSum(3, 6);
+        const staminaRoll = rollSum(3, 6);
+        const personalityRoll = rollSum(3, 6);
+        const intelligenceRoll = rollSum(3, 6);
+        const luckRoll = rollSum(3, 6);
+
+        const stats = {
+          strength: { score: strengthRoll.total, rolls: strengthRoll.rolls, mod: getModifier(strengthRoll.total) },
+          agility: { score: agilityRoll.total, rolls: agilityRoll.rolls, mod: getModifier(agilityRoll.total) },
+          stamina: { score: staminaRoll.total, rolls: staminaRoll.rolls, mod: getModifier(staminaRoll.total) },
+          personality: { score: personalityRoll.total, rolls: personalityRoll.rolls, mod: getModifier(personalityRoll.total) },
+          intelligence: { score: intelligenceRoll.total, rolls: intelligenceRoll.rolls, mod: getModifier(intelligenceRoll.total) },
+          luck: { score: luckRoll.total, rolls: luckRoll.rolls, mod: getModifier(luckRoll.total) }
+        };
+
+        const occupationRoll = roll(100);
+        const occupation = OCCUPATIONS.find(o => o.roll.includes(occupationRoll)) || OCCUPATIONS[0];
+
+        const luckyRoll = roll(30);
+        const luckySign = LUCKY_SIGNS.find(s => s.roll === luckyRoll) || LUCKY_SIGNS[0];
+
+        const equipmentRoll = roll(24);
+        const randomEquipment = STARTING_EQUIPMENT[equipmentRoll - 1];
+
+        const hpBaseRoll = roll(4);
+        let hpBonus = stats.stamina.mod;
+        if (luckySign.roll === 25) {
+          hpBonus += stats.luck.mod;
+        }
+        const maxHp = Math.max(1, hpBaseRoll + hpBonus);
+
+        const copperRoll = rollSum(5, 12);
+        const copperPieces = copperRoll.total;
+
+        let speed = (occupation.race === 'Nain' || occupation.race === 'Halfelin') ? 6 : 9;
+        if (luckySign.roll === 30) {
+          speed += stats.luck.mod * 1.5;
+          speed = Math.max(1.5, speed);
+        }
+
+        let armorBonus = (occupation.title === 'Mercenaire') ? 2 : 0;
+        let ac = 10 + stats.agility.mod + armorBonus;
+        if (luckySign.roll === 23) {
+          ac += stats.luck.mod;
+        }
+
+        let initiative = stats.agility.mod;
+        if (luckySign.roll === 24) {
+          initiative += stats.luck.mod;
+        }
+
+        const generalSaveBonus = (luckySign.roll === 17) ? stats.luck.mod : 0;
+        const saves = {
+          reflex: stats.agility.mod + generalSaveBonus + (luckySign.roll === 20 ? stats.luck.mod : 0),
+          fortitude: stats.stamina.mod + generalSaveBonus + (luckySign.roll === 21 ? stats.luck.mod : 0),
+          will: stats.personality.mod + generalSaveBonus + (luckySign.roll === 22 ? stats.luck.mod : 0)
+        };
+
+        let isPackHunter = (luckySign.roll === 9);
+        let meleeAttackMod = stats.strength.mod + ([1, 2].includes(luckySign.roll) ? stats.luck.mod : 0) + (isPackHunter ? stats.luck.mod : 0);
+        let rangedAttackMod = stats.agility.mod + ([1, 3].includes(luckySign.roll) ? stats.luck.mod : 0) + (isPackHunter ? stats.luck.mod : 0);
+
+        let meleeDamageMod = stats.strength.mod + ([6, 7].includes(luckySign.roll) ? stats.luck.mod : 0) + (isPackHunter ? stats.luck.mod : 0);
+        let rangedDamageMod = ([6, 8].includes(luckySign.roll) ? stats.luck.mod : 0) + (isPackHunter ? stats.luck.mod : 0);
+
+        const alignment = customOptions.alignment || 'Neutre';
+        const name = customOptions.name || generateRandomName(occupation.race);
+
+        return {
+          id: 'char_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+          name,
+          level: 0,
+          race: occupation.race,
+          occupation: occupation.title,
+          alignment,
+          stats,
+          currentHp: maxHp,
+          maxHp,
+          hpBaseRoll,
+          ac,
+          speed,
+          initiative,
+          saves,
+          attack: {
+            melee: meleeAttackMod,
+            ranged: rangedAttackMod
+          },
+          damageMods: {
+            melee: meleeDamageMod,
+            ranged: rangedDamageMod
+          },
+          weapon: {
+            name: occupation.weapon,
+            damage: occupation.damage
+          },
+          tradeGoods: occupation.goods,
+          startingItem: randomEquipment,
+          luckySign: {
+            ...luckySign,
+            modifier: stats.luck.mod
+          },
+          copperPieces,
+          status: 'Vivant',
+          notes: occupation.title === 'Mercenaire' ? 'Équipé d\'une armure de cuir (+2 CA)' : '',
+          createdAt: new Date().toISOString()
+        };
+      }
+
+      function generateFunnelBatch(count = 4) {
+        const characters = [];
+        for (let i = 0; i < count; i++) {
+          characters.push(generateLevelZeroCharacter());
+        }
+        return characters;
+      }
+
+      // ==========================================
+      // 4. APP (Interface & Contrôles utilisateur)
+      // ==========================================
+
+      class DCCApp {
+        constructor() {
+          this.characters = [];
+          this.storageKey = 'dcc_rpg_funnel_roster_v2';
+          this.toastTimeout = null;
+
+          this.initElements();
+          this.bindEvents();
+          this.loadState();
+        }
+
+        // Déduction automatique du statut selon les PV
+        getDerivedStatus(char) {
+          const hp = (char.currentHp !== undefined) ? char.currentHp : char.maxHp;
+          if (hp <= 0) {
+            return { label: 'Mort 💀', code: 'mort' };
+          }
+          if (hp < char.maxHp) {
+            return { label: 'Blessé', code: 'blesse' };
+          }
+          return { label: 'Vivant', code: 'vivant' };
+        }
+
+        getWeaponAttackType(char) {
+          const rangedWeapons = ['Arbalète', 'Arc court', 'Arc long', 'Fléchette', 'Fronde', 'Javelot', 'Sarbacane'];
+          return rangedWeapons.includes(char.weapon.name) ? 'ranged' : 'melee';
+        }
+
+        getRacialTraits(race) {
+          switch (race) {
+            case 'Nain':
+              return ['Infravision', 'Langues : commun et nain'];
+            case 'Elfe':
+              return [
+                'Sensibilité au fer (contact continu : 1 PV/jour)',
+                'Sens surdéveloppés (+4 pour détecter les passages secrets; tentative possible à moins de 3 m)',
+                'Langues : commun et elfique'
+              ];
+            case 'Halfelin':
+              return ['Infravision', 'Langues : commun et halfelin'];
+            default:
+              return [];
+          }
+        }
+
+        initElements() {
+          this.rosterGrid = document.getElementById('rosterGrid');
+          this.charCountEl = document.getElementById('charCount');
+          this.aliveCountEl = document.getElementById('aliveCount');
+          this.emptyState = document.getElementById('emptyState');
+          this.diceLogBanner = document.getElementById('diceLogBanner');
+
+          this.btnGenOne = document.getElementById('btnGenOne');
+          this.btnGenFour = document.getElementById('btnGenFour');
+          this.btnGenSixteen = document.getElementById('btnGenSixteen');
+          this.btnClearAll = document.getElementById('btnClearAll');
+          this.btnPrint = document.getElementById('btnPrint');
+          this.btnExportJson = document.getElementById('btnExportJson');
+          this.btnImportJson = document.getElementById('btnImportJson');
+          this.fileInput = document.getElementById('fileInput');
+
+          this.diceButtonsContainer = document.getElementById('diceButtons');
+        }
+
+        bindEvents() {
+          this.btnGenOne.addEventListener('click', () => this.addCharacter());
+          this.btnGenFour.addEventListener('click', () => this.addBatch(4));
+          this.btnGenSixteen.addEventListener('click', () => this.addBatch(16));
+
+          this.btnClearAll.addEventListener('click', () => {
+            if (this.characters.length === 0) return;
+            if (confirm('Voulez-vous vraiment supprimer tous les personnages générés ?')) {
+              this.characters = [];
+              this.saveState();
+              this.render();
+            }
+          });
+
+          this.btnPrint.addEventListener('click', () => window.print());
+
+          this.btnExportJson.addEventListener('click', () => this.exportJson());
+          this.btnImportJson.addEventListener('click', () => this.fileInput.click());
+          this.fileInput.addEventListener('change', (e) => this.importJson(e));
+
+          this.renderDiceButtons();
+        }
+
+        renderDiceButtons() {
+          const diceList = [3, 4, 5, 6, 7, 8, 10, 12, 14, 16, 20, 24, 30, 100];
+          const funkyList = [3, 5, 7, 14, 16, 24, 30];
+
+          this.diceButtonsContainer.innerHTML = '';
+          diceList.forEach(sides => {
+            const btn = document.createElement('button');
+            btn.className = `die-btn ${funkyList.includes(sides) ? 'special-funky' : ''}`;
+            btn.textContent = `d${sides}`;
+            btn.title = `Lancer un d${sides}`;
+            btn.addEventListener('click', () => {
+              const result = roll(sides);
+              this.showRollToast(`Lancer libre : d${sides}`, result, `Résultat brut (1 à ${sides})`);
+            });
+            this.diceButtonsContainer.appendChild(btn);
+          });
+        }
+
+        loadState() {
+          try {
+            const saved = localStorage.getItem(this.storageKey);
+            if (saved) {
+              this.characters = JSON.parse(saved);
+            }
+          } catch (e) {
+            console.warn('Erreur lors du chargement des personnages depuis le stockage local', e);
+            this.characters = [];
+          }
+
+          if (this.characters.length === 0) {
+            this.characters = generateFunnelBatch(4);
+            this.saveState();
+          }
+
+          this.render();
+        }
+
+        saveState() {
+          try {
+            localStorage.setItem(this.storageKey, JSON.stringify(this.characters));
+          } catch (e) {
+            console.error('Erreur lors de la sauvegarde locale', e);
+          }
+        }
+
+        addCharacter() {
+          const newChar = generateLevelZeroCharacter();
+          this.characters.unshift(newChar);
+          this.saveState();
+          this.render();
+          this.showRollToast("Nouveau paysan recruté !", newChar.name, `${newChar.occupation} (${newChar.race})`);
+        }
+
+        addBatch(count) {
+          const batch = generateFunnelBatch(count);
+          this.characters = [...batch, ...this.characters];
+          this.saveState();
+          this.render();
+          this.showRollToast("Entonnoir alimenté !", `${count} paysans générés`, "Prêts pour le massacre !");
+        }
+
+        deleteCharacter(id) {
+          this.characters = this.characters.filter(c => c.id !== id);
+          this.saveState();
+          this.render();
+        }
+
+        rerollCharacter(id) {
+          const index = this.characters.findIndex(c => c.id === id);
+          if (index !== -1) {
+            this.characters[index] = generateLevelZeroCharacter();
+            this.saveState();
+            this.render();
+          }
+        }
+
+        updateHp(id, delta) {
+          const char = this.characters.find(c => c.id === id);
+          if (!char) return;
+
+          char.currentHp = Math.max(0, Math.min(char.maxHp, (char.currentHp ?? char.maxHp) + delta));
+          const statusInfo = this.getDerivedStatus(char);
+          char.status = (statusInfo.code === 'mort') ? 'Mort' : (statusInfo.code === 'blesse') ? 'Blessé' : 'Vivant';
+
+          this.saveState();
+          this.render();
+        }
+
+        showRollToast(title, result, detail = '') {
+          if (this.diceLogBanner) {
+            this.diceLogBanner.textContent = `${title} ➔ ${result} ${detail ? `(${detail})` : ''}`;
+          }
+
+          let toast = document.getElementById('rollToast');
+          if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'rollToast';
+            toast.className = 'roll-toast';
+            document.body.appendChild(toast);
+          }
+
+          toast.innerHTML = `
+        <div class="toast-header">
+          <span>${title}</span>
+          <span style="cursor:pointer;" onclick="this.parentElement.parentElement.remove()">✕</span>
+        </div>
+        <div class="toast-body">${result}</div>
+        ${detail ? `<div class="toast-detail">${detail}</div>` : ''}
+      `;
+          toast.style.display = 'block';
+
+          if (this.toastTimeout) clearTimeout(this.toastTimeout);
+          this.toastTimeout = setTimeout(() => {
+            if (toast) toast.style.display = 'none';
+          }, 4000);
+        }
+
+        rollStatCheck(char, statName, statKey) {
+          const d20 = roll(20);
+          if (statKey === 'luck') {
+            const luckScore = char.stats.luck.score;
+            const success = d20 <= luckScore;
+            this.showRollToast(
+              `Test de ${statName} (${char.name})`,
+              success ? 'Réussi' : 'Échec',
+              `d20 (${d20}) ${success ? '≤' : '>'} Chance (${luckScore})`
+            );
+            return;
+          }
+
+          const mod = char.stats[statKey].mod;
+          const total = d20 + mod;
+          this.showRollToast(
+            `Test de ${statName} (${char.name})`,
+            `${total}`,
+            `d20 (${d20}) ${formatModifier(mod)}`
+          );
+        }
+
+        rollSaveCheck(char, saveName, saveKey) {
+          const mod = char.saves[saveKey];
+          const d20 = roll(20);
+          const total = d20 + mod;
+          this.showRollToast(
+            `Sauvegarde de ${saveName} (${char.name})`,
+            `${total}`,
+            `d20 (${d20}) ${formatModifier(mod)}`
+          );
+        }
+
+        rollAttack(char) {
+          const d20 = roll(20);
+          const attackType = this.getWeaponAttackType(char);
+          const atkMod = char.attack[attackType];
+          const atkTotal = d20 + atkMod;
+
+          let dmgSides = 4;
+          const match = char.weapon.damage.match(/1d(\d+)/);
+          if (match) dmgSides = parseInt(match[1], 10);
+
+          const dmgRoll = roll(dmgSides);
+          const dmgMod = char.damageMods[attackType];
+          const dmgTotal = Math.max(1, dmgRoll + dmgMod);
+
+          let critMsg = '';
+          if (d20 === 20) critMsg = ' 🔥 COUP CRITIQUE !';
+          if (d20 === 1) critMsg = ' 💀 MALADRESSE !';
+
+          this.showRollToast(
+            `Attaque ${attackType === 'ranged' ? 'à distance' : 'de mêlée'} : ${char.weapon.name} (${char.name})${critMsg}`,
+            `Toucher : ${atkTotal} | Dégâts : ${dmgTotal}`,
+            `Attaque: d20(${d20}) ${formatModifier(atkMod)} ➔ Dégâts: d${dmgSides}(${dmgRoll}) ${formatModifier(dmgMod)}`
+          );
+        }
+
+        rollInitiative(char) {
+          const d20 = roll(20);
+          const mod = char.initiative;
+          const total = d20 + mod;
+          this.showRollToast(
+            `Initiative (${char.name})`,
+            `${total}`,
+            `d20 (${d20}) ${formatModifier(mod)}`
+          );
+        }
+
+        exportJson() {
+          const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.characters, null, 2));
+          const downloadAnchor = document.createElement('a');
+          downloadAnchor.setAttribute("href", dataStr);
+          downloadAnchor.setAttribute("download", `dcc_entonnoir_${new Date().toISOString().slice(0, 10)}.json`);
+          document.body.appendChild(downloadAnchor);
+          downloadAnchor.click();
+          downloadAnchor.remove();
+        }
+
+        importJson(event) {
+          const file = event.target.files[0];
+          if (!file) return;
+
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            try {
+              const imported = JSON.parse(e.target.result);
+              if (Array.isArray(imported)) {
+                this.characters = imported;
+                this.saveState();
+                this.render();
+                this.showRollToast("Import réussi", `${imported.length} personnages importés`);
+              } else {
+                alert("Le format du fichier JSON n'est pas valide (tableau de personnages attendu).");
+              }
+            } catch (err) {
+              alert("Erreur de lecture du fichier JSON : " + err.message);
+            }
+          };
+          reader.readAsText(file);
+          event.target.value = '';
+        }
+
+        render() {
+          const total = this.characters.length;
+          const alive = this.characters.filter(c => c.status !== 'Mort').length;
+
+          this.charCountEl.textContent = total;
+          this.aliveCountEl.textContent = alive;
+
+          if (total === 0) {
+            this.emptyState.style.display = 'block';
+            this.rosterGrid.innerHTML = '';
+            return;
+          }
+
+          this.emptyState.style.display = 'none';
+          this.rosterGrid.innerHTML = '';
+
+          this.characters.forEach(char => {
+            const card = this.createCharacterCard(char);
+            this.rosterGrid.appendChild(card);
+          });
+        }
+
+        createCharacterCard(char) {
+          const statusInfo = this.getDerivedStatus(char);
+          const racialTraits = this.getRacialTraits(char.race);
+          char.status = (statusInfo.code === 'mort') ? 'Mort' : (statusInfo.code === 'blesse') ? 'Blessé' : 'Vivant';
+
+          const card = document.createElement('div');
+          const statusClass = `status-${statusInfo.code}`;
+          card.className = `char-card ${statusClass}`;
+          card.dataset.id = char.id;
+
+          const modClass = (mod) => mod > 0 ? 'mod-pos' : mod < 0 ? 'mod-neg' : 'mod-zero';
+
+          card.innerHTML = `
+        <!-- En-tête de la fiche -->
+        <div class="card-header">
+          <!-- Ligne 1 : Nom complet sur toute la largeur -->
+          <input type="text" class="card-name-input" value="${this.escapeHtml(char.name)}" title="Cliquer pour modifier le nom" />
+          
+          <!-- Ligne 2 : Race et Métier -->
+          <div class="card-identity-line">
+            <span class="badge-race">${char.race}</span>
+            <strong class="char-occupation" title="${char.occupation}">${char.occupation}</strong>
+          </div>
+
+          <!-- Ligne 3 : Alignement & Statut déduit automatiquement des PV -->
+          <div class="card-subline">
+            <span class="char-alignment">Align. : <strong>${char.alignment || 'Neutre'}</strong></span>
+            <span class="badge-status status-${statusInfo.code}">${statusInfo.label}</span>
+          </div>
+          ${racialTraits.length ? `<div class="lucky-desc"><strong>Capacités raciales :</strong> ${this.escapeHtml(racialTraits.join(' ; '))}</div>` : ''}
+        </div>
+
+        <!-- Jauges vitales (PV, CA, Vitesse, Init) -->
+        <div class="vitals-row">
+          <div class="vital-box">
+            <span class="vital-label">PV</span>
+            <span class="vital-val">${char.currentHp ?? char.maxHp} / ${char.maxHp}</span>
+            <div class="hp-controls">
+              <button class="hp-btn btn-hp-minus" title="Perdre 1 PV">-</button>
+              <button class="hp-btn btn-hp-plus" title="Gagner 1 PV">+</button>
+            </div>
+          </div>
+          <div class="vital-box">
+            <span class="vital-label">CA</span>
+            <span class="vital-val">${char.ac}</span>
+          </div>
+          <div class="vital-box btn-roll-init" style="cursor:pointer;" title="Lancer l'Initiative (d20 + AGI/Augure)">
+            <span class="vital-label">Init 🎲</span>
+            <span class="vital-val">${formatModifier(char.initiative)}</span>
+          </div>
+          <div class="vital-box">
+            <span class="vital-label">Vitesse</span>
+            <span class="vital-val">${char.speed}m</span>
+          </div>
+        </div>
+
+        <!-- Les 6 Caractéristiques (3d6 dans l'ordre strict) -->
+        <div class="stats-grid">
+          <div class="stat-item btn-stat" data-stat="Force" data-key="strength" title="Test de Force (d20 + mod)">
+            <div class="stat-name">FOR</div>
+            <div class="stat-score">${char.stats.strength.score}</div>
+            <div class="stat-mod ${modClass(char.stats.strength.mod)}">${formatModifier(char.stats.strength.mod)}</div>
+          </div>
+          <div class="stat-item btn-stat" data-stat="Agilité" data-key="agility" title="Test d'Agilité (d20 + mod)">
+            <div class="stat-name">AGI</div>
+            <div class="stat-score">${char.stats.agility.score}</div>
+            <div class="stat-mod ${modClass(char.stats.agility.mod)}">${formatModifier(char.stats.agility.mod)}</div>
+          </div>
+          <div class="stat-item btn-stat" data-stat="Endurance" data-key="stamina" title="Test d'Endurance (d20 + mod)">
+            <div class="stat-name">END</div>
+            <div class="stat-score">${char.stats.stamina.score}</div>
+            <div class="stat-mod ${modClass(char.stats.stamina.mod)}">${formatModifier(char.stats.stamina.mod)}</div>
+          </div>
+          <div class="stat-item btn-stat" data-stat="Personnalité" data-key="personality" title="Test de Personnalité (d20 + mod)">
+            <div class="stat-name">PER</div>
+            <div class="stat-score">${char.stats.personality.score}</div>
+            <div class="stat-mod ${modClass(char.stats.personality.mod)}">${formatModifier(char.stats.personality.mod)}</div>
+          </div>
+          <div class="stat-item btn-stat" data-stat="Intelligence" data-key="intelligence" title="Test d'Intelligence (d20 + mod)">
+            <div class="stat-name">INT</div>
+            <div class="stat-score">${char.stats.intelligence.score}</div>
+            <div class="stat-mod ${modClass(char.stats.intelligence.mod)}">${formatModifier(char.stats.intelligence.mod)}</div>
+          </div>
+          <div class="stat-item btn-stat" data-stat="Chance" data-key="luck" title="Test de Chance (d20 ≤ score)">
+            <div class="stat-name">CHA</div>
+            <div class="stat-score">${char.stats.luck.score}</div>
+            <div class="stat-mod ${modClass(char.stats.luck.mod)}">${formatModifier(char.stats.luck.mod)}</div>
+          </div>
+        </div>
+
+        <!-- Jets de sauvegarde -->
+        <div class="saves-row">
+          <div class="save-item btn-save" data-save="Réflexes" data-key="reflex" title="Sauvegarde de Réflexes (d20 + mod)">
+            <div class="save-label">RÉF 🎲</div>
+            <div class="save-val ${modClass(char.saves.reflex)}">${formatModifier(char.saves.reflex)}</div>
+          </div>
+          <div class="save-item btn-save" data-save="Vigueur" data-key="fortitude" title="Sauvegarde de Vigueur (d20 + mod)">
+            <div class="save-label">VIG 🎲</div>
+            <div class="save-val ${modClass(char.saves.fortitude)}">${formatModifier(char.saves.fortitude)}</div>
+          </div>
+          <div class="save-item btn-save" data-save="Volonté" data-key="will" title="Sauvegarde de Volonté (d20 + mod)">
+            <div class="save-label">VOL 🎲</div>
+            <div class="save-val ${modClass(char.saves.will)}">${formatModifier(char.saves.will)}</div>
+          </div>
+        </div>
+
+        <!-- Arme & Attaque -->
+        <div class="card-section">
+          <div class="section-label">⚔️ Arme de départ (Niv. 0)</div>
+          <div class="weapon-row">
+            <div>
+              <span class="weapon-info">${char.weapon.name}</span>
+              <span class="weapon-damage">(${char.weapon.damage})</span>
+            </div>
+            <button class="attack-btn btn-attack" title="Lancer une attaque avec cette arme">Attaquer (${formatModifier(char.attack[this.getWeaponAttackType(char)])})</button>
+          </div>
+        </div>
+
+        <!-- Augure de Chance officiel -->
+        <div class="card-section">
+          <div class="section-label">🍀 Augure : ${char.luckySign.name} (${formatModifier(char.luckySign.modifier)})</div>
+          <div class="lucky-desc">${char.luckySign.description}</div>
+        </div>
+
+        <!-- Marchandises & Équipement -->
+        <div class="card-section">
+          <div class="section-label">🎒 Bagages & Équipement</div>
+          <div class="gear-list">
+            <div>• <strong>Métier :</strong> ${char.tradeGoods}</div>
+            <div>• <strong>Survie :</strong> ${char.startingItem}</div>
+            <div class="gear-money">💰 Bourse : ${char.copperPieces} pièces de cuivre (pc)</div>
+          </div>
+        </div>
+
+        <!-- Notes & Actions -->
+        <div class="card-footer">
+          <textarea class="card-notes-input" rows="2" placeholder="Notes / faits d'armes...">${this.escapeHtml(char.notes || '')}</textarea>
+          <div style="display:flex; gap:0.3rem; margin-left:0.5rem;">
+            <button class="btn btn-secondary btn-sm btn-reroll" title="Relancer ce personnage">🔄</button>
+            <button class="btn btn-danger btn-sm btn-delete" title="Supprimer ce personnage">🗑️</button>
+          </div>
+        </div>
+      `;
+
+          const nameInput = card.querySelector('.card-name-input');
+          nameInput.addEventListener('change', (e) => {
+            char.name = e.target.value.trim() || 'Inconnu';
+            this.saveState();
+          });
+
+          const notesInput = card.querySelector('.card-notes-input');
+          notesInput.addEventListener('change', (e) => {
+            char.notes = e.target.value;
+            this.saveState();
+          });
+
+          card.querySelector('.btn-hp-minus').addEventListener('click', () => this.updateHp(char.id, -1));
+          card.querySelector('.btn-hp-plus').addEventListener('click', () => this.updateHp(char.id, +1));
+
+          card.querySelector('.btn-roll-init').addEventListener('click', () => this.rollInitiative(char));
+
+          card.querySelectorAll('.btn-stat').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const statName = btn.dataset.stat;
+              const statKey = btn.dataset.key;
+              this.rollStatCheck(char, statName, statKey);
+            });
+          });
+
+          card.querySelectorAll('.btn-save').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const saveName = btn.dataset.save;
+              const saveKey = btn.dataset.key;
+              this.rollSaveCheck(char, saveName, saveKey);
+            });
+          });
+
+          card.querySelector('.btn-attack').addEventListener('click', () => this.rollAttack(char));
+          card.querySelector('.btn-reroll').addEventListener('click', () => this.rerollCharacter(char.id));
+          card.querySelector('.btn-delete').addEventListener('click', () => this.deleteCharacter(char.id));
+
+          return card;
+        }
+
+        escapeHtml(string) {
+          if (!string) return '';
+          return String(string)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        new DCCApp();
+      });
+
+    })();
+  </script>
+</body>
+
+</html>
+</body>
+
+</html>
