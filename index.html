@@ -154,6 +154,20 @@
       background-color: #692121;
     }
 
+    .btn:focus-visible,
+    .die-btn:focus-visible,
+    .hp-btn:focus-visible,
+    .attack-btn:focus-visible,
+    .btn-stat:focus-visible,
+    .btn-save:focus-visible,
+    .btn-roll-init:focus-visible,
+    .racial-trait:focus-visible,
+    .card-name-input:focus-visible,
+    .card-notes-input:focus-visible {
+      outline: 2px solid var(--accent-gold);
+      outline-offset: 2px;
+    }
+
     .btn-sm {
       padding: 0.25rem 0.5rem;
       font-size: 0.75rem;
@@ -372,6 +386,27 @@
       color: var(--text-muted);
     }
 
+    .char-alignment {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .alignment-select {
+      padding: 0.1rem 0.25rem;
+      border: 1px solid #434152;
+      border-radius: 3px;
+      background: #2d2c38;
+      color: #e4e2ed;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .alignment-select:focus-visible {
+      outline: 2px solid var(--accent-gold);
+      outline-offset: 2px;
+    }
+
     .badge-race {
       background: #2d2c38;
       color: #d1cfd8;
@@ -417,7 +452,7 @@
     /* Vitals Row (HP, CA, Vitesse, Init) */
     .vitals-row {
       display: grid;
-      grid-template-columns: 1.2fr 1fr 1fr 1fr;
+      grid-template-columns: 1.2fr 0.9fr 0.9fr 1fr 1fr;
       gap: 0.5rem;
       background: #18171d;
       padding: 0.6rem;
@@ -445,6 +480,11 @@
       font-weight: 700;
       font-family: var(--font-mono);
       color: #fff;
+    }
+
+    .xp-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
     }
 
     .hp-controls {
@@ -582,20 +622,33 @@
       gap: 0.3rem;
     }
 
-    .weapon-row {
+    .weapon-row,
+    .protection-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .weapon-info {
+    .weapon-info,
+    .protection-info {
       font-weight: 600;
       color: #fff;
     }
 
-    .weapon-damage {
+    .weapon-damage,
+    .protection-bonus {
       font-family: var(--font-mono);
       color: var(--accent-gold);
+    }
+
+    .weapon-ammunition {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+    }
+
+    .protection-none {
+      color: var(--text-muted);
+      font-style: italic;
     }
 
     .attack-btn {
@@ -625,6 +678,18 @@
       font-style: italic;
     }
 
+    .racial-trait {
+      cursor: help;
+      text-decoration: underline dotted;
+      text-underline-offset: 0.15em;
+    }
+
+    .lucky-sign-tooltip {
+      cursor: help;
+      text-decoration: underline dotted;
+      text-underline-offset: 0.15em;
+    }
+
     .gear-list {
       font-size: 0.8rem;
       color: #ccc9c0;
@@ -637,6 +702,89 @@
       color: #e6a753;
       font-weight: 600;
       margin-top: 0.2rem;
+    }
+
+    .coin-controls {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.35rem;
+    }
+
+    .coin-row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.15rem;
+      min-width: 0;
+      border: 1px solid var(--coin-border);
+      border-radius: 4px;
+      background: var(--coin-background);
+      padding: 0.3rem 0.1rem;
+    }
+
+    .coin-row[data-denomination="pc"] {
+      --coin-color: #e0a06f;
+      --coin-border: rgba(224, 160, 111, 0.45);
+      --coin-background: rgba(224, 160, 111, 0.08);
+    }
+
+    .coin-row[data-denomination="pa"] {
+      --coin-color: #c4d2df;
+      --coin-border: rgba(196, 210, 223, 0.45);
+      --coin-background: rgba(196, 210, 223, 0.08);
+    }
+
+    .coin-row[data-denomination="po"] {
+      --coin-color: #f0c663;
+      --coin-border: rgba(240, 198, 99, 0.45);
+      --coin-background: rgba(240, 198, 99, 0.08);
+    }
+
+    .coin-label {
+      display: flex;
+      align-items: baseline;
+      gap: 0.2rem;
+      color: var(--coin-color);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .coin-icon {
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      line-height: 1;
+    }
+
+    .coin-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+    }
+
+    .coin-btn {
+      border-color: var(--coin-border);
+    }
+
+    .coin-btn:hover:not(:disabled) {
+      background: var(--coin-background);
+      border-color: var(--coin-color);
+    }
+
+    .coin-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    .coin-count {
+      color: var(--coin-color);
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-align: center;
     }
 
     /* Card Footer Actions */
@@ -744,6 +892,35 @@
         display: none !important;
       }
 
+      .coin-btn {
+        display: none !important;
+      }
+
+      .coin-actions {
+        display: none !important;
+      }
+
+      .coin-controls {
+        display: block;
+      }
+
+      .coin-row {
+        display: inline-flex;
+        flex-direction: row;
+        align-items: baseline;
+        gap: 0.35rem;
+        margin-right: 0.75rem;
+        border: 0;
+        background: transparent;
+        padding: 0;
+      }
+
+      .coin-purse-title,
+      .coin-label,
+      .coin-count {
+        color: #000 !important;
+      }
+
       main.main-content {
         max-width: 100% !important;
         margin: 0 !important;
@@ -789,10 +966,20 @@
         display: none !important;
       }
 
+      .alignment-select {
+        padding: 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+        color: #000 !important;
+        appearance: none;
+      }
+
       .vital-val,
       .stat-score,
       .save-val,
-      .weapon-info {
+      .weapon-info,
+      .protection-info,
+      .protection-bonus {
         color: #000 !important;
       }
 
@@ -821,6 +1008,131 @@
         background: #ddd !important;
         color: #000 !important;
         border: 1px solid #999;
+      }
+    }
+
+    @media screen and (max-width: 640px) {
+      header.app-header {
+        position: static;
+        padding: 1rem;
+      }
+
+      .header-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.8rem;
+      }
+
+      .title-group h1 {
+        font-size: 1.2rem;
+        letter-spacing: 0.4px;
+      }
+
+      .title-group p {
+        font-size: 0.8rem;
+        line-height: 1.4;
+      }
+
+      .actions-toolbar {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem;
+      }
+
+      .actions-toolbar .btn {
+        min-height: 44px;
+        justify-content: center;
+        padding: 0.5rem;
+        text-align: center;
+      }
+
+      .actions-toolbar .btn-danger {
+        justify-self: start;
+        width: 44px;
+      }
+
+      .dice-bar {
+        padding: 0.75rem 1rem;
+      }
+
+      .dice-bar-content {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 0.65rem;
+      }
+
+      .dice-bar-content > div:first-child {
+        align-items: flex-start !important;
+        flex-direction: column;
+        gap: 0.45rem !important;
+        width: 100%;
+        min-width: 0;
+      }
+
+      .dice-buttons {
+        flex-wrap: wrap;
+        width: 100%;
+        min-width: 0;
+        overflow: visible;
+        padding: 0.15rem 0.1rem;
+      }
+
+      .die-btn {
+        flex: 0 0 auto;
+        min-width: 40px;
+        min-height: 40px;
+      }
+
+      .dice-log-banner {
+        width: 100%;
+        line-height: 1.4;
+      }
+
+      main.main-content {
+        margin: 1rem auto;
+        padding: 0 1rem;
+      }
+
+      .stats-bar {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 0.55rem;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+      }
+
+      .stats-bar > div:first-child {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem 1rem;
+      }
+
+      .stats-bar > div:first-child > span:nth-child(2) {
+        display: none;
+      }
+
+      .stats-bar > div:last-child {
+        font-size: 0.75rem !important;
+      }
+
+      .roster-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.85rem;
+      }
+
+      .char-card {
+        padding: 0.9rem;
+      }
+
+      .roll-toast {
+        right: 1rem;
+        bottom: 1rem;
+        left: 1rem;
+        min-width: 0;
+      }
+
+      .empty-state {
+        padding: 2.5rem 1rem;
       }
     }
   </style>
@@ -858,7 +1170,7 @@
           <span>📂</span> Importer
         </button>
         <input type="file" id="fileInput" accept=".json" style="display: none;" />
-        <button id="btnClearAll" class="btn btn-danger" title="Vider la table">
+        <button id="btnClearAll" class="btn btn-danger" title="Vider la table" aria-label="Vider la table">
           <span>🗑️</span>
         </button>
       </div>
@@ -874,7 +1186,7 @@
           <!-- Injecté dynamiquement par JS -->
         </div>
       </div>
-      <div id="diceLogBanner" class="dice-log-banner">
+      <div id="diceLogBanner" class="dice-log-banner" role="status" aria-live="polite">
         Cliquez sur un dé, une caractéristique ou une arme pour faire un jet !
       </div>
     </div>
@@ -941,6 +1253,8 @@
         18: 3
       };
 
+      const ALIGNMENTS = ['Loyal', 'Neutre', 'Chaotique'];
+
       function getModifier(score) {
         if (score <= 3) return -3;
         if (score >= 18) return 3;
@@ -949,6 +1263,56 @@
 
       function formatModifier(mod) {
         return mod >= 0 ? `+${mod}` : `${mod}`;
+      }
+
+      const ARMOR_TABLE = [
+        { id: 'none', name: 'Sans armure', acBonus: 0 },
+        { id: 'leather', name: 'Cuir', acBonus: 2 },
+        { id: 'hide', name: 'Peau', acBonus: 3 }
+      ];
+
+      function getArmorById(id) {
+        const armor = ARMOR_TABLE.find(armor => armor.id === id);
+        if (!armor) throw new Error(`Type d'armure inconnu : ${id}`);
+        return armor;
+      }
+
+      function isCurrentCharacterFormat(char) {
+        return Boolean(
+          char &&
+          typeof char === 'object' &&
+          !Array.isArray(char) &&
+          Number.isSafeInteger(char.xp) &&
+          char.xp >= 0 &&
+          ALIGNMENTS.includes(char.alignment) &&
+          ARMOR_TABLE.some(armor => armor.id === char.armorId) &&
+          char.coinPurse &&
+          typeof char.coinPurse === 'object' &&
+          !Array.isArray(char.coinPurse) &&
+          COIN_DENOMINATIONS.every(({ key }) =>
+            Number.isSafeInteger(char.coinPurse[key]) && char.coinPurse[key] >= 0
+          )
+        );
+      }
+
+      function calculateArmorClass(stats, luckySign, armorId) {
+        const armor = getArmorById(armorId);
+        const luckBonus = luckySign.roll === 23 ? stats.luck.mod : 0;
+        return 10 + stats.agility.mod + armor.acBonus + luckBonus;
+      }
+
+      const SAVE_MODIFIER_SOURCES = {
+        reflex: { name: 'Réflexes', ability: "d'Agilité", luckSignRolls: [17, 20] },
+        fortitude: { name: 'Vigueur', ability: "d'Endurance", luckSignRolls: [17, 21] },
+        will: { name: 'Volonté', ability: 'de Présence', luckSignRolls: [17, 22] }
+      };
+
+      function getSaveTooltip(saveKey, luckySignRoll) {
+        const save = SAVE_MODIFIER_SOURCES[saveKey];
+        const luckSource = save.luckSignRolls.includes(luckySignRoll)
+          ? ' + modificateur de Chance (Augure de naissance)'
+          : '';
+        return `Sauvegarde de ${save.name} (d20 + modificateur ${save.ability}${luckSource})`;
       }
 
       // Table 1-2 : Augure de naissance et jet de chance (1d30) - Officiel DCC RPG
@@ -968,7 +1332,7 @@
         { roll: 13, name: "Septième fils", description: "Épreuves de sort", category: "Magie" },
         { roll: 14, name: "Tempête déchaînée", description: "Jets de dégâts des sorts", category: "Magie" },
         { roll: 15, name: "Cœur vertueux", description: "Renvoi des impies", category: "Magie" },
-        { roll: 16, name: "Survivant de la peste", description: "Guérison magique reçue", category: "Survie" },
+        { roll: 16, name: "Survivant de la peste", description: "Guérison magique reçue", tooltip: "Pour un clerc, ce signe s’applique à tous les soins prodigués. Sinon, il s’applique à tous les soins magiques reçus.", category: "Survie" },
         { roll: 17, name: "Signe faste", description: "Tous les jets de sauvegarde", category: "Sauvegarde" },
         { roll: 18, name: "Ange gardien", description: "Jets de sauvegarde contre les pièges", category: "Sauvegarde" },
         { roll: 19, name: "Morsure d'araignée", description: "Jets de sauvegarde contre le poison", category: "Sauvegarde" },
@@ -978,9 +1342,9 @@
         { roll: 23, name: "Demeure enchantée", description: "Classe d'Armure (CA)", category: "Défense" },
         { roll: 24, name: "Vitesse du cobra", description: "Jet d'Initiative", category: "Combat" },
         { roll: 25, name: "Moisson généreuse", description: "Points de vie (s'applique à chaque niveau)", category: "Survie" },
-        { roll: 26, name: "Bras du guerrier", description: "Jets sur la table de coups critiques", category: "Critique" },
+        { roll: 26, name: "Bras du guerrier", description: "Jets sur la table de coups critiques", tooltip: "La Chance affecte toujours les jets sur la table des coups critiques. Avec ce signe, le modificateur de Chance est doublé.", category: "Critique" },
         { roll: 27, name: "Maison impie", description: "Jets de corruption", category: "Magie" },
-        { roll: 28, name: "L'étoile brisée", description: "Jets sur la table de maladresses", category: "Critique" },
+        { roll: 28, name: "L'étoile brisée", description: "Jets sur la table de maladresses", tooltip: "La Chance affecte toujours les jets sur la table des maladresses. Avec ce signe, le modificateur de Chance est doublé.", category: "Critique" },
         { roll: 29, name: "Chant d'oiseau", description: "Nombre de langues connues", category: "Général" },
         { roll: 30, name: "Enfant sauvage", description: "Vitesse de déplacement (+/- 1,5m par point)", category: "Déplacement" }
       ];
@@ -1013,91 +1377,92 @@
         "Torche (1 unité)"
       ];
 
+      const FARM_CROPS = ['patate', 'blé', 'navet', 'maïs', 'riz', 'panais', 'radis', 'rutabaga'];
+      const HERD_ANIMALS = ['mouton', 'chèvre', 'vache', 'canard', 'oie', 'mule'];
+      const CART_CONTENTS = ['tomates', 'rien', 'paille', 'vos morts', 'terre', 'cailloux'];
+
       // Table 1-3 : Métier (1d100) - Officiel DCC RPG
       const OCCUPATIONS = [
         { roll: [1], title: "Alchimiste", race: "Humain", weapon: "Bâton", damage: "1d4", goods: "Huile (1 flasque)" },
-        { roll: [2], title: "Dresseur d'animaux", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Poney" },
-        { roll: [3], title: "Armurier", race: "Humain", weapon: "Marteau", damage: "1d4", goods: "Casque de fer" },
-        { roll: [4], title: "Astrologue", race: "Humain", weapon: "Dague", damage: "1d4", goods: "Longue-vue" },
-        { roll: [5], title: "Barbier", race: "Humain", weapon: "Rasoir", damage: "1d4", goods: "Ciseaux" },
-        { roll: [6, 7, 8], title: "Forgeron", race: "Humain", weapon: "Marteau", damage: "1d4", goods: "Tenailles en acier" },
-        { roll: [9, 10], title: "Garde de caravane", race: "Humain", weapon: "Épée courte", damage: "1d6", goods: "Toile de lin (1 mètre)" },
-        { roll: [11], title: "Fromager", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Fromage puant (1 meule)" },
-        { roll: [12], title: "Cordonnier", race: "Humain", weapon: "Alêne", damage: "1d4", goods: "Chausse-pied" },
-        { roll: [13], title: "Confiseur", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Sucre raffiné (500 g)" },
-        { roll: [14, 15], title: "Tonnelier", race: "Humain", weapon: "Pied-de-biche", damage: "1d4", goods: "Tonneau vide" },
-        { roll: [16], title: "Marchand des quatre-saisons", race: "Humain", weapon: "Couteau", damage: "1d4", goods: "Panier de fruits" },
-        { roll: [17, 18], title: "Artisan", race: "Humain", weapon: "Marteau", damage: "1d4", goods: "Argile (500 g)" },
-        { roll: [19, 20], title: "Terrassier", race: "Humain", weapon: "Pelle", damage: "1d4", goods: "Sac de terre fine" },
-        { roll: [21, 22], title: "Débardeur", race: "Humain", weapon: "Gaffe", damage: "1d4", goods: "Crochet de manutention" },
-        { roll: [23, 24], title: "Apothicaire nain", race: "Nain", weapon: "Gourdin", damage: "1d4", goods: "Fiole d'acier" },
-        { roll: [25, 26], title: "Forgeron nain", race: "Nain", weapon: "Marteau", damage: "1d4", goods: "Mithril (30 g)" },
-        { roll: [27], title: "Coffretier nain", race: "Nain", weapon: "Ciseau à bois", damage: "1d4", goods: "Morceau de bois noble (1 kg)" },
-        { roll: [28, 29], title: "Éleveur nain", race: "Nain", weapon: "Bâton", damage: "1d4", goods: "Truie d'élevage" },
-        { roll: [30, 31], title: "Mineur nain", race: "Nain", weapon: "Pioche", damage: "1d6", goods: "Lanterne de mineur" },
-        { roll: [32, 33], title: "Myciculteur nain", race: "Nain", weapon: "Pelle", damage: "1d4", goods: "Sac de spores luminescents" },
-        { roll: [34], title: "Dératiseur nain", race: "Nain", weapon: "Gourdin", damage: "1d4", goods: "Filet et rat mort" },
-        { roll: [35], title: "Tailleur de pierre nain", race: "Nain", weapon: "Marteau", damage: "1d4", goods: "Bloc de pierre taillée (5 kg)" },
-        { roll: [36, 37], title: "Artisan elfe", race: "Elfe", weapon: "Bâton", damage: "1d4", goods: "Soie brodée (1 mètre)" },
-        { roll: [38], title: "Avocat elfe", race: "Elfe", weapon: "Stylet", damage: "1d4", goods: "Livre de lois elfiques" },
-        { roll: [39], title: "Cirier elfe", race: "Elfe", weapon: "Ciseaux", damage: "1d4", goods: "Chandelles en cire d'abeille (x12)" },
-        { roll: [40], title: "Fauconnier elfe", race: "Elfe", weapon: "Dague", damage: "1d4", goods: "Faucon de chasse dressé" },
-        { roll: [41], title: "Forestier elfe", race: "Elfe", weapon: "Bâton", damage: "1d4", goods: "Herbes rares séchées (1 sachet)" },
-        { roll: [42], title: "Souffleur de verre elfe", race: "Elfe", weapon: "Marteau", damage: "1d4", goods: "Billes de verre coloré" },
-        { roll: [43], title: "Navigateur elfe", race: "Elfe", weapon: "Arc court", damage: "1d6", goods: "Longue-vue en laiton" },
-        { roll: [44], title: "Sage elfe", race: "Elfe", weapon: "Dague", damage: "1d4", goods: "Rouleau de parchemin vierge" },
-        { roll: [45], title: "Fermier (moutons)", race: "Humain", weapon: "Fourche", damage: "1d6", goods: "Mouton docile" },
-        { roll: [46], title: "Fermier (chèvres)", race: "Humain", weapon: "Fourche", damage: "1d6", goods: "Chèvre têtue" },
-        { roll: [47], title: "Fermier (poules)", race: "Humain", weapon: "Fourche", damage: "1d6", goods: "Poule vivante" },
-        { roll: [48], title: "Fermier (canards)", race: "Humain", weapon: "Fourche", damage: "1d6", goods: "Canard criard" },
-        { roll: [49], title: "Fermier (oies)", race: "Humain", weapon: "Fourche", damage: "1d6", goods: "Oie agressive" },
-        { roll: [50], title: "Fermier (porcs)", race: "Humain", weapon: "Fourche", damage: "1d6", goods: "Porcelet glouton" },
-        { roll: [51], title: "Fermier (bovins)", race: "Humain", weapon: "Fourche", damage: "1d6", goods: "Vache laitière" },
-        { roll: [52], title: "Fermier (blé)", race: "Humain", weapon: "Fourche", damage: "1d6", goods: "Sac de grain de blé" },
-        { roll: [53], title: "Fermier (navets)", race: "Humain", weapon: "Fourche", damage: "1d6", goods: "Sac de navets (10 kg)" },
-        { roll: [54], title: "Fermier (pommes de terre)", race: "Humain", weapon: "Fourche", damage: "1d6", goods: "Sac de pommes de terre" },
-        { roll: [55], title: "Diseur de bonne aventure", race: "Humain", weapon: "Dague", damage: "1d4", goods: "Jeu de tarots divinatoires" },
-        { roll: [56], title: "Joueur compulsif", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Paire de dés pipés en ivoire" },
-        { roll: [57], title: "Vidangeur de fosses (Gongfarmer)", race: "Humain", weapon: "Truelle", damage: "1d4", goods: "Sac de fiente d'aisances" },
-        { roll: [58], title: "Fossoyeur", race: "Humain", weapon: "Pelle", damage: "1d4", goods: "Bêche usée et crâne inconnu" },
-        { roll: [59], title: "Mendiant juré", race: "Humain", weapon: "Fronde", damage: "1d4", goods: "Paire de béquilles en bois" },
-        { roll: [60], title: "Boucher de volaille halfelin", race: "Halfelin", weapon: "Hachette", damage: "1d6", goods: "Viande de poulet salée (2,5 kg)" },
-        { roll: [61], title: "Teinturier halfelin", race: "Halfelin", weapon: "Bâton", damage: "1d4", goods: "Coupon d'étoffe pourpre (1 mètre)" },
-        { roll: [62], title: "Gantier halfelin", race: "Halfelin", weapon: "Alêne", damage: "1d4", goods: "Gants en cuir doux" },
-        { roll: [63], title: "Bohémien halfelin", race: "Halfelin", weapon: "Fronde", damage: "1d4", goods: "Bourse de verroterie et breloques" },
-        { roll: [64], title: "Chapelier halfelin", race: "Halfelin", weapon: "Ciseaux", damage: "1d4", goods: "Chapeaux fins à plumes (lot de 3)" },
-        { roll: [65], title: "Marinier halfelin", race: "Halfelin", weapon: "Couteau", damage: "1d4", goods: "Corde de chanvre goudronnée (15 m)" },
-        { roll: [66], title: "Tailleur halfelin", race: "Halfelin", weapon: "Ciseaux", damage: "1d4", goods: "Aiguilles et bobines de fil fin" },
-        { roll: [67], title: "Commerçant halfelin", race: "Halfelin", weapon: "Gourdin", damage: "1d4", goods: "Balance de trébuchet miniature" },
-        { roll: [68], title: "Vagabond halfelin", race: "Halfelin", weapon: "Gourdin", damage: "1d4", goods: "Écuelle en bois de mendiant" },
-        { roll: [69], title: "Guérisseur", race: "Humain", weapon: "Bâton", damage: "1d4", goods: "Eau bénite (1 petite fiole)" },
-        { roll: [70], title: "Herboriste", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Herbes médicinales (1 sachet)" },
-        { roll: [71], title: "Berger", race: "Humain", weapon: "Bâton", damage: "1d4", goods: "Chien de troupeau" },
-        { roll: [72], title: "Marchand", race: "Humain", weapon: "Dague", damage: "1d4", goods: "4 po, 14 pa, 27 pc" },
+        { roll: [2], title: "Apiculteur", race: "Humain", weapon: "Bâton", damage: "1d4", goods: "Pot de miel" },
+        { roll: [3], title: "Apprenti mage", race: "Humain", weapon: "Dague", damage: "1d4", goods: "Grimoire noir" },
+        { roll: [4], title: "Armurier", race: "Humain", weapon: "Marteau (comme gourdin)", damage: "1d4", goods: "Heaume en fer" },
+        { roll: [5], title: "Astrologue", race: "Humain", weapon: "Dague", damage: "1d4", goods: "Longue-vue" },
+        { roll: [6], title: "Barbier", race: "Humain", weapon: "Rasoir (comme dague)", damage: "1d4", goods: "Ciseaux" },
+        { roll: [7], title: "Bedeau", race: "Humain", weapon: "Bâton", damage: "1d4", goods: "Symbole sacré" },
+        { roll: [8], title: "Berger", race: "Humain", weapon: "Bâton", damage: "1d4", goods: "Chien de berger" },
+        { roll: [9], title: "Boucher", race: "Humain", weapon: "Hachoir (comme hachette)", damage: "1d6", goods: "Tranche de viande" },
+        { roll: [10], title: "Bouffon", race: "Humain", weapon: "Fléchette", damage: "1d4", attackType: "ranged", ammunitionType: "fléchettes", goods: "Vêtements de soie" },
+        { roll: [11, 12, 13], title: "Bûcheron", race: "Humain", weapon: "Hachette", damage: "1d6", goods: "Fagot de bois" },
+        { roll: [14], title: "Chaman", race: "Humain", weapon: "Masse", damage: "1d6", goods: "Herbes (500 g)" },
+        { roll: [15], title: "Charron", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Charrette à bras", cartContents: true },
+        { roll: [16, 17], title: "Chasseur", race: "Humain", weapon: "Arc court", damage: "1d6", attackType: "ranged", ammunitionType: "flèches", goods: "Peau de cerf" },
+        { roll: [18], title: "Collecteur d'impôts", race: "Humain", weapon: "Épée longue", damage: "1d8", goods: "", coins: { pc: 100, pa: 0, po: 0 } },
+        { roll: [19], title: "Contrebandier", race: "Humain", weapon: "Fronde", damage: "1d4", attackType: "ranged", ammunitionType: "pierres de fronde", goods: "Sac étanche" },
+        { roll: [20], title: "Cordier", race: "Humain", weapon: "Couteau (comme dague)", damage: "1d4", goods: "Corde (30 m)" },
+        { roll: [21], title: "Cordonnier", race: "Humain", weapon: "Poinçon (comme dague)", damage: "1d4", goods: "Chausse-pied" },
+        { roll: [22], title: "Coupeur de bourse", race: "Humain", weapon: "Dague", damage: "1d4", goods: "Petit coffre" },
+        { roll: [23], title: "Diseur de bonne aventure", race: "Humain", weapon: "Dague", damage: "1d4", goods: "Jeu de tarot" },
+        { roll: [24], title: "Docker", race: "Humain", weapon: "Perche (comme bâton)", damage: "1d4", goods: "1 livre de JdR en retard" },
+        { roll: [25], title: "Dresseur", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Poney" },
+        { roll: [26, 27], title: "Écuyer", race: "Humain", weapon: "Épée longue", damage: "1d8", goods: "Heaume en acier" },
+        { roll: [28], title: "Elfe artisan", race: "Elfe", weapon: "Bâton", damage: "1d4", goods: "Argile (500 g)" },
+        { roll: [29], title: "Elfe avocat", race: "Elfe", weapon: "Plume (comme fléchette)", damage: "1d4", attackType: "ranged", ammunitionType: "plumes", goods: "Livre" },
+        { roll: [30], title: "Elfe cirier", race: "Elfe", weapon: "Ciseaux (comme dague)", damage: "1d4", goods: "Chandelles (20)" },
+        { roll: [31], title: "Elfe fauconnier", race: "Elfe", weapon: "Dague", damage: "1d4", goods: "Faucon" },
+        { roll: [32, 33], title: "Elfe forestier", race: "Elfe", weapon: "Bâton", damage: "1d4", goods: "Herbes (500 g)" },
+        { roll: [34], title: "Elfe navigateur", race: "Elfe", weapon: "Arc court", damage: "1d6", attackType: "ranged", ammunitionType: "flèches", goods: "Longue-vue" },
+        { roll: [35, 36], title: "Elfe sage", race: "Elfe", weapon: "Dague", damage: "1d4", goods: "Parchemin et plume" },
+        { roll: [37], title: "Elfe souffleur de verre", race: "Elfe", weapon: "Marteau (comme gourdin)", damage: "1d4", goods: "Perles de verre" },
+        { roll: [38], title: "Esclave", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Caillou de forme bizarre" },
+        { roll: [39], title: "Escroc", race: "Humain", weapon: "Dague", damage: "1d4", goods: "Cape de qualité" },
+        { roll: [40], title: "Excavateur", race: "Humain", weapon: "Pelle (comme bâton)", damage: "1d4", goods: "Poussière fine (500 g)" },
+        { roll: [41, 42, 43, 44, 45, 46, 47, 48, 49], title: "Fermier", race: "Humain", weapon: "Fourche (comme lance)", damage: "1d8", goods: "Poule", farmCrop: true },
+        { roll: [50], title: "Forgeron", race: "Humain", weapon: "Marteau (comme gourdin)", damage: "1d4", goods: "Pinces en acier" },
+        { roll: [51, 52], title: "Fossoyeur", race: "Humain", weapon: "Pelle (comme bâton)", damage: "1d4", goods: "Truelle" },
+        { roll: [53], title: "Fromager", race: "Humain", weapon: "Matraque (comme bâton)", damage: "1d4", goods: "Fromage puant" },
+        { roll: [54], title: "Gamin des rues", race: "Humain", weapon: "Bout de bois (comme gourdin)", damage: "1d4", goods: "Sébile" },
+        { roll: [55], title: "Garde de caravane", race: "Humain", weapon: "Épée courte", damage: "1d6", goods: "Drap (1 m)" },
+        { roll: [56], title: "Guérisseur", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Eau bénite (1 fiole)" },
+        { roll: [57], title: "Halfelin bohémien", race: "Halfelin", weapon: "Fronde", damage: "1d4", attackType: "ranged", ammunitionType: "pierres de fronde", goods: "Poupée vaudou" },
+        { roll: [58], title: "Halfelin gantier", race: "Halfelin", weapon: "Poinçon (comme dague)", damage: "1d4", goods: "Gants (4 paires)" },
+        { roll: [59], title: "Halfelin marin", race: "Halfelin", weapon: "Couteau (comme dague)", damage: "1d4", goods: "Voile (2 m)" },
+        { roll: [60], title: "Halfelin mercier", race: "Halfelin", weapon: "Ciseaux (comme dague)", damage: "1d4", goods: "Costumes (3 ensembles)" },
+        { roll: [61], title: "Halfelin négociant", race: "Halfelin", weapon: "Épée courte", damage: "1d6", goods: "", coins: { pc: 0, pa: 20, po: 0 } },
+        { roll: [62, 63], title: "Halfelin teinturier", race: "Halfelin", weapon: "Bâton", damage: "1d4", goods: "Tissu (3 m)" },
+        { roll: [64], title: "Halfelin usurier", race: "Halfelin", weapon: "Épée courte", damage: "1d6", goods: "", coins: { pc: 200, pa: 10, po: 5 } },
+        { roll: [65], title: "Halfelin vagabond", race: "Halfelin", weapon: "Gourdin", damage: "1d4", goods: "Coupelle de mendiant" },
+        { roll: [66], title: "Halfelin volailler", race: "Halfelin", weapon: "Hachette", damage: "1d6", goods: "Viande de poulet (2 kg)" },
+        { roll: [67], title: "Herboriste", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Herbes (500 g)" },
+        { roll: [68], title: "Hors-la-loi", race: "Humain", weapon: "Épée courte", damage: "1d6", goods: "Armure de cuir", armorId: "leather" },
+        { roll: [69], title: "Joaillier", race: "Humain", weapon: "Dague", damage: "1d4", goods: "Gemmes valant 20 po" },
+        { roll: [70], title: "Joueur", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Dés" },
+        { roll: [71], title: "Maraîcher", race: "Humain", weapon: "Couteau (comme dague)", damage: "1d4", goods: "Fruit" },
+        { roll: [72], title: "Marchand", race: "Humain", weapon: "Dague", damage: "1d4", goods: "", coins: { pc: 27, pa: 14, po: 4 } },
         { roll: [73], title: "Mendiant", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Fromage" },
-        { roll: [74, 75], title: "Mendiant de guilde", race: "Humain", weapon: "Fronde", damage: "1d4", goods: "Béquilles" },
+        { roll: [74, 75], title: "Mendiant de guilde", race: "Humain", weapon: "Fronde", damage: "1d4", attackType: "ranged", ammunitionType: "pierres de fronde", goods: "Béquilles" },
         { roll: [76], title: "Ménestrel", race: "Humain", weapon: "Dague", damage: "1d4", goods: "Ukulélé" },
-        { roll: [77], title: "Mercenaire", race: "Humain", weapon: "Épée longue", damage: "1d8", goods: "Armure de peau" },
+        { roll: [77], title: "Mercenaire", race: "Humain", weapon: "Épée longue", damage: "1d8", goods: "Armure de peau", armorId: "hide" },
         { roll: [78], title: "Meunier/Boulanger", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Farine (500 g)" },
-        { roll: [79], title: "Nain apothicaire", race: "Nain", weapon: "Matraque", damage: "1d4", goods: "Flacon en acier" },
-        { roll: [80], title: "Nain coffretier", race: "Nain", weapon: "Burin", damage: "1d4", goods: "Bois (5 kg)" },
+        { roll: [79], title: "Nain apothicaire", race: "Nain", weapon: "Matraque (comme bâton)", damage: "1d4", goods: "Flacon en acier" },
+        { roll: [80], title: "Nain coffretier", race: "Nain", weapon: "Burin (comme dague)", damage: "1d4", goods: "Bois (5 kg)" },
         { roll: [81], title: "Nain éleveur", race: "Nain", weapon: "Bâton", damage: "1d4", goods: "Truie" },
-        { roll: [82], title: "Nain forgeron", race: "Nain", weapon: "Marteau", damage: "1d4", goods: "Mithril (30 g)" },
+        { roll: [82], title: "Nain forgeron", race: "Nain", weapon: "Marteau (comme gourdin)", damage: "1d4", goods: "Mithril (30 g)" },
         { roll: [83, 84], title: "Nain maçon", race: "Nain", weapon: "Marteau", damage: "1d4", goods: "Pierre (5 kg)" },
-        { roll: [85, 86], title: "Nain mineur", race: "Nain", weapon: "Pioche", damage: "1d4", goods: "Lanterne" },
-        { roll: [87], title: "Nain myciculteur", race: "Nain", weapon: "Pelle", damage: "1d4", goods: "Sacoche" },
+        { roll: [85, 86], title: "Nain mineur", race: "Nain", weapon: "Pioche (comme gourdin)", damage: "1d4", goods: "Lanterne" },
+        { roll: [87], title: "Nain myciculteur", race: "Nain", weapon: "Pelle (comme bâton)", damage: "1d4", goods: "Sacoche" },
         { roll: [88], title: "Nain ratier", race: "Nain", weapon: "Gourdin", damage: "1d4", goods: "Filet" },
         { roll: [89], title: "Noble", race: "Humain", weapon: "Épée longue", damage: "1d8", goods: "Anneau d'or (10 po)" },
         { roll: [90], title: "Orphelin", race: "Humain", weapon: "Gourdin", damage: "1d4", goods: "Poupée de chiffon" },
         { roll: [91], title: "Palefrenier", race: "Humain", weapon: "Bâton", damage: "1d4", goods: "Bride" },
-        { roll: [92], title: "Scribe", race: "Humain", weapon: "Fléchette", damage: "1d4", goods: "Parchemin (10 feuilles)" },
+        { roll: [92], title: "Scribe", race: "Humain", weapon: "Fléchette", damage: "1d4", attackType: "ranged", ammunitionType: "fléchettes", goods: "Parchemin (10 feuilles)" },
         { roll: [93], title: "Serrurier", race: "Humain", weapon: "Dague", damage: "1d4", goods: "Outils de précision" },
         { roll: [94], title: "Serviteur", race: "Humain", weapon: "Bâton", damage: "1d4", goods: "Médaillon" },
         { roll: [95], title: "Soldat", race: "Humain", weapon: "Lance", damage: "1d8", goods: "Bouclier" },
         { roll: [96], title: "Tisserand", race: "Humain", weapon: "Dague", damage: "1d4", goods: "Vêtements de qualité" },
-        { roll: [97], title: "Tonnelier", race: "Humain", weapon: "Pied-de-biche", damage: "1d4", goods: "Tonneau" },
-        { roll: [98, 99], title: "Trappeur", race: "Humain", weapon: "Fronde", damage: "1d4", goods: "Fourrure de blaireau" },
-        { roll: [100], title: "Vidangeur de latrines", race: "Humain", weapon: "Truelle", damage: "1d4", goods: "Sac d'excréments" }
+        { roll: [97], title: "Tonnelier", race: "Humain", weapon: "Pied-de-biche (comme gourdin)", damage: "1d4", goods: "Tonneau" },
+        { roll: [98, 99], title: "Trappeur", race: "Humain", weapon: "Fronde", damage: "1d4", attackType: "ranged", ammunitionType: "pierres de fronde", goods: "Fourrure de blaireau" },
+        { roll: [100], title: "Vidangeur de latrines", race: "Humain", weapon: "Truelle (comme dague)", damage: "1d4", goods: "Sac d'excréments" }
       ];
 
       const FIRST_NAMES = {
@@ -1124,6 +1489,12 @@
       // ==========================================
       // 2. DICE (Moteur de dés DCC)
       // ==========================================
+
+      const COIN_DENOMINATIONS = [
+        { key: 'pc', label: 'PC', icon: '🟤', name: 'pièce de cuivre', plural: 'Pièces de cuivre' },
+        { key: 'pa', label: 'PA', icon: '⚪', name: "pièce d'argent", plural: "Pièces d'argent" },
+        { key: 'po', label: 'PO', icon: '🟡', name: "pièce d'or", plural: "Pièces d'or" }
+      ];
 
       const DICE_CHAIN = [3, 4, 5, 6, 7, 8, 10, 12, 14, 16, 20, 24, 30];
 
@@ -1180,6 +1551,12 @@
 
         const occupationRoll = roll(100);
         const occupation = OCCUPATIONS.find(o => o.roll.includes(occupationRoll)) || OCCUPATIONS[0];
+        const farmCrop = occupation.farmCrop ? FARM_CROPS[roll(8) - 1] : '';
+        const cartContents = occupation.cartContents ? CART_CONTENTS[roll(6) - 1] : '';
+        const occupationCoins = occupation.coins || { pc: 0, pa: 0, po: 0 };
+        const ammunition = occupation.ammunitionType
+          ? { count: roll(6), type: occupation.ammunitionType }
+          : null;
 
         const luckyRoll = roll(30);
         const luckySign = LUCKY_SIGNS.find(s => s.roll === luckyRoll) || LUCKY_SIGNS[0];
@@ -1203,11 +1580,8 @@
           speed = Math.max(1.5, speed);
         }
 
-        let armorBonus = (occupation.title === 'Mercenaire') ? 2 : 0;
-        let ac = 10 + stats.agility.mod + armorBonus;
-        if (luckySign.roll === 23) {
-          ac += stats.luck.mod;
-        }
+        const armorId = occupation.armorId || 'none';
+        const ac = calculateArmorClass(stats, luckySign, armorId);
 
         let initiative = stats.agility.mod;
         if (luckySign.roll === 24) {
@@ -1228,13 +1602,14 @@
         let meleeDamageMod = stats.strength.mod + ([6, 7].includes(luckySign.roll) ? stats.luck.mod : 0) + (isPackHunter ? stats.luck.mod : 0);
         let rangedDamageMod = ([6, 8].includes(luckySign.roll) ? stats.luck.mod : 0) + (isPackHunter ? stats.luck.mod : 0);
 
-        const alignment = customOptions.alignment || 'Neutre';
+        const alignment = ALIGNMENTS.includes(customOptions.alignment) ? customOptions.alignment : 'Neutre';
         const name = customOptions.name || generateRandomName(occupation.race);
 
         return {
           id: 'char_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
           name,
           level: 0,
+          xp: 0,
           race: occupation.race,
           occupation: occupation.title,
           alignment,
@@ -1256,27 +1631,53 @@
           },
           weapon: {
             name: occupation.weapon,
-            damage: occupation.damage
+            damage: occupation.damage,
+            attackType: occupation.attackType || 'melee',
+            ammunition
           },
-          tradeGoods: occupation.goods,
+          armorId,
+          tradeGoods: occupation.cartContents
+            ? `${occupation.goods} (${cartContents})`
+            : occupation.goods,
+          farmCrop,
           startingItem: randomEquipment,
           luckySign: {
             ...luckySign,
             modifier: stats.luck.mod
           },
-          copperPieces,
+          coinPurse: {
+            pc: copperPieces + occupationCoins.pc,
+            pa: occupationCoins.pa,
+            po: occupationCoins.po
+          },
           status: 'Vivant',
-          notes: occupation.title === 'Mercenaire' ? 'Équipé d\'une armure de cuir (+2 CA)' : '',
+          notes: '',
           createdAt: new Date().toISOString()
         };
       }
 
-      function generateFunnelBatch(count = 4) {
+      function isHerdOccupation(char) {
+        return char.occupation === 'Fermier' || char.occupation === 'Berger';
+      }
+
+      function assignGroupLivestock(characters, existingCharacters = []) {
+        let animalAlreadyAssigned = existingCharacters.some(isHerdOccupation);
+        characters.forEach(char => {
+          if (!isHerdOccupation(char)) return;
+          if (animalAlreadyAssigned) {
+            char.tradeGoods = HERD_ANIMALS[roll(6) - 1];
+          }
+          animalAlreadyAssigned = true;
+        });
+        return characters;
+      }
+
+      function generateFunnelBatch(count = 4, existingCharacters = []) {
         const characters = [];
         for (let i = 0; i < count; i++) {
           characters.push(generateLevelZeroCharacter());
         }
-        return characters;
+        return assignGroupLivestock(characters, existingCharacters);
       }
 
       // ==========================================
@@ -1307,22 +1708,33 @@
         }
 
         getWeaponAttackType(char) {
-          const rangedWeapons = ['Arbalète', 'Arc court', 'Arc long', 'Fléchette', 'Fronde', 'Javelot', 'Sarbacane'];
-          return rangedWeapons.includes(char.weapon.name) ? 'ranged' : 'melee';
+          return char.weapon.attackType;
         }
 
         getRacialTraits(race) {
           switch (race) {
             case 'Nain':
-              return ['Infravision', 'Langues : commun et nain'];
+              return [
+                { name: 'Infravision', description: 'Le nain peut voir dans le noir jusqu’à 18 m.' },
+                { name: 'Langues', description: 'Le nain parle le commun et le nain.' }
+              ];
             case 'Elfe':
               return [
-                'Sensibilité au fer (contact continu : 1 PV/jour)',
-                'Sens surdéveloppés (+4 pour détecter les passages secrets; tentative possible à moins de 3 m)',
-                'Langues : commun et elfique'
+                {
+                  name: 'Sensibilité au fer',
+                  description: 'Le contact direct et prolongé avec le fer provoque une sensation de brûlure, et une simple exposition met l’elfe mal à l’aise. Un contact continu lui inflige 1 point de dégâts par jour; il ne peut pas porter d’armure ni manier une arme en fer trop longtemps.'
+                },
+                {
+                  name: 'Sens surdéveloppés',
+                  description: 'L’elfe bénéficie d’un bonus de +4 pour détecter les passages secrets. Il peut aussi tenter de détecter un passage secret lorsqu’il passe à moins de 3 m de celui-ci.'
+                },
+                { name: 'Langues', description: 'L’elfe parle le commun et l’elfique.' }
               ];
             case 'Halfelin':
-              return ['Infravision', 'Langues : commun et halfelin'];
+              return [
+                { name: 'Infravision', description: 'Le halfelin peut voir dans le noir jusqu’à 9 m.' },
+                { name: 'Langues', description: 'Le halfelin parle le commun et le halfelin.' }
+              ];
             default:
               return [];
           }
@@ -1417,6 +1829,7 @@
 
         addCharacter() {
           const newChar = generateLevelZeroCharacter();
+          assignGroupLivestock([newChar], this.characters);
           this.characters.unshift(newChar);
           this.saveState();
           this.render();
@@ -1424,7 +1837,7 @@
         }
 
         addBatch(count) {
-          const batch = generateFunnelBatch(count);
+          const batch = generateFunnelBatch(count, this.characters);
           this.characters = [...batch, ...this.characters];
           this.saveState();
           this.render();
@@ -1440,7 +1853,9 @@
         rerollCharacter(id) {
           const index = this.characters.findIndex(c => c.id === id);
           if (index !== -1) {
-            this.characters[index] = generateLevelZeroCharacter();
+            this.characters[index] = generateLevelZeroCharacter({
+              alignment: this.characters[index].alignment
+            });
             this.saveState();
             this.render();
           }
@@ -1454,6 +1869,37 @@
           const statusInfo = this.getDerivedStatus(char);
           char.status = (statusInfo.code === 'mort') ? 'Mort' : (statusInfo.code === 'blesse') ? 'Blessé' : 'Vivant';
 
+          this.saveState();
+          this.render();
+        }
+
+        updateXp(id, delta) {
+          const char = this.characters.find(c => c.id === id);
+          if (!char) return;
+          if (!Number.isSafeInteger(char.xp) || char.xp < 0) {
+            this.showRollToast('XP invalide', 'Modification impossible', 'Les XP doivent être un entier positif ou nul.');
+            return;
+          }
+
+          const nextXp = char.xp + delta;
+          if (!Number.isSafeInteger(nextXp) || nextXp < 0) {
+            this.showRollToast('XP invalide', 'Modification impossible', 'Les XP doivent rester dans la plage des entiers positifs.');
+            return;
+          }
+
+          char.xp = nextXp;
+          this.saveState();
+          this.render();
+        }
+
+        updateCoin(id, denomination, delta) {
+          const char = this.characters.find(c => c.id === id);
+          if (!char || !COIN_DENOMINATIONS.some(coin => coin.key === denomination)) return;
+
+          const nextAmount = char.coinPurse[denomination] + delta;
+          if (!Number.isSafeInteger(nextAmount) || nextAmount < 0) return;
+
+          char.coinPurse[denomination] = nextAmount;
           this.saveState();
           this.render();
         }
@@ -1575,6 +2021,10 @@
             try {
               const imported = JSON.parse(e.target.result);
               if (Array.isArray(imported)) {
+                if (!imported.every(isCurrentCharacterFormat)) {
+                  alert("Le fichier utilise un ancien format ou des données invalides. Seuls les exports du format actuel sont acceptés.");
+                  return;
+                }
                 this.characters = imported;
                 this.saveState();
                 this.render();
@@ -1615,6 +2065,7 @@
         createCharacterCard(char) {
           const statusInfo = this.getDerivedStatus(char);
           const racialTraits = this.getRacialTraits(char.race);
+          const armor = getArmorById(char.armorId);
           char.status = (statusInfo.code === 'mort') ? 'Mort' : (statusInfo.code === 'blesse') ? 'Blessé' : 'Vivant';
 
           const card = document.createElement('div');
@@ -1638,10 +2089,14 @@
 
           <!-- Ligne 3 : Alignement & Statut déduit automatiquement des PV -->
           <div class="card-subline">
-            <span class="char-alignment">Align. : <strong>${char.alignment || 'Neutre'}</strong></span>
+            <label class="char-alignment">Align. :
+              <select class="alignment-select" aria-label="Alignement">
+                ${ALIGNMENTS.map(alignment => `<option value="${alignment}" ${char.alignment === alignment ? 'selected' : ''}>${alignment}</option>`).join('')}
+              </select>
+            </label>
             <span class="badge-status status-${statusInfo.code}">${statusInfo.label}</span>
           </div>
-          ${racialTraits.length ? `<div class="lucky-desc"><strong>Capacités raciales :</strong> ${this.escapeHtml(racialTraits.join(' ; '))}</div>` : ''}
+          ${racialTraits.length ? `<div class="lucky-desc"><strong>Capacités raciales :</strong> ${racialTraits.map(({ name, description }) => `<span class="racial-trait" tabindex="0" title="${this.escapeHtml(description)}">${this.escapeHtml(name)}</span>`).join(' ; ')}</div>` : ''}
         </div>
 
         <!-- Jauges vitales (PV, CA, Vitesse, Init) -->
@@ -1650,15 +2105,23 @@
             <span class="vital-label">PV</span>
             <span class="vital-val">${char.currentHp ?? char.maxHp} / ${char.maxHp}</span>
             <div class="hp-controls">
-              <button class="hp-btn btn-hp-minus" title="Perdre 1 PV">-</button>
-              <button class="hp-btn btn-hp-plus" title="Gagner 1 PV">+</button>
+              <button class="hp-btn btn-hp-minus" title="Perdre 1 PV" aria-label="Perdre 1 point de vie">-</button>
+              <button class="hp-btn btn-hp-plus" title="Gagner 1 PV" aria-label="Gagner 1 point de vie">+</button>
+            </div>
+          </div>
+          <div class="vital-box">
+            <span class="vital-label">XP</span>
+            <span class="vital-val">${char.xp}</span>
+            <div class="hp-controls">
+              <button class="hp-btn xp-btn btn-xp-minus" type="button" aria-label="Retirer 1 XP" title="Retirer 1 XP" ${char.xp === 0 ? 'disabled' : ''}>−</button>
+              <button class="hp-btn xp-btn btn-xp-plus" type="button" aria-label="Ajouter 1 XP" title="Ajouter 1 XP" ${char.xp === Number.MAX_SAFE_INTEGER ? 'disabled' : ''}>+</button>
             </div>
           </div>
           <div class="vital-box">
             <span class="vital-label">CA</span>
             <span class="vital-val">${char.ac}</span>
           </div>
-          <div class="vital-box btn-roll-init" style="cursor:pointer;" title="Lancer l'Initiative (d20 + AGI/Augure)">
+          <div class="vital-box btn-roll-init" role="button" tabindex="0" style="cursor:pointer;" title="Lancer l'Initiative (d20 + AGI/Augure)">
             <span class="vital-label">Init 🎲</span>
             <span class="vital-val">${formatModifier(char.initiative)}</span>
           </div>
@@ -1670,32 +2133,32 @@
 
         <!-- Les 6 Caractéristiques (3d6 dans l'ordre strict) -->
         <div class="stats-grid">
-          <div class="stat-item btn-stat" data-stat="Force" data-key="strength" title="Test de Force (d20 + mod)">
+          <div class="stat-item btn-stat" role="button" tabindex="0" data-stat="Force" data-key="strength" title="Test de Force (d20 + mod)">
             <div class="stat-name">FOR</div>
             <div class="stat-score">${char.stats.strength.score}</div>
             <div class="stat-mod ${modClass(char.stats.strength.mod)}">${formatModifier(char.stats.strength.mod)}</div>
           </div>
-          <div class="stat-item btn-stat" data-stat="Agilité" data-key="agility" title="Test d'Agilité (d20 + mod)">
+          <div class="stat-item btn-stat" role="button" tabindex="0" data-stat="Agilité" data-key="agility" title="Test d'Agilité (d20 + mod)">
             <div class="stat-name">AGI</div>
             <div class="stat-score">${char.stats.agility.score}</div>
             <div class="stat-mod ${modClass(char.stats.agility.mod)}">${formatModifier(char.stats.agility.mod)}</div>
           </div>
-          <div class="stat-item btn-stat" data-stat="Endurance" data-key="stamina" title="Test d'Endurance (d20 + mod)">
+          <div class="stat-item btn-stat" role="button" tabindex="0" data-stat="Endurance" data-key="stamina" title="Test d'Endurance (d20 + mod)">
             <div class="stat-name">END</div>
             <div class="stat-score">${char.stats.stamina.score}</div>
             <div class="stat-mod ${modClass(char.stats.stamina.mod)}">${formatModifier(char.stats.stamina.mod)}</div>
           </div>
-          <div class="stat-item btn-stat" data-stat="Personnalité" data-key="personality" title="Test de Personnalité (d20 + mod)">
-            <div class="stat-name">PER</div>
+          <div class="stat-item btn-stat" role="button" tabindex="0" data-stat="Présence" data-key="personality" title="Test de Présence (d20 + mod)">
+            <div class="stat-name">PRE</div>
             <div class="stat-score">${char.stats.personality.score}</div>
             <div class="stat-mod ${modClass(char.stats.personality.mod)}">${formatModifier(char.stats.personality.mod)}</div>
           </div>
-          <div class="stat-item btn-stat" data-stat="Intelligence" data-key="intelligence" title="Test d'Intelligence (d20 + mod)">
+          <div class="stat-item btn-stat" role="button" tabindex="0" data-stat="Intelligence" data-key="intelligence" title="Test d'Intelligence (d20 + mod)">
             <div class="stat-name">INT</div>
             <div class="stat-score">${char.stats.intelligence.score}</div>
             <div class="stat-mod ${modClass(char.stats.intelligence.mod)}">${formatModifier(char.stats.intelligence.mod)}</div>
           </div>
-          <div class="stat-item btn-stat" data-stat="Chance" data-key="luck" title="Test de Chance (d20 ≤ score)">
+          <div class="stat-item btn-stat" role="button" tabindex="0" data-stat="Chance" data-key="luck" title="Test de Chance (d20 ≤ score)">
             <div class="stat-name">CHA</div>
             <div class="stat-score">${char.stats.luck.score}</div>
             <div class="stat-mod ${modClass(char.stats.luck.mod)}">${formatModifier(char.stats.luck.mod)}</div>
@@ -1704,15 +2167,15 @@
 
         <!-- Jets de sauvegarde -->
         <div class="saves-row">
-          <div class="save-item btn-save" data-save="Réflexes" data-key="reflex" title="Sauvegarde de Réflexes (d20 + mod)">
+          <div class="save-item btn-save" role="button" tabindex="0" data-save="Réflexes" data-key="reflex" title="${getSaveTooltip('reflex', char.luckySign.roll)}">
             <div class="save-label">RÉF 🎲</div>
             <div class="save-val ${modClass(char.saves.reflex)}">${formatModifier(char.saves.reflex)}</div>
           </div>
-          <div class="save-item btn-save" data-save="Vigueur" data-key="fortitude" title="Sauvegarde de Vigueur (d20 + mod)">
+          <div class="save-item btn-save" role="button" tabindex="0" data-save="Vigueur" data-key="fortitude" title="${getSaveTooltip('fortitude', char.luckySign.roll)}">
             <div class="save-label">VIG 🎲</div>
             <div class="save-val ${modClass(char.saves.fortitude)}">${formatModifier(char.saves.fortitude)}</div>
           </div>
-          <div class="save-item btn-save" data-save="Volonté" data-key="will" title="Sauvegarde de Volonté (d20 + mod)">
+          <div class="save-item btn-save" role="button" tabindex="0" data-save="Volonté" data-key="will" title="${getSaveTooltip('will', char.luckySign.roll)}">
             <div class="save-label">VOL 🎲</div>
             <div class="save-val ${modClass(char.saves.will)}">${formatModifier(char.saves.will)}</div>
           </div>
@@ -1725,14 +2188,31 @@
             <div>
               <span class="weapon-info">${char.weapon.name}</span>
               <span class="weapon-damage">(${char.weapon.damage})</span>
+              ${char.weapon.ammunition
+                ? `<div class="weapon-ammunition">${char.weapon.ammunition.count} ${char.weapon.ammunition.type}</div>`
+                : ''}
             </div>
             <button class="attack-btn btn-attack" title="Lancer une attaque avec cette arme">Attaquer (${formatModifier(char.attack[this.getWeaponAttackType(char)])})</button>
           </div>
         </div>
 
+        <!-- Protection -->
+        <div class="card-section">
+          <div class="section-label">🛡️ Protection</div>
+          <div class="protection-row">
+            <span class="protection-info">${armor.name}</span>
+            <span class="protection-bonus">${formatModifier(armor.acBonus)} CA</span>
+          </div>
+        </div>
+
         <!-- Augure de Chance officiel -->
         <div class="card-section">
-          <div class="section-label">🍀 Augure : ${char.luckySign.name} (${formatModifier(char.luckySign.modifier)})</div>
+          <div class="section-label">🍀 Augure :
+            ${char.luckySign.tooltip
+              ? `<span class="lucky-sign-tooltip" tabindex="0" title="${this.escapeHtml(char.luckySign.tooltip)}">${this.escapeHtml(char.luckySign.name)}</span>`
+              : this.escapeHtml(char.luckySign.name)}
+            (${formatModifier(char.luckySign.modifier)})
+          </div>
           <div class="lucky-desc">${char.luckySign.description}</div>
         </div>
 
@@ -1740,9 +2220,22 @@
         <div class="card-section">
           <div class="section-label">🎒 Bagages & Équipement</div>
           <div class="gear-list">
-            <div>• <strong>Métier :</strong> ${char.tradeGoods}</div>
+            ${char.tradeGoods ? `<div>• <strong>Possession :</strong> ${char.tradeGoods}</div>` : ''}
+            ${char.farmCrop ? `<div>• <strong>Culture :</strong> ${char.farmCrop}</div>` : ''}
             <div>• <strong>Survie :</strong> ${char.startingItem}</div>
-            <div class="gear-money">💰 Bourse : ${char.copperPieces} pièces de cuivre (pc)</div>
+            <div class="gear-money coin-purse-title">💰 Bourse</div>
+            <div class="coin-controls">
+              ${COIN_DENOMINATIONS.map(({ key, label, icon, name, plural }) => `
+                <div class="coin-row" role="group" aria-label="${plural}" data-denomination="${key}">
+                  <span class="coin-label">${label}<span class="coin-icon" aria-hidden="true">${icon}</span></span>
+                  <span class="coin-count">${char.coinPurse[key]}</span>
+                  <div class="coin-actions">
+                    <button class="hp-btn coin-btn btn-coin-minus" type="button" aria-label="Retirer une ${name}" title="Retirer une ${name}" ${char.coinPurse[key] === 0 ? 'disabled' : ''}>−</button>
+                    <button class="hp-btn coin-btn btn-coin-plus" type="button" aria-label="Ajouter une ${name}" title="Ajouter une ${name}">+</button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
           </div>
         </div>
 
@@ -1750,8 +2243,8 @@
         <div class="card-footer">
           <textarea class="card-notes-input" rows="2" placeholder="Notes / faits d'armes...">${this.escapeHtml(char.notes || '')}</textarea>
           <div style="display:flex; gap:0.3rem; margin-left:0.5rem;">
-            <button class="btn btn-secondary btn-sm btn-reroll" title="Relancer ce personnage">🔄</button>
-            <button class="btn btn-danger btn-sm btn-delete" title="Supprimer ce personnage">🗑️</button>
+            <button class="btn btn-secondary btn-sm btn-reroll" title="Relancer ce personnage" aria-label="Relancer ce personnage">🔄</button>
+            <button class="btn btn-danger btn-sm btn-delete" title="Supprimer ce personnage" aria-label="Supprimer ce personnage">🗑️</button>
           </div>
         </div>
       `;
@@ -1762,19 +2255,44 @@
             this.saveState();
           });
 
+          const alignmentSelect = card.querySelector('.alignment-select');
+          alignmentSelect.addEventListener('change', () => {
+            char.alignment = alignmentSelect.value;
+            this.saveState();
+          });
+
           const notesInput = card.querySelector('.card-notes-input');
           notesInput.addEventListener('change', (e) => {
             char.notes = e.target.value;
             this.saveState();
           });
 
+          const bindKeyboardActivation = (element, handler) => {
+            element.addEventListener('click', handler);
+            element.addEventListener('keydown', (event) => {
+              if (!event.repeat && (event.key === 'Enter' || event.key === ' ')) {
+                event.preventDefault();
+                handler();
+              }
+            });
+          };
+
           card.querySelector('.btn-hp-minus').addEventListener('click', () => this.updateHp(char.id, -1));
           card.querySelector('.btn-hp-plus').addEventListener('click', () => this.updateHp(char.id, +1));
+          card.querySelector('.btn-xp-minus').addEventListener('click', () => this.updateXp(char.id, -1));
+          card.querySelector('.btn-xp-plus').addEventListener('click', () => this.updateXp(char.id, +1));
 
-          card.querySelector('.btn-roll-init').addEventListener('click', () => this.rollInitiative(char));
+          card.querySelectorAll('.btn-coin-minus').forEach(button => {
+            button.addEventListener('click', () => this.updateCoin(char.id, button.closest('.coin-row').dataset.denomination, -1));
+          });
+          card.querySelectorAll('.btn-coin-plus').forEach(button => {
+            button.addEventListener('click', () => this.updateCoin(char.id, button.closest('.coin-row').dataset.denomination, 1));
+          });
+
+          bindKeyboardActivation(card.querySelector('.btn-roll-init'), () => this.rollInitiative(char));
 
           card.querySelectorAll('.btn-stat').forEach(btn => {
-            btn.addEventListener('click', () => {
+            bindKeyboardActivation(btn, () => {
               const statName = btn.dataset.stat;
               const statKey = btn.dataset.key;
               this.rollStatCheck(char, statName, statKey);
@@ -1782,7 +2300,7 @@
           });
 
           card.querySelectorAll('.btn-save').forEach(btn => {
-            btn.addEventListener('click', () => {
+            bindKeyboardActivation(btn, () => {
               const saveName = btn.dataset.save;
               const saveKey = btn.dataset.key;
               this.rollSaveCheck(char, saveName, saveKey);
