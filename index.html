@@ -377,6 +377,13 @@
       white-space: nowrap;
     }
 
+    .known-languages {
+      color: #c8c4ba;
+      font-size: 0.75rem;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
     .card-subline {
       display: flex;
       align-items: center;
@@ -557,6 +564,58 @@
       font-weight: bold;
     }
 
+    .luck-management {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 0.4rem 0.55rem;
+      background: #18171d;
+      border: 1px solid #2e2c38;
+      border-radius: 4px;
+      font-size: 0.75rem;
+    }
+
+    .luck-summary {
+      display: flex;
+      align-items: baseline;
+      gap: 0.35rem;
+    }
+
+    .luck-label {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .luck-score {
+      color: #fff;
+      font-family: var(--font-mono);
+      font-weight: 700;
+    }
+
+    .luck-note {
+      color: var(--text-muted);
+      font-size: 0.65rem;
+    }
+
+    .luck-warning {
+      color: #f26b6b;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .luck-actions {
+      display: flex;
+      gap: 0.35rem;
+    }
+
+    .luck-actions .btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
     .mod-pos {
       color: #68cf74;
     }
@@ -706,8 +765,8 @@
 
     .coin-controls {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.35rem;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.3rem;
     }
 
     .coin-row {
@@ -739,6 +798,18 @@
       --coin-color: #f0c663;
       --coin-border: rgba(240, 198, 99, 0.45);
       --coin-background: rgba(240, 198, 99, 0.08);
+    }
+
+    .coin-row[data-denomination="pe"] {
+      --coin-color: #d7c49b;
+      --coin-border: rgba(215, 196, 155, 0.45);
+      --coin-background: rgba(215, 196, 155, 0.08);
+    }
+
+    .coin-row[data-denomination="pp"] {
+      --coin-color: #d4ddeb;
+      --coin-border: rgba(212, 221, 235, 0.45);
+      --coin-background: rgba(212, 221, 235, 0.08);
     }
 
     .coin-label {
@@ -986,15 +1057,28 @@
       .vitals-row,
       .stats-grid,
       .save-item,
-      .card-section {
+      .card-section,
+      .luck-management {
         background: #f7f7f7 !important;
         border: 1px solid #aaa !important;
+        color: #000 !important;
+      }
+
+      .luck-actions {
+        display: none !important;
+      }
+
+      .luck-score {
         color: #000 !important;
       }
 
       .section-label,
       .dice-chain-label,
       .title-group h1 {
+        color: #000 !important;
+      }
+
+      .known-languages {
         color: #000 !important;
       }
 
@@ -1254,11 +1338,73 @@
       };
 
       const ALIGNMENTS = ['Loyal', 'Neutre', 'Chaotique'];
+      const ALIGNMENT_LANGUAGES = {
+        Loyal: 'Loi',
+        Neutre: 'Neutralité',
+        Chaotique: 'Chaos'
+      };
+      const RACIAL_LANGUAGES = {
+        Nain: 'Nain',
+        Elfe: 'Elfe',
+        Halfelin: 'Halfelin'
+      };
+      const LANGUAGE_ROLL_TABLES = {
+        Humain: [
+          [1, 20, 'ALIGNMENT'], [21, 30, 'Nain'], [31, 35, 'Elfe'], [36, 40, 'Halfelin'],
+          [41, 45, 'Gnome'], [46, 47, 'Gobelours'], [48, 57, 'Gobelin'], [58, 60, 'Gnoll'],
+          [61, 65, 'Hobgobelin'], [66, 75, 'Kobold'], [76, 80, 'Homme-lézard'], [81, 81, 'Minotaure'],
+          [82, 83, 'Ogre'], [84, 93, 'Orque'], [94, 99, 'Troglodyte'], [100, 100, 'Géant']
+        ],
+        Halfelin: [
+          [1, 25, 'ALIGNMENT'], [26, 35, 'Nain'], [36, 40, 'Elfe'], [41, 50, 'Gnome'],
+          [51, 55, 'Gobelours'], [56, 70, 'Gobelin'], [71, 80, 'Hobgobelin'], [81, 90, 'Kobold'],
+          [91, 93, 'Fée'], [94, 98, 'Furet'], [99, 100, 'Sous-commun']
+        ],
+        Elfe: [
+          [1, 20, 'ALIGNMENT'], [21, 25, 'Chaos'], [26, 30, 'Loi'], [31, 35, 'Neutralité'],
+          [36, 40, 'Nain'], [41, 45, 'Halfelin'], [46, 48, 'Gobelin'], [49, 50, 'Gnoll'],
+          [51, 52, 'Harpie'], [53, 54, 'Hobgobelin'], [55, 57, 'Kobold'], [58, 58, 'Homme-lézard'],
+          [59, 59, 'Minotaure'], [60, 60, 'Ogre'], [61, 63, 'Orque'], [64, 64, 'Homme-serpent'],
+          [65, 65, 'Troglodyte'], [66, 70, 'Angélique (Céleste)'], [71, 75, 'Centaure'],
+          [76, 80, 'Démoniaque (Infernal/Abyssal)'], [81, 85, 'Dragon'], [86, 90, 'Fée'],
+          [91, 92, 'Naga'], [93, 94, 'Aigle'], [95, 96, 'Cheval'], [97, 100, 'Sous-commun']
+        ],
+        Nain: [
+          [1, 20, 'ALIGNMENT'], [21, 25, 'Elfe'], [26, 35, 'Halfelin'], [36, 40, 'Gnome'],
+          [41, 45, 'Gobelours'], [46, 55, 'Gobelin'], [56, 60, 'Gnoll'], [61, 65, 'Hobgobelin'],
+          [66, 75, 'Kobold'], [76, 76, 'Minotaure'], [77, 81, 'Ogre'], [82, 86, 'Orque'],
+          [87, 91, 'Troglodyte'], [92, 93, 'Dragon'], [94, 97, 'Géant'], [98, 98, 'Ours'],
+          [99, 100, 'Sous-commun']
+        ]
+      };
+      const LANGUAGE_NAMES = new Set([
+        'Commun', 'Loi', 'Chaos', 'Neutralité', 'Nain', 'Elfe', 'Halfelin', 'Gnome',
+        'Gobelours', 'Gobelin', 'Gnoll', 'Harpie', 'Hobgobelin', 'Kobold', 'Homme-lézard',
+        'Minotaure', 'Ogre', 'Orque', 'Homme-serpent', 'Troglodyte', 'Angélique (Céleste)',
+        'Centaure', 'Démoniaque (Infernal/Abyssal)', 'Dragon', 'Fée', 'Naga', 'Aigle', 'Cheval',
+        'Sous-commun', 'Furet', 'Géant', 'Ours'
+      ]);
 
       function getModifier(score) {
         if (score <= 3) return -3;
         if (score >= 18) return 3;
         return ABILITY_MODIFIERS[score] ?? 0;
+      }
+
+      function normalizeCharacterLuck(char) {
+        const luck = char && char.stats && char.stats.luck;
+        if (!luck || !Number.isSafeInteger(luck.score) || luck.score < 0) {
+          throw new Error('Score de Chance invalide dans la fiche du personnage.');
+        }
+
+        if (luck.initialScore === undefined) {
+          luck.initialScore = luck.score;
+        }
+        if (!Number.isSafeInteger(luck.initialScore) || luck.initialScore < luck.score) {
+          throw new Error('Score initial de Chance invalide dans la fiche du personnage.');
+        }
+
+        luck.mod = getModifier(luck.score);
       }
 
       function formatModifier(mod) {
@@ -1285,14 +1431,48 @@
           Number.isSafeInteger(char.xp) &&
           char.xp >= 0 &&
           ALIGNMENTS.includes(char.alignment) &&
+          char.stats &&
+          char.stats.luck &&
+          Number.isSafeInteger(char.stats.luck.score) &&
+          char.stats.luck.score >= 0 &&
+          (char.stats.luck.initialScore === undefined ||
+            (Number.isSafeInteger(char.stats.luck.initialScore) &&
+              char.stats.luck.initialScore >= char.stats.luck.score)) &&
+          Array.isArray(char.knownLanguages) &&
+          char.knownLanguages.length > 0 &&
+          char.knownLanguages.includes('Commun') &&
+          char.knownLanguages.every(language => LANGUAGE_NAMES.has(language)) &&
+          new Set(char.knownLanguages).size === char.knownLanguages.length &&
           ARMOR_TABLE.some(armor => armor.id === char.armorId) &&
-          char.coinPurse &&
-          typeof char.coinPurse === 'object' &&
-          !Array.isArray(char.coinPurse) &&
+          isCoinPurseFormat(char.coinPurse)
+        );
+      }
+
+      function isCoinPurseFormat(purse) {
+        return Boolean(
+          purse &&
+          typeof purse === 'object' &&
+          !Array.isArray(purse) &&
           COIN_DENOMINATIONS.every(({ key }) =>
-            Number.isSafeInteger(char.coinPurse[key]) && char.coinPurse[key] >= 0
+            ((key === 'pe' || key === 'pp') && purse[key] === undefined) ||
+            (Number.isSafeInteger(purse[key]) && purse[key] >= 0)
           )
         );
+      }
+
+      function normalizeCharacterCoins(char) {
+        const purse = char && char.coinPurse;
+        if (!purse || typeof purse !== 'object' || Array.isArray(purse)) {
+          throw new Error('Bourse invalide dans la fiche du personnage.');
+        }
+
+        for (const key of ['pe', 'pp']) {
+          if (purse[key] === undefined) purse[key] = 0;
+        }
+
+        if (!isCoinPurseFormat(purse)) {
+          throw new Error('Montant de pièces invalide dans la fiche du personnage.');
+        }
       }
 
       function calculateArmorClass(stats, luckySign, armorId) {
@@ -1345,7 +1525,7 @@
         { roll: 26, name: "Bras du guerrier", description: "Jets sur la table de coups critiques", tooltip: "La Chance affecte toujours les jets sur la table des coups critiques. Avec ce signe, le modificateur de Chance est doublé.", category: "Critique" },
         { roll: 27, name: "Maison impie", description: "Jets de corruption", category: "Magie" },
         { roll: 28, name: "L'étoile brisée", description: "Jets sur la table de maladresses", tooltip: "La Chance affecte toujours les jets sur la table des maladresses. Avec ce signe, le modificateur de Chance est doublé.", category: "Critique" },
-        { roll: 29, name: "Chant d'oiseau", description: "Nombre de langues connues", category: "Général" },
+        { roll: 29, name: "Chant d'oiseau", description: "Nombre de langues connues", tooltip: "Le modificateur de Chance ajuste le nombre de langues connues au niveau 0.", category: "Général" },
         { roll: 30, name: "Enfant sauvage", description: "Vitesse de déplacement (+/- 1,5m par point)", category: "Déplacement" }
       ];
 
@@ -1493,7 +1673,9 @@
       const COIN_DENOMINATIONS = [
         { key: 'pc', label: 'PC', icon: '🟤', name: 'pièce de cuivre', plural: 'Pièces de cuivre' },
         { key: 'pa', label: 'PA', icon: '⚪', name: "pièce d'argent", plural: "Pièces d'argent" },
-        { key: 'po', label: 'PO', icon: '🟡', name: "pièce d'or", plural: "Pièces d'or" }
+        { key: 'po', label: 'PO', icon: '🟡', name: "pièce d'or", plural: "Pièces d'or" },
+        { key: 'pe', label: 'PE', icon: '🟠', name: "pièce d'électrum", plural: "Pièces d'électrum" },
+        { key: 'pp', label: 'PP', icon: '💠', name: 'pièce de platine', plural: 'Pièces de platine' }
       ];
 
       const DICE_CHAIN = [3, 4, 5, 6, 7, 8, 10, 12, 14, 16, 20, 24, 30];
@@ -1532,6 +1714,36 @@
         return `${firstName} ${surname}`;
       }
 
+      function rollAdditionalLanguage(race, alignment, knownLanguages) {
+        const table = LANGUAGE_ROLL_TABLES[race];
+        if (!table) throw new Error(`Aucune table de langues pour la race : ${race}`);
+
+        for (let attempt = 0; attempt < 100; attempt++) {
+          const result = roll(100);
+          const entry = table.find(([minimum, maximum]) => result >= minimum && result <= maximum);
+          if (!entry) throw new Error(`Résultat de langue sans correspondance : ${result}`);
+
+          const language = entry[2] === 'ALIGNMENT' ? ALIGNMENT_LANGUAGES[alignment] : entry[2];
+          if (!knownLanguages.includes(language)) return language;
+        }
+
+        throw new Error(`Impossible de tirer une langue distincte pour ${race}`);
+      }
+
+      function generateKnownLanguages(race, intelligence, alignment, luckModifier, luckAffectsLanguages) {
+        const knownLanguages = ['Commun'];
+
+        const racialLanguage = intelligence.score >= 8 ? RACIAL_LANGUAGES[race] : null;
+        if (racialLanguage) knownLanguages.push(racialLanguage);
+
+        const luckAdjustment = luckAffectsLanguages ? luckModifier : 0;
+        const additionalLanguageCount = Math.max(0, intelligence.mod + luckAdjustment);
+        for (let i = 0; i < additionalLanguageCount; i++) {
+          knownLanguages.push(rollAdditionalLanguage(race, alignment, knownLanguages));
+        }
+        return knownLanguages;
+      }
+
       function generateLevelZeroCharacter(customOptions = {}) {
         const strengthRoll = rollSum(3, 6);
         const agilityRoll = rollSum(3, 6);
@@ -1546,20 +1758,33 @@
           stamina: { score: staminaRoll.total, rolls: staminaRoll.rolls, mod: getModifier(staminaRoll.total) },
           personality: { score: personalityRoll.total, rolls: personalityRoll.rolls, mod: getModifier(personalityRoll.total) },
           intelligence: { score: intelligenceRoll.total, rolls: intelligenceRoll.rolls, mod: getModifier(intelligenceRoll.total) },
-          luck: { score: luckRoll.total, rolls: luckRoll.rolls, mod: getModifier(luckRoll.total) }
+          luck: {
+            score: luckRoll.total,
+            initialScore: luckRoll.total,
+            rolls: luckRoll.rolls,
+            mod: getModifier(luckRoll.total)
+          }
         };
 
         const occupationRoll = roll(100);
         const occupation = OCCUPATIONS.find(o => o.roll.includes(occupationRoll)) || OCCUPATIONS[0];
+        const alignment = ALIGNMENTS.includes(customOptions.alignment) ? customOptions.alignment : 'Neutre';
         const farmCrop = occupation.farmCrop ? FARM_CROPS[roll(8) - 1] : '';
         const cartContents = occupation.cartContents ? CART_CONTENTS[roll(6) - 1] : '';
-        const occupationCoins = occupation.coins || { pc: 0, pa: 0, po: 0 };
+        const occupationCoins = occupation.coins || { pc: 0, pa: 0, po: 0, pe: 0, pp: 0 };
         const ammunition = occupation.ammunitionType
           ? { count: roll(6), type: occupation.ammunitionType }
           : null;
 
         const luckyRoll = roll(30);
         const luckySign = LUCKY_SIGNS.find(s => s.roll === luckyRoll) || LUCKY_SIGNS[0];
+        const knownLanguages = generateKnownLanguages(
+          occupation.race,
+          stats.intelligence,
+          alignment,
+          stats.luck.mod,
+          luckySign.roll === 29
+        );
 
         const equipmentRoll = roll(24);
         const randomEquipment = STARTING_EQUIPMENT[equipmentRoll - 1];
@@ -1602,7 +1827,6 @@
         let meleeDamageMod = stats.strength.mod + ([6, 7].includes(luckySign.roll) ? stats.luck.mod : 0) + (isPackHunter ? stats.luck.mod : 0);
         let rangedDamageMod = ([6, 8].includes(luckySign.roll) ? stats.luck.mod : 0) + (isPackHunter ? stats.luck.mod : 0);
 
-        const alignment = ALIGNMENTS.includes(customOptions.alignment) ? customOptions.alignment : 'Neutre';
         const name = customOptions.name || generateRandomName(occupation.race);
 
         return {
@@ -1613,6 +1837,7 @@
           race: occupation.race,
           occupation: occupation.title,
           alignment,
+          knownLanguages,
           stats,
           currentHp: maxHp,
           maxHp,
@@ -1648,7 +1873,9 @@
           coinPurse: {
             pc: copperPieces + occupationCoins.pc,
             pa: occupationCoins.pa,
-            po: occupationCoins.po
+            po: occupationCoins.po,
+            pe: occupationCoins.pe || 0,
+            pp: occupationCoins.pp || 0
           },
           status: 'Vivant',
           notes: '',
@@ -1711,12 +1938,22 @@
           return char.weapon.attackType;
         }
 
-        getRacialTraits(race) {
+        getRacialTraits(race, intelligenceScore, luckySignRoll) {
+          const birdSongNote = luckySignRoll === 29
+            ? ' Avec l’augure Chant d’oiseau, le modificateur de Chance s’ajoute à celui d’Intelligence.'
+            : '';
+          const languageDescription = intelligenceScore <= 7
+            ? `Avec une Intelligence de 7 ou moins, le personnage ne parle normalement que le commun.${birdSongNote}`
+            : {
+              Nain: `Le nain connaît le commun et le nain. Il apprend une langue de plus par point positif de modificateur d’Intelligence.${birdSongNote}`,
+              Elfe: `L’elfe connaît le commun et l’elfique. Il apprend une langue de plus par point positif de modificateur d’Intelligence.${birdSongNote}`,
+              Halfelin: `Le halfelin connaît le commun et le halfelin. Il apprend une langue de plus par point positif de modificateur d’Intelligence.${birdSongNote}`
+            }[race];
           switch (race) {
             case 'Nain':
               return [
                 { name: 'Infravision', description: 'Le nain peut voir dans le noir jusqu’à 18 m.' },
-                { name: 'Langues', description: 'Le nain parle le commun et le nain.' }
+                { name: 'Langues', description: languageDescription }
               ];
             case 'Elfe':
               return [
@@ -1728,12 +1965,12 @@
                   name: 'Sens surdéveloppés',
                   description: 'L’elfe bénéficie d’un bonus de +4 pour détecter les passages secrets. Il peut aussi tenter de détecter un passage secret lorsqu’il passe à moins de 3 m de celui-ci.'
                 },
-                { name: 'Langues', description: 'L’elfe parle le commun et l’elfique.' }
+                { name: 'Langues', description: languageDescription }
               ];
             case 'Halfelin':
               return [
                 { name: 'Infravision', description: 'Le halfelin peut voir dans le noir jusqu’à 9 m.' },
-                { name: 'Langues', description: 'Le halfelin parle le commun et le halfelin.' }
+                { name: 'Langues', description: languageDescription }
               ];
             default:
               return [];
@@ -1804,7 +2041,20 @@
           try {
             const saved = localStorage.getItem(this.storageKey);
             if (saved) {
-              this.characters = JSON.parse(saved);
+              const characters = JSON.parse(saved);
+              if (!Array.isArray(characters)) {
+                throw new Error('La sauvegarde locale doit contenir une liste de personnages.');
+              }
+              const needsLuckMigration = characters.some(char =>
+                char && char.stats && char.stats.luck && char.stats.luck.initialScore === undefined
+              );
+              const needsCoinMigration = characters.some(char =>
+                char && char.coinPurse && (char.coinPurse.pe === undefined || char.coinPurse.pp === undefined)
+              );
+              characters.forEach(normalizeCharacterLuck);
+              characters.forEach(normalizeCharacterCoins);
+              this.characters = characters;
+              if (needsLuckMigration || needsCoinMigration) this.saveState();
             }
           } catch (e) {
             console.warn('Erreur lors du chargement des personnages depuis le stockage local', e);
@@ -1871,6 +2121,25 @@
 
           this.saveState();
           this.render();
+        }
+
+        updateLuck(id, delta) {
+          const char = this.characters.find(c => c.id === id);
+          if (!char || ![-1, 1].includes(delta)) return;
+
+          const luck = char.stats.luck;
+          const nextScore = Math.max(0, Math.min(luck.initialScore, luck.score + delta));
+          if (nextScore === luck.score) return;
+
+          luck.score = nextScore;
+          luck.mod = getModifier(nextScore);
+          this.saveState();
+          this.render();
+          this.showRollToast(
+            delta < 0 ? 'Chance brûlée' : 'Chance restaurée',
+            `${nextScore} / ${luck.initialScore}`,
+            delta < 0 ? '+1 à appliquer à un jet' : 'Restauration manuelle'
+          );
         }
 
         updateXp(id, delta) {
@@ -2025,6 +2294,8 @@
                   alert("Le fichier utilise un ancien format ou des données invalides. Seuls les exports du format actuel sont acceptés.");
                   return;
                 }
+                imported.forEach(normalizeCharacterLuck);
+                imported.forEach(normalizeCharacterCoins);
                 this.characters = imported;
                 this.saveState();
                 this.render();
@@ -2064,8 +2335,9 @@
 
         createCharacterCard(char) {
           const statusInfo = this.getDerivedStatus(char);
-          const racialTraits = this.getRacialTraits(char.race);
+          const racialTraits = this.getRacialTraits(char.race, char.stats.intelligence.score, char.luckySign.roll);
           const armor = getArmorById(char.armorId);
+          const knownLanguages = Array.isArray(char.knownLanguages) ? char.knownLanguages : [];
           char.status = (statusInfo.code === 'mort') ? 'Mort' : (statusInfo.code === 'blesse') ? 'Blessé' : 'Vivant';
 
           const card = document.createElement('div');
@@ -2097,6 +2369,7 @@
             <span class="badge-status status-${statusInfo.code}">${statusInfo.label}</span>
           </div>
           ${racialTraits.length ? `<div class="lucky-desc"><strong>Capacités raciales :</strong> ${racialTraits.map(({ name, description }) => `<span class="racial-trait" tabindex="0" title="${this.escapeHtml(description)}">${this.escapeHtml(name)}</span>`).join(' ; ')}</div>` : ''}
+          <div class="known-languages"><strong>Langues connues :</strong> ${knownLanguages.length ? knownLanguages.map(language => this.escapeHtml(language)).join(', ') : 'Non renseignées'}</div>
         </div>
 
         <!-- Jauges vitales (PV, CA, Vitesse, Init) -->
@@ -2165,6 +2438,19 @@
           </div>
         </div>
 
+        <div class="luck-management" role="group" aria-label="Gestion manuelle de la Chance">
+          <div class="luck-summary">
+            <span class="luck-label">Chance actuelle / initiale</span>
+            <span class="luck-score">${char.stats.luck.score} / ${char.stats.luck.initialScore}</span>
+            <span class="luck-note" title="Le modificateur du jet chanceux reste celui de départ.">Augure fixe</span>
+            ${char.stats.luck.score === 0 ? '<span class="luck-warning" role="status">Infortune permanente</span>' : ''}
+          </div>
+          <div class="luck-actions">
+            <button class="btn btn-secondary btn-sm btn-luck-burn" type="button" title="Brûler 1 point pour obtenir +1 à un jet" aria-label="Brûler 1 point de Chance" ${char.stats.luck.score === 0 ? 'disabled' : ''}>Brûler 1</button>
+            <button class="btn btn-secondary btn-sm btn-luck-restore" type="button" title="Restaurer 1 point, jusqu’au score initial" aria-label="Restaurer 1 point de Chance" ${char.stats.luck.score >= char.stats.luck.initialScore ? 'disabled' : ''}>Restaurer 1</button>
+          </div>
+        </div>
+
         <!-- Jets de sauvegarde -->
         <div class="saves-row">
           <div class="save-item btn-save" role="button" tabindex="0" data-save="Réflexes" data-key="reflex" title="${getSaveTooltip('reflex', char.luckySign.roll)}">
@@ -2226,7 +2512,7 @@
             <div class="gear-money coin-purse-title">💰 Bourse</div>
             <div class="coin-controls">
               ${COIN_DENOMINATIONS.map(({ key, label, icon, name, plural }) => `
-                <div class="coin-row" role="group" aria-label="${plural}" data-denomination="${key}">
+                <div class="coin-row" role="group" aria-label="${plural}" title="${plural}" data-denomination="${key}">
                   <span class="coin-label">${label}<span class="coin-icon" aria-hidden="true">${icon}</span></span>
                   <span class="coin-count">${char.coinPurse[key]}</span>
                   <div class="coin-actions">
@@ -2281,6 +2567,8 @@
           card.querySelector('.btn-hp-plus').addEventListener('click', () => this.updateHp(char.id, +1));
           card.querySelector('.btn-xp-minus').addEventListener('click', () => this.updateXp(char.id, -1));
           card.querySelector('.btn-xp-plus').addEventListener('click', () => this.updateXp(char.id, +1));
+          card.querySelector('.btn-luck-burn').addEventListener('click', () => this.updateLuck(char.id, -1));
+          card.querySelector('.btn-luck-restore').addEventListener('click', () => this.updateLuck(char.id, +1));
 
           card.querySelectorAll('.btn-coin-minus').forEach(button => {
             button.addEventListener('click', () => this.updateCoin(char.id, button.closest('.coin-row').dataset.denomination, -1));

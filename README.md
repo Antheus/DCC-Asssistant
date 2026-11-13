@@ -22,6 +22,7 @@ Le fichier **[`index.html`](index.html)** regroupe **tout le HTML, le CSS et le 
   * Table des Augures de Naissance / Chance ($d30$) avec calcul automatique des bonus impactés (PV si Résurrection, CA si Étoile du berger, etc.).
   * Équipement de départ aventurier ($d24$).
   * Points de vie de départ ($1d4 + \text{mod. END}$, min 1) et pièces de cuivre ($5d12$ pc).
+  * Bourse en cuivre (PC), argent (PA), or (PO), électrum (PE) et platine (PP), avec ajout et retrait des pièces.
   * Jets de sauvegarde (Réflexes, Vigueur, Volonté).
 * **Génération en lot :**
   * Bouton **+1 Paysan**
@@ -29,6 +30,7 @@ Le fichier **[`index.html`](index.html)** regroupe **tout le HTML, le CSS et le 
   * Bouton **Table entière (16)** : pour équiper une table de 4 joueurs instantanément.
 * **Fiche interactive en direct autour de la table :**
   * Suivi des PV en temps réel avec boutons `+` et `-`.
+  * Suivi manuel de la Chance actuelle et initiale, avec dépense et restauration plafonnée au score initial.
   * Statut du personnage (*Vivant*, *Blessé*, *Mort 💀*).
   * Jets de dés intégrés en 1 clic : cliquez sur n'importe quelle caractéristique, sauvegarde, initiative ou arme pour lancer les dés en direct avec détection des **Coups Critiques (20 naturel)** et des **Maladresses (1 naturel)** !
 * **Chaîne de dés DCC intégrée :**
