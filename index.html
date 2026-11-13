@@ -575,54 +575,70 @@
       font-weight: bold;
     }
 
-    .luck-management {
+    .stat-luck {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      padding: 0.4rem 0.55rem;
-      background: #18171d;
-      border: 1px solid #2e2c38;
-      border-radius: 4px;
-      font-size: 0.75rem;
-    }
-
-    .luck-summary {
-      display: flex;
-      align-items: baseline;
-      gap: 0.35rem;
-    }
-
-    .luck-label {
-      color: var(--text-muted);
-      font-size: 0.7rem;
-      font-weight: 600;
-    }
-
-    .luck-score {
-      color: #fff;
-      font-family: var(--font-mono);
-      font-weight: 700;
-    }
-
-    .luck-note {
-      color: var(--text-muted);
-      font-size: 0.65rem;
+      justify-content: center;
     }
 
     .luck-warning {
       color: #f26b6b;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       font-weight: 600;
     }
 
     .luck-actions {
       display: flex;
-      gap: 0.35rem;
+      justify-content: center;
+      gap: 0.15rem;
+      margin-top: 0.1rem;
     }
 
-    .luck-actions .btn:disabled {
+    .luck-roll {
+      width: 100%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      line-height: 1.1;
+      cursor: pointer;
+    }
+
+    .luck-roll:hover {
+      background: #2c2a38;
+      border-radius: 3px;
+    }
+
+    .luck-initial {
+      color: var(--text-muted);
+      font-size: 0.6rem;
+      font-weight: 400;
+    }
+
+    .luck-action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      padding: 0;
+      border: 1px solid #434152;
+      border-radius: 3px;
+      background: #2b2a36;
+      color: #fff;
+      font-size: 0.7rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .luck-action-btn:hover:not(:disabled) {
+      border-color: var(--accent-gold);
+      background: #383645;
+    }
+
+    .luck-action-btn:disabled {
       cursor: not-allowed;
       opacity: 0.45;
     }
@@ -1068,8 +1084,7 @@
       .vitals-row,
       .stats-grid,
       .save-item,
-      .card-section,
-      .luck-management {
+      .card-section {
         background: #f7f7f7 !important;
         border: 1px solid #aaa !important;
         color: #000 !important;
@@ -1079,7 +1094,7 @@
         display: none !important;
       }
 
-      .luck-score {
+      .luck-initial {
         color: #000 !important;
       }
 
@@ -2475,23 +2490,21 @@
             <div class="stat-score">${char.stats.intelligence.score}</div>
             <div class="stat-mod ${modClass(char.stats.intelligence.mod)}">${formatModifier(char.stats.intelligence.mod)}</div>
           </div>
-          <div class="stat-item btn-stat" role="button" tabindex="0" data-stat="Chance" data-key="luck" title="Test de Chance (d20 ≤ score)">
+          <div class="stat-item stat-luck" role="group" aria-label="Caractéristique Chance">
             <div class="stat-name">CHA</div>
-            <div class="stat-score">${char.stats.luck.score}</div>
+            <button class="stat-score luck-roll btn-stat" type="button" data-stat="Chance" data-key="luck"
+              aria-label="Test de Chance : d20 inférieur ou égal au score actuel ${char.stats.luck.score}"
+              title="Test de Chance (d20 ≤ score actuel)">
+              ${char.stats.luck.score}<span class="luck-initial">/${char.stats.luck.initialScore}</span>
+            </button>
             <div class="stat-mod ${modClass(char.stats.luck.mod)}">${formatModifier(char.stats.luck.mod)}</div>
-          </div>
-        </div>
-
-        <div class="luck-management" role="group" aria-label="Gestion manuelle de la Chance">
-          <div class="luck-summary">
-            <span class="luck-label">Chance actuelle / initiale</span>
-            <span class="luck-score">${char.stats.luck.score} / ${char.stats.luck.initialScore}</span>
-            <span class="luck-note" title="Le modificateur du jet chanceux reste celui de départ.">Augure fixe</span>
-            ${char.stats.luck.score === 0 ? '<span class="luck-warning" role="status">Infortune permanente</span>' : ''}
-          </div>
-          <div class="luck-actions">
-            <button class="btn btn-secondary btn-sm btn-luck-burn" type="button" title="Brûler 1 point pour obtenir +1 à un jet" aria-label="Brûler 1 point de Chance" ${char.stats.luck.score === 0 ? 'disabled' : ''}>Brûler 1</button>
-            <button class="btn btn-secondary btn-sm btn-luck-restore" type="button" title="Restaurer 1 point, jusqu’au score initial" aria-label="Restaurer 1 point de Chance" ${char.stats.luck.score >= char.stats.luck.initialScore ? 'disabled' : ''}>Restaurer 1</button>
+            <div class="luck-actions" role="group" aria-label="Dépense et restauration de Chance">
+              <button class="luck-action-btn btn-luck-burn" type="button" title="Brûler 1 point pour obtenir +1 à un jet"
+                aria-label="Brûler 1 point de Chance" ${char.stats.luck.score === 0 ? 'disabled' : ''}>−</button>
+              <button class="luck-action-btn btn-luck-restore" type="button" title="Restaurer 1 point, jusqu’au score initial"
+                aria-label="Restaurer 1 point de Chance" ${char.stats.luck.score >= char.stats.luck.initialScore ? 'disabled' : ''}>+</button>
+            </div>
+            ${char.stats.luck.score === 0 ? '<span class="luck-warning" role="status" aria-label="Infortune permanente" title="Infortune permanente">!</span>' : ''}
           </div>
         </div>
 
@@ -2602,6 +2615,7 @@
 
           const bindKeyboardActivation = (element, handler) => {
             element.addEventListener('click', handler);
+            if (element.tagName === 'BUTTON') return;
             element.addEventListener('keydown', (event) => {
               if (!event.repeat && (event.key === 'Enter' || event.key === ' ')) {
                 event.preventDefault();
