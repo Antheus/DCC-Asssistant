@@ -1295,8 +1295,8 @@
         <span style="margin: 0 0.5rem; color: #555;">|</span>
         <span>Encore en vie : <strong id="aliveCount" class="stats-bar-count" style="color: #68cf74;">0</strong></span>
       </div>
-      <div style="color: var(--text-muted); font-size: 0.8rem; font-style: italic;">
-        💡 Astuce : Cliquez sur les caractéristiques, sauvegardes ou armes pour lancer les dés en direct.
+      <div role="status" aria-live="polite" style="color: var(--text-muted); font-size: 0.8rem; font-style: italic;">
+        💡 Astuce : <span id="appTip"></span>
       </div>
     </div>
 
@@ -1688,6 +1688,27 @@
       ];
 
       const DICE_CHAIN = [3, 4, 5, 6, 7, 8, 10, 12, 14, 16, 20, 24, 30];
+      const APP_TIPS = [
+        'Cliquez sur une caractéristique pour lancer un test au d20 avec son modificateur.',
+        'Un test de Chance réussit si le d20 est inférieur ou égal au score actuel.',
+        'Brûler 1 point de Chance donne +1 à un jet choisi, mais réduit le score.',
+        'La Chance peut être restaurée manuellement jusqu’à son score initial.',
+        'Cliquez sur Réflexes, Vigueur ou Volonté pour lancer la sauvegarde correspondante.',
+        'Le bouton Attaquer lance le jet pour toucher et les dégâts.',
+        'Un 20 naturel est signalé comme coup critique; un 1 naturel comme maladresse.',
+        'Cliquez sur l’initiative pour lancer le d20 et ajouter son modificateur.',
+        'Les boutons PV mettent à jour automatiquement le statut du personnage.',
+        'Ajustez les XP avec + ou −; les changements sont sauvegardés automatiquement.',
+        'Modifiez le nom directement dans le champ en haut de la fiche.',
+        'Choisissez l’alignement dans le menu déroulant de la fiche.',
+        'Les notes de la fiche sont conservées dans la sauvegarde locale.',
+        'Ajoutez ou retirez séparément les pièces PC, PA, PO, PE et PP.',
+        'Le bouton 🔄 relance un personnage tout en conservant son alignement.',
+        'Les résultats des jets apparaissent dans le journal de dés en haut de la page.',
+        'Le lanceur de dés permet aussi de faire un jet libre, sans personnage.',
+        'Exportez les fiches en JSON pour en conserver une copie ou les partager.',
+        'Le bouton Imprimer / PDF prépare les fiches pour une impression A4.'
+      ];
 
       function roll(sides) {
         return Math.floor(Math.random() * sides) + 1;
@@ -1924,6 +1945,7 @@
         constructor() {
           this.characters = [];
           this.storageKey = 'dcc_rpg_funnel_roster_v2';
+          this.tipIndex = -1;
           this.toastTimeout = null;
 
           this.initElements();
@@ -1990,6 +2012,7 @@
           this.rosterGrid = document.getElementById('rosterGrid');
           this.charCountEl = document.getElementById('charCount');
           this.aliveCountEl = document.getElementById('aliveCount');
+          this.appTip = document.getElementById('appTip');
           this.emptyState = document.getElementById('emptyState');
           this.diceLogBanner = document.getElementById('diceLogBanner');
 
@@ -2182,6 +2205,12 @@
           this.render();
         }
 
+        showNextTip() {
+          if (!this.appTip) return;
+          this.tipIndex = (this.tipIndex + 1) % APP_TIPS.length;
+          this.appTip.textContent = APP_TIPS[this.tipIndex];
+        }
+
         showRollToast(title, result, detail = '') {
           if (this.diceLogBanner) {
             this.diceLogBanner.textContent = `${title} ➔ ${result} ${detail ? `(${detail})` : ''}`;
@@ -2221,6 +2250,7 @@
               success ? 'Réussi' : 'Échec',
               `d20 (${d20}) ${success ? '≤' : '>'} Chance (${luckScore})`
             );
+            this.showNextTip();
             return;
           }
 
@@ -2231,6 +2261,7 @@
             `${total}`,
             `d20 (${d20}) ${formatModifier(mod)}`
           );
+          this.showNextTip();
         }
 
         rollSaveCheck(char, saveName, saveKey) {
@@ -2242,6 +2273,7 @@
             `${total}`,
             `d20 (${d20}) ${formatModifier(mod)}`
           );
+          this.showNextTip();
         }
 
         rollAttack(char) {
@@ -2267,6 +2299,7 @@
             `Toucher : ${atkTotal} | Dégâts : ${dmgTotal}`,
             `Attaque: d20(${d20}) ${formatModifier(atkMod)} ➔ Dégâts: d${dmgSides}(${dmgRoll}) ${formatModifier(dmgMod)}`
           );
+          this.showNextTip();
         }
 
         rollInitiative(char) {
@@ -2278,6 +2311,7 @@
             `${total}`,
             `d20 (${d20}) ${formatModifier(mod)}`
           );
+          this.showNextTip();
         }
 
         exportJson() {
@@ -2324,6 +2358,7 @@
           const total = this.characters.length;
           const alive = this.characters.filter(c => c.status !== 'Mort').length;
 
+          this.showNextTip();
           this.charCountEl.textContent = total;
           this.aliveCountEl.textContent = alive;
 
@@ -2548,18 +2583,21 @@
           nameInput.addEventListener('change', (e) => {
             char.name = e.target.value.trim() || 'Inconnu';
             this.saveState();
+            this.showNextTip();
           });
 
           const alignmentSelect = card.querySelector('.alignment-select');
           alignmentSelect.addEventListener('change', () => {
             char.alignment = alignmentSelect.value;
             this.saveState();
+            this.showNextTip();
           });
 
           const notesInput = card.querySelector('.card-notes-input');
           notesInput.addEventListener('change', (e) => {
             char.notes = e.target.value;
             this.saveState();
+            this.showNextTip();
           });
 
           const bindKeyboardActivation = (element, handler) => {
