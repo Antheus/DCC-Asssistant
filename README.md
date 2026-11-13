@@ -31,6 +31,7 @@ Le fichier **[`index.html`](index.html)** regroupe **tout le HTML, le CSS et le 
 * **Fiche interactive en direct autour de la table :**
   * Suivi des PV en temps réel avec boutons `+` et `-`.
   * Suivi manuel de la Chance actuelle et initiale, avec dépense et restauration plafonnée au score initial.
+  * Choix de l’arme parmi les 23 armes de la table 3-1; les jets d’attaque, les dégâts et l’initiative à deux mains sont adaptés.
   * Statut du personnage (*Vivant*, *Blessé*, *Mort 💀*).
   * Jets de dés intégrés en 1 clic : cliquez sur n'importe quelle caractéristique, sauvegarde, initiative ou arme pour lancer les dés en direct avec détection des **Coups Critiques (20 naturel)** et des **Maladresses (1 naturel)** !
   * Catalogue d'astuces contextuelles, renouvelées après chaque action sur une fiche.

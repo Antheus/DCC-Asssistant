@@ -715,6 +715,42 @@
       align-items: center;
     }
 
+    .weapon-row {
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .weapon-choice {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.1rem;
+      min-width: 0;
+    }
+
+    .weapon-select {
+      width: 100%;
+      padding: 0.2rem 0.35rem;
+      border: 1px solid #434152;
+      border-radius: 3px;
+      background: #2d2c38;
+      color: #e4e2ed;
+      font: inherit;
+      font-size: 0.8rem;
+    }
+
+    .weapon-select,
+    .attack-btn {
+      box-sizing: border-box;
+      height: 1.7rem;
+    }
+
+    .weapon-select:focus-visible {
+      outline: 2px solid var(--accent-gold);
+      outline-offset: 2px;
+    }
+
     .weapon-info,
     .protection-info {
       font-weight: 600;
@@ -732,12 +768,21 @@
       font-size: 0.7rem;
     }
 
+    .weapon-rules-note {
+      color: var(--text-muted);
+      font-size: 0.68rem;
+    }
+
     .protection-none {
       color: var(--text-muted);
       font-style: italic;
     }
 
     .attack-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.2rem;
       background: #2f2e3d;
       border: 1px solid #4a485e;
       color: #e4e2ed;
@@ -1070,6 +1115,19 @@
         background: transparent !important;
         color: #000 !important;
         appearance: none;
+      }
+
+      .weapon-select {
+        padding: 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+        color: #000 !important;
+        appearance: none;
+      }
+
+      .weapon-rules-note,
+      .weapon-ammunition {
+        color: #000 !important;
       }
 
       .vital-val,
@@ -1441,6 +1499,63 @@
         { id: 'hide', name: 'Peau', acBonus: 3 }
       ];
 
+      const RULE_WEAPONS = [
+        { id: 'arbalete', name: 'Arbalète', damage: '1d6', attackType: 'ranged', ammunitionType: 'carreaux', twoHanded: true },
+        { id: 'arc-court', name: 'Arc court', damage: '1d6', attackType: 'ranged', ammunitionType: 'flèches', twoHanded: true },
+        { id: 'arc-long', name: 'Arc long', damage: '1d6', attackType: 'ranged', ammunitionType: 'flèches', twoHanded: true },
+        { id: 'baton', name: 'Bâton', damage: '1d4', attackType: 'melee' },
+        { id: 'dague', name: 'Dague', damage: '1d4', displayDamage: '1d4 / 1d10†', attackType: 'melee', note: 'Le second profil s’applique à une attaque sournoise réussie d’un voleur.' },
+        { id: 'epee-courte', name: 'Épée courte', damage: '1d6', attackType: 'melee' },
+        { id: 'epee-longue', name: 'Épée longue', damage: '1d8', attackType: 'melee' },
+        { id: 'epee-deux-mains', name: 'Épée à deux mains', damage: '1d10', attackType: 'melee', twoHanded: true },
+        { id: 'fleau', name: 'Fléau', damage: '1d6', attackType: 'melee' },
+        { id: 'flechette', name: 'Fléchette', damage: '1d4', attackType: 'ranged', ammunitionType: 'fléchettes' },
+        { id: 'fronde', name: 'Fronde', damage: '1d4', attackType: 'ranged', ammunitionType: 'pierres de fronde' },
+        { id: 'garrot', name: 'Garrot', damage: '1', displayDamage: '1 / 3d4†', attackType: 'melee', note: 'Le second profil s’applique à une attaque sournoise réussie d’un voleur.' },
+        { id: 'gourdin', name: 'Gourdin', damage: '1d4', attackType: 'melee' },
+        { id: 'hache-bataille', name: 'Hache de bataille', damage: '1d10', attackType: 'melee', twoHanded: true },
+        { id: 'hachette', name: 'Hachette', damage: '1d6', attackType: 'melee' },
+        { id: 'hallebarde', name: 'Hallebarde', damage: '1d10', attackType: 'melee', twoHanded: true },
+        { id: 'javelot', name: 'Javelot', damage: '1d6', attackType: 'ranged' },
+        { id: 'lance', name: 'Lance', damage: '1d8', attackType: 'melee', mountedCharge: true },
+        { id: 'lance-arcon', name: 'Lance d’arçon', damage: '1d12', attackType: 'melee', mountedCharge: true },
+        { id: 'marteau-guerre', name: 'Marteau de guerre', damage: '1d8', attackType: 'melee' },
+        { id: 'masse', name: 'Masse', damage: '1d6', attackType: 'melee' },
+        { id: 'matraque', name: 'Matraque', damage: '1d3', displayDamage: '1d3 / 2d6†', attackType: 'melee', note: 'Dégâts non létaux; le second profil s’applique à une attaque sournoise réussie d’un voleur.' },
+        { id: 'sarbacane', name: 'Sarbacane', damage: '1d3', displayDamage: '1d3 / 1d5†', attackType: 'ranged', note: 'Le second profil s’applique à une attaque sournoise réussie d’un voleur.' }
+      ];
+
+      function findRuleWeapon(weapon) {
+        if (!weapon || typeof weapon !== 'object') return null;
+        const byId = RULE_WEAPONS.find(entry => entry.id === weapon.catalogId);
+        if (byId) return byId;
+        return RULE_WEAPONS.find(entry =>
+          entry.name === weapon.name &&
+          entry.damage === weapon.damage &&
+          entry.attackType === (weapon.attackType || 'melee')
+        ) || null;
+      }
+
+      function copyWeapon(weapon) {
+        return {
+          ...weapon,
+          ammunition: weapon.ammunition ? { ...weapon.ammunition } : null
+        };
+      }
+
+      function getWeaponInitiativeDie(weapon) {
+        const ruleWeapon = findRuleWeapon(weapon);
+        return ruleWeapon && ruleWeapon.twoHanded ? 16 : 20;
+      }
+
+      function getWeaponRuleNote(weapon) {
+        const notes = [];
+        if (weapon.note) notes.push(weapon.note);
+        if (weapon.twoHanded) notes.push('Arme à deux mains : initiative au d16.');
+        if (weapon.mountedCharge) notes.push('Dégâts doublés lors d’une charge montée.');
+        return notes.join(' ');
+      }
+
       function getArmorById(id) {
         const armor = ARMOR_TABLE.find(armor => armor.id === id);
         if (!armor) throw new Error(`Type d'armure inconnu : ${id}`);
@@ -1710,8 +1825,9 @@
         'La Chance peut être restaurée manuellement jusqu’à son score initial.',
         'Cliquez sur Réflexes, Vigueur ou Volonté pour lancer la sauvegarde correspondante.',
         'Le bouton Attaquer lance le jet pour toucher et les dégâts.',
+        'Choisissez une arme dans la liste; ses dégâts et son type d’attaque sont adaptés.',
         'Un 20 naturel est signalé comme coup critique; un 1 naturel comme maladresse.',
-        'Cliquez sur l’initiative pour lancer le d20 et ajouter son modificateur.',
+        'Cliquez sur l’initiative : d20, ou d16 avec une arme à deux mains.',
         'Les boutons PV mettent à jour automatiquement le statut du personnage.',
         'Ajustez les XP avec + ou −; les changements sont sauvegardés automatiquement.',
         'Modifiez le nom directement dans le champ en haut de la fiche.',
@@ -2220,6 +2336,50 @@
           this.render();
         }
 
+        changeWeapon(id, weaponId) {
+          const char = this.characters.find(c => c.id === id);
+          if (!char) return;
+
+          const selectedWeapon = weaponId === 'starting'
+            ? null
+            : RULE_WEAPONS.find(weapon => weapon.id === weaponId);
+          if (weaponId !== 'starting' && !selectedWeapon) {
+            this.showRollToast('Arme inconnue', 'Changement impossible');
+            return;
+          }
+
+          if (!char.startingWeapon) char.startingWeapon = copyWeapon(char.weapon);
+          if (weaponId === 'starting') {
+            char.weapon = copyWeapon(char.startingWeapon);
+          } else {
+            const ammunition = selectedWeapon.ammunitionType &&
+              char.weapon.ammunition &&
+              char.weapon.ammunition.type === selectedWeapon.ammunitionType
+              ? { ...char.weapon.ammunition }
+              : null;
+            char.weapon = {
+              catalogId: selectedWeapon.id,
+              name: selectedWeapon.name,
+              damage: selectedWeapon.damage,
+              displayDamage: selectedWeapon.displayDamage || selectedWeapon.damage,
+              attackType: selectedWeapon.attackType,
+              ammunitionType: selectedWeapon.ammunitionType || null,
+              ammunition,
+              note: selectedWeapon.note || '',
+              twoHanded: Boolean(selectedWeapon.twoHanded),
+              mountedCharge: Boolean(selectedWeapon.mountedCharge)
+            };
+          }
+
+          this.saveState();
+          this.render();
+          this.showRollToast(
+            'Arme changée',
+            char.weapon.name,
+            `Dégâts : ${char.weapon.displayDamage || char.weapon.damage}`
+          );
+        }
+
         showNextTip() {
           if (!this.appTip) return;
           this.tipIndex = (this.tipIndex + 1) % APP_TIPS.length;
@@ -2297,11 +2457,23 @@
           const atkMod = char.attack[attackType];
           const atkTotal = d20 + atkMod;
 
-          let dmgSides = 4;
-          const match = char.weapon.damage.match(/1d(\d+)/);
-          if (match) dmgSides = parseInt(match[1], 10);
+          const damageMatch = /^(\d+)d(\d+)$/.exec(char.weapon.damage);
+          let dmgRoll;
+          let damageRollDetail;
+          if (damageMatch) {
+            const diceCount = parseInt(damageMatch[1], 10);
+            const dmgSides = parseInt(damageMatch[2], 10);
+            const damageRolls = Array.from({ length: diceCount }, () => roll(dmgSides));
+            dmgRoll = damageRolls.reduce((sum, result) => sum + result, 0);
+            damageRollDetail = `${damageMatch[1]}d${dmgSides}(${damageRolls.join('+')})`;
+          } else if (/^\d+$/.test(char.weapon.damage)) {
+            dmgRoll = Number(char.weapon.damage);
+            damageRollDetail = `${dmgRoll} fixe`;
+          } else {
+            this.showRollToast('Dégâts d’arme invalides', 'Attaque impossible');
+            return;
+          }
 
-          const dmgRoll = roll(dmgSides);
           const dmgMod = char.damageMods[attackType];
           const dmgTotal = Math.max(1, dmgRoll + dmgMod);
 
@@ -2312,19 +2484,20 @@
           this.showRollToast(
             `Attaque ${attackType === 'ranged' ? 'à distance' : 'de mêlée'} : ${char.weapon.name} (${char.name})${critMsg}`,
             `Toucher : ${atkTotal} | Dégâts : ${dmgTotal}`,
-            `Attaque: d20(${d20}) ${formatModifier(atkMod)} ➔ Dégâts: d${dmgSides}(${dmgRoll}) ${formatModifier(dmgMod)}`
+            `Attaque: d20(${d20}) ${formatModifier(atkMod)} ➔ Dégâts: ${damageRollDetail} ${formatModifier(dmgMod)}`
           );
           this.showNextTip();
         }
 
         rollInitiative(char) {
-          const d20 = roll(20);
+          const initiativeDie = getWeaponInitiativeDie(char.weapon);
+          const initiativeRoll = roll(initiativeDie);
           const mod = char.initiative;
-          const total = d20 + mod;
+          const total = initiativeRoll + mod;
           this.showRollToast(
             `Initiative (${char.name})`,
             `${total}`,
-            `d20 (${d20}) ${formatModifier(mod)}`
+            `d${initiativeDie} (${initiativeRoll}) ${formatModifier(mod)}`
           );
           this.showNextTip();
         }
@@ -2397,6 +2570,29 @@
           const racialTraits = this.getRacialTraits(char.race, char.stats.intelligence.score, char.luckySign.roll);
           const armor = getArmorById(char.armorId);
           const knownLanguages = Array.isArray(char.knownLanguages) ? char.knownLanguages : [];
+          const ruleWeapon = findRuleWeapon(char.weapon);
+          const startingWeapon = char.startingWeapon || char.weapon;
+          const startingRuleWeapon = findRuleWeapon(startingWeapon);
+          const includeStartingOption = !startingRuleWeapon || !ruleWeapon;
+          const startingOptionWeapon = startingRuleWeapon ? char.weapon : startingWeapon;
+          const selectedWeaponId = ruleWeapon ? ruleWeapon.id : 'starting';
+          const weaponOptions = [
+            ...(includeStartingOption
+              ? [`<option value="starting" ${selectedWeaponId === 'starting' ? 'selected' : ''}>Arme de départ : ${this.escapeHtml(startingOptionWeapon.name)} (${this.escapeHtml(startingOptionWeapon.displayDamage || startingOptionWeapon.damage)})</option>`]
+              : []),
+            ...RULE_WEAPONS.map(weapon => {
+              const damage = weapon.displayDamage || weapon.damage;
+              const attackType = weapon.attackType === 'ranged' ? 'distance' : 'mêlée';
+              return `<option value="${weapon.id}" title="${this.escapeHtml(getWeaponRuleNote(weapon))}" ${selectedWeaponId === weapon.id ? 'selected' : ''}>${this.escapeHtml(weapon.name)} (${this.escapeHtml(damage)}) — ${attackType}</option>`;
+            })
+          ].join('');
+          const weaponRuleNote = char.weapon.ruleNote || (ruleWeapon ? getWeaponRuleNote(ruleWeapon) : '');
+          const ammunitionInfo = char.weapon.ammunition
+            ? `${char.weapon.ammunition.count} ${char.weapon.ammunition.type}`
+            : char.weapon.ammunitionType
+              ? `${char.weapon.ammunitionType} (quantité à suivre)`
+              : '';
+          const initiativeDie = getWeaponInitiativeDie(char.weapon);
           char.status = (statusInfo.code === 'mort') ? 'Mort' : (statusInfo.code === 'blesse') ? 'Blessé' : 'Vivant';
 
           const card = document.createElement('div');
@@ -2453,8 +2649,8 @@
             <span class="vital-label">CA</span>
             <span class="vital-val">${char.ac}</span>
           </div>
-          <div class="vital-box btn-roll-init" role="button" tabindex="0" style="cursor:pointer;" title="Lancer l'Initiative (d20 + AGI/Augure)">
-            <span class="vital-label">Init 🎲</span>
+          <div class="vital-box btn-roll-init" role="button" tabindex="0" style="cursor:pointer;" title="Lancer l'Initiative (d${initiativeDie} + AGI/Augure)">
+            <span class="vital-label">Init d${initiativeDie} 🎲</span>
             <span class="vital-val">${formatModifier(char.initiative)}</span>
           </div>
           <div class="vital-box">
@@ -2526,16 +2722,18 @@
 
         <!-- Arme & Attaque -->
         <div class="card-section">
-          <div class="section-label">⚔️ Arme de départ (Niv. 0)</div>
+          <div class="section-label">⚔️ Arme équipée (Niv. 0)</div>
           <div class="weapon-row">
-            <div>
-              <span class="weapon-info">${char.weapon.name}</span>
-              <span class="weapon-damage">(${char.weapon.damage})</span>
-              ${char.weapon.ammunition
-                ? `<div class="weapon-ammunition">${char.weapon.ammunition.count} ${char.weapon.ammunition.type}</div>`
-                : ''}
+            <div class="weapon-choice">
+              <select class="weapon-select" aria-label="Arme équipée" title="Choisir une arme : l’attaque et les dégâts seront adaptés">
+                ${weaponOptions}
+              </select>
+              ${ammunitionInfo ? `<div class="weapon-ammunition">Munitions : ${this.escapeHtml(ammunitionInfo)}</div>` : ''}
+              ${weaponRuleNote ? `<div class="weapon-rules-note">${this.escapeHtml(weaponRuleNote)}</div>` : ''}
             </div>
-            <button class="attack-btn btn-attack" title="Lancer une attaque avec cette arme">Attaquer (${formatModifier(char.attack[this.getWeaponAttackType(char)])})</button>
+            <button class="attack-btn btn-attack" aria-label="Lancer une attaque avec cette arme (${formatModifier(char.attack[this.getWeaponAttackType(char)])})" title="Lancer une attaque avec cette arme">
+              <span aria-hidden="true">⚔️</span> (${formatModifier(char.attack[this.getWeaponAttackType(char)])})
+            </button>
           </div>
         </div>
 
@@ -2613,6 +2811,10 @@
             this.showNextTip();
           });
 
+          card.querySelector('.weapon-select').addEventListener('change', (event) => {
+            this.changeWeapon(char.id, event.target.value);
+          });
+
           const bindKeyboardActivation = (element, handler) => {
             element.addEventListener('click', handler);
             if (element.tagName === 'BUTTON') return;
@@ -2680,9 +2882,6 @@
 
     })();
   </script>
-</body>
-
-</html>
 </body>
 
 </html>
