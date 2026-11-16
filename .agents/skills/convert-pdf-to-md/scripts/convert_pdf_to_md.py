@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
-"""Convert PDF documents to Markdown using Microsoft's MarkItDown, with
-embedded images extracted to real files via PyMuPDF (MarkItDown's PDF
-converter only extracts text/tables -- it does not detect or emit anything
-for embedded images at all).
+"""Convert PDF documents to Markdown using PyMuPDF4LLM's layout-aware
+extractor, with embedded images extracted to real files via PyMuPDF.
 
 Usage:
     python convert_pdf_to_md.py <input> [-o OUTPUT] [--recursive]
@@ -24,15 +22,10 @@ Output:
               ...
           <name>.md
 
-  IMPORTANT: MarkItDown's PDF text extraction does not preserve reliable
-  per-page markers in the returned Markdown (pages are simply joined
-  together, or in some cases returned as a single unmarked block of text).
-  That means there is no safe way to know exactly where, inline, an image
-  should go. Rather than guess and risk misplacing an image next to the
-  wrong paragraph, this script appends a clearly labeled "## Extracted
-  Images" section at the end of the Markdown, with a "### Page N"
-  subheading per page that contains images. This is a deliberate, honest
-  tradeoff -- read the images section separately from the main body text.
+  IMPORTANT: Images are extracted separately and appended in a clearly
+  labeled "## Extracted Images" section, with a "### Page N" subheading per
+  page that contains images. This avoids guessing where an image belongs
+  when the Markdown reading order differs from the PDF's visual layout.
 
   - Single file mode: the "<name>/" folder is created next to the source
     file, or at -o/--output (treated as the exact destination folder) if
@@ -47,13 +40,12 @@ Output:
 Exit codes:
   0 - all requested conversions succeeded
   1 - one or more conversions failed (partial success in batch mode)
-  2 - a required dependency ("markitdown" or "pymupdf") is not installed
+  2 - a required dependency ("pymupdf4llm" or "pymupdf") is not installed
   3 - invalid input (path not found, or single-file input is not .pdf)
 """
 import argparse
 import sys
 import hashlib
-import shutil
 from pathlib import Path
 
 EXIT_OK = 0
@@ -62,16 +54,18 @@ EXIT_MISSING_DEPENDENCY = 2
 EXIT_INVALID_INPUT = 3
 
 
-def _import_markitdown():
-    """Import MarkItDown, failing with a clear, actionable message if absent."""
+def _import_pymupdf4llm():
+    """Import the layout-aware Markdown extractor, failing clearly if absent."""
     try:
-        from markitdown import MarkItDown
-        return MarkItDown
+        import pymupdf4llm
+        # Use geometric column detection instead of line-by-line layout ordering.
+        pymupdf4llm.use_layout(False)
+        return pymupdf4llm.to_markdown
     except ImportError:
         print(
-            "ERROR: The 'markitdown' package is not installed.\n"
+            "ERROR: The 'pymupdf4llm' package is not installed.\n"
             "See references/setup.md for this skill, or run:\n"
-            '    pip install "markitdown[pdf]"',
+            "    pip install pymupdf4llm",
             file=sys.stderr,
         )
         sys.exit(EXIT_MISSING_DEPENDENCY)
@@ -81,7 +75,6 @@ def _import_fitz():
     """Import PyMuPDF (module name 'fitz'), failing with a clear message if absent."""
     try:
         import fitz
-        import hashlib
         return fitz
     except ImportError:
         print(
@@ -206,23 +199,21 @@ def build_image_appendix(written_by_page) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
-def convert_one(md, fitz, source: Path, dest_dir: Path) -> bool:
+def convert_one(to_markdown, fitz, source: Path, dest_dir: Path) -> bool:
     """Convert a single .pdf file to a '<name>/' folder containing the
     Markdown file and an 'img/' folder of extracted images. Returns True on
     success."""
     try:
-        result = md.convert(str(source))
+        text = to_markdown(str(source), show_progress=False)
     except Exception as exc:  # noqa: BLE001 - surface any conversion error
         print(f"FAILED  {source} -> {exc}", file=sys.stderr)
         return False
 
     try:
-        if dest_dir.exists():
-            shutil.rmtree(dest_dir)
         dest_dir.mkdir(parents=True, exist_ok=True)
         written_by_page = extract_images(fitz, source, dest_dir / "img")
         appendix = build_image_appendix(written_by_page)
-        text = result.text_content.rstrip("\n")
+        text = text.rstrip("\n")
         full_text = f"{text}\n{appendix}" if appendix else f"{text}\n"
         md_path = dest_dir / f"{source.stem}.md"
         md_path.write_text(full_text, encoding="utf-8")
@@ -268,10 +259,6 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    #MarkItDown = _import_markitdown()
-    #fitz = _import_fitz()
-    #md = MarkItDown()
-
     source = Path(args.input)
     if not source.exists():
         print(f"ERROR: Input path not found: {source}", file=sys.stderr)
@@ -285,13 +272,12 @@ def main() -> int:
          )
          return EXIT_INVALID_INPUT
 
-    MarkItDown = _import_markitdown()
+    to_markdown = _import_pymupdf4llm()
     fitz = _import_fitz()
-    md = MarkItDown()
 
     if source.is_file():
         dest_dir = Path(args.output) if args.output else source.parent / source.stem
-        return EXIT_OK if convert_one(md, fitz, source, dest_dir) else EXIT_CONVERSION_FAILED
+        return EXIT_OK if convert_one(to_markdown, fitz, source, dest_dir) else EXIT_CONVERSION_FAILED
 
     # Directory / batch mode
     pdf_files, skipped = find_pdf_files(source, args.recursive)
@@ -309,7 +295,7 @@ def main() -> int:
             dest_dir = out_dir / rel.parent / pdf_path.stem
         else:
             dest_dir = pdf_path.parent / pdf_path.stem
-        if convert_one(md, fitz, pdf_path, dest_dir):
+        if convert_one(to_markdown, fitz, pdf_path, dest_dir):
             success_count += 1
 
     total = len(pdf_files)

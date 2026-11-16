@@ -15,9 +15,8 @@ layout/print format, not reliably readable as plain text, so always convert
 it to Markdown first using the script in this skill rather than trying to
 open or parse the file directly.
 
-This skill only supports `.pdf` — that's MarkItDown's only PDF-family
-format, so there's no legacy format to worry about here (unlike Word's
-`.doc` or Excel's `.xls`).
+This skill only supports `.pdf`. Use the sibling skills for Word and Excel
+documents.
 
 **Mixed file types:** When the user references a folder or set of documents
 containing multiple supported file types (`.pdf`, `.docx`, `.xlsx`), this
@@ -33,7 +32,7 @@ skills must be invoked together when mixed types are present.
 
 Before the first conversion in a given environment, follow
 [`references/setup.md`](references/setup.md) step by step to ensure Python,
-pip, `markitdown`, and `pymupdf` (for image extraction) are installed. Do
+pip, `pymupdf4llm`, and `pymupdf` are installed. Do
 this proactively rather than guessing whether the environment is ready — the
 script itself will also fail with a clear pointer back to that file if a
 dependency turns out to be missing, so it's safe to just try the conversion
@@ -43,10 +42,10 @@ first if you're reasonably confident setup was already done.
 
 The conversion script lives at `scripts/convert_pdf_to_md.py`.
 
-**Output structure:** MarkItDown's PDF converter extracts text and tables
-only — it has no concept of embedded images at all. This script separately
-extracts real embedded images via PyMuPDF and writes a self-contained folder
-per document:
+**Output structure:** PyMuPDF4LLM extracts text in layout-aware reading order,
+which helps preserve the order of multi-column content. The script separately
+extracts embedded images via PyMuPDF and writes a self-contained folder per
+document:
 
 ```
 <name>/
@@ -57,13 +56,9 @@ per document:
     <name>.md
 ```
 
-Because MarkItDown's PDF text does not preserve reliable per-page markers,
-there's no safe way to know exactly where inline an image belongs. Rather
-than risk misplacing images next to the wrong paragraph, the script appends
-a `## Extracted Images` section at the end of the Markdown, with a
-`### Page N` subheading per page that has images — read this section
-separately from the main body text. If the document has no embedded images,
-no `img/` folder or `Extracted Images` section is created.
+The script appends a `## Extracted Images` section at the end of the Markdown,
+with a `### Page N` subheading per page that has images. If the document has
+no embedded images, no `img/` folder or `Extracted Images` section is created.
 
 **Single file:**
 
@@ -121,10 +116,11 @@ conversion. Never guess or assume the directory.
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| `ModuleNotFoundError: No module named 'markitdown'` or `'fitz'` / exit code 2 | MarkItDown or PyMuPDF not installed | Follow `references/setup.md` |
+| `ModuleNotFoundError: No module named 'pymupdf4llm'` or `'fitz'` / exit code 2 | PyMuPDF4LLM or PyMuPDF not installed | Follow `references/setup.md` |
 | `ERROR: Unsupported file type '...'` / exit code 3 | Not a `.pdf` file | Ask the user for the correct file, or if it's `.doc`/`.docx`/`.xlsx`, use the matching sibling skill instead |
 | `ERROR: Input path not found` / exit code 3 | Wrong path, or file moved | Confirm the correct path with the user |
 | `FAILED <file> -> ...` in batch output | That specific file is corrupt, password-protected, or otherwise unreadable | Report which file(s) failed; other files in the batch still succeed |
 | `NOTE: skipped N non-.pdf file(s)` | Folder contains non-PDF files | Expected — those files are intentionally ignored |
-| Markdown body is empty or near-empty despite images being extracted | The PDF is scanned/image-only with no embedded text layer; MarkItDown does not perform OCR | Tell the user OCR isn't supported — the extracted page images are still available for them to view |
-| Images appear in an appendix instead of inline with the text | Deliberate limitation — MarkItDown's PDF text has no reliable per-page markers to place images inline | Expected behavior; cross-reference the `### Page N` heading with the surrounding text context if needed |
+| Markdown body is empty or near-empty despite images being extracted | The PDF is scanned/image-only and OCR is unavailable | The extracted page images are still available for viewing |
+| Multi-column text still appears out of order | The page layout may be unusually complex | Report the affected page(s); do not silently reorder content |
+| Images appear in an appendix instead of inline with the text | Images are deliberately grouped separately by page | Cross-reference the `### Page N` heading with the surrounding text |
