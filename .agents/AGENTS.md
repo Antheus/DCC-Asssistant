@@ -1,6 +1,6 @@
 # Agent Instructions — DCC Assistant
 
-> **Agent Directive:** Trust these instructions completely. Do not spend time searching, grepping, or re-exploring the repository unless information here is missing or an unexpected error occurs. When researching game rules, **always use `Dungeon Crawl Classics - Francais.md` (Markdown)**; never attempt to parse or read the `.pdf` file.
+> **Agent Directive:** Trust these instructions completely. Do not spend time searching, grepping, or re-exploring the repository unless information here is missing or an unexpected error occurs. When researching game rules, **always use `Dungeon Crawl Classics - Francais.md` (Markdown)**; never attempt to parse or read the `.pdf` file. **Zero implicit decisions on evolutions:** For any feature request or evolution, always ask clarifying questions, suggest options, and clear all doubts before implementing.
 
 ---
 
@@ -37,6 +37,7 @@
 > 3. **External libraries:** Any future external dependency (e.g. GUN/SEA for the planned shared notes feature) must be imported via HTTPS CDN `<script>` tags, never npm modules.
 > 4. **Gitignore rule:** `.gitignore` ignores `Dungeon Crawl Classics - Francais.pdf`. The `.agents/` folder and `AGENTS.md` are tracked.
 > 5. **Rulebook format — Markdown ONLY:** Always consult and work with the rules using the Markdown file (`Dungeon Crawl Classics - Francais.md`). **Never use or parse the PDF (`Dungeon Crawl Classics - Francais.pdf`)**. The Markdown file contains the complete, search-ready official rules and avoids heavy/unreliable PDF extraction.
+> 6. **Zero implicit decisions — Clarify & Propose Options:** For each evolution or feature request, you MUST ask all clarifying questions necessary for thorough understanding and implementation before writing any code. Systematically present concrete options/alternatives. Never make implicit decisions or assumptions; any doubt must be completely cleared and aligned with the user prior to implementation.
 
 ---
 
@@ -85,13 +86,14 @@
 ## 4. Development Workflow & Change Verification
 
 When making changes or adding features:
-1. **Edit `index.html`:** Keep HTML, CSS, and JS strictly within their designated sections.
-2. **Run JS syntax check:**
+1. **Clarify before coding:** Ask all clarifying questions needed, submit implementation options, and ensure all ambiguity is resolved with the user. No implicit decisions.
+2. **Edit `index.html`:** Keep HTML, CSS, and JS strictly within their designated sections.
+3. **Run JS syntax check:**
    ```bash
    node -e 'const fs=require("fs"),vm=require("vm"),h=fs.readFileSync("index.html","utf8"),s=h.match(/<script>([\s\S]*?)<\/script>/)[1];new vm.Script(s);console.log("JS Syntax OK");'
    ```
-3. **Run HTML structure check:**
+4. **Run HTML structure check:**
    ```bash
    python3 -c 'from html.parser import HTMLParser;p=HTMLParser();p.feed(open("index.html",encoding="utf-8").read());print("HTML OK")'
    ```
-4. **Confirm git diff:** Ensure no spurious whitespace or duplicate tags at end of file (`</body></html>` must appear once).
+5. **Confirm git diff:** Ensure no spurious whitespace or duplicate tags at end of file (`</body></html>` must appear once).
