@@ -752,6 +752,86 @@
       outline-offset: 2px;
     }
 
+    .armor-select {
+      width: 100%;
+      padding: 0.2rem 0.35rem;
+      border: 1px solid #434152;
+      border-radius: 3px;
+      background: #2d2c38;
+      color: #e4e2ed;
+      font: inherit;
+      font-size: 0.8rem;
+      box-sizing: border-box;
+      height: 1.7rem;
+    }
+
+    .armor-select:focus-visible {
+      outline: 2px solid var(--accent-gold);
+      outline-offset: 2px;
+    }
+
+    .protection-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .protection-select-wrap {
+      display: flex;
+      width: 100%;
+    }
+
+    .shield-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--text-main);
+      cursor: pointer;
+      user-select: none;
+      padding-top: 0.1rem;
+    }
+
+    .shield-toggle input[type="checkbox"] {
+      cursor: pointer;
+      accent-color: var(--accent-gold);
+      width: 0.9rem;
+      height: 0.9rem;
+    }
+
+    .protection-warning {
+      color: #e57373;
+      font-size: 0.72rem;
+      font-style: italic;
+      line-height: 1.25;
+      margin-top: 0.15rem;
+    }
+
+    .protection-stats-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.3rem;
+      font-size: 0.72rem;
+    }
+
+    .prot-badge {
+      background: #23222a;
+      border: 1px solid #3a3846;
+      border-radius: 3px;
+      padding: 0.1rem 0.35rem;
+      color: var(--text-muted);
+    }
+
+    .prot-badge strong {
+      color: var(--accent-gold);
+      font-family: var(--font-mono);
+    }
+
+    .prot-badge-speed strong {
+      color: #e57373;
+    }
+
     .weapon-info,
     .protection-info {
       font-weight: 600;
@@ -1125,6 +1205,38 @@
         appearance: none;
       }
 
+      .armor-select {
+        padding: 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+        color: #000 !important;
+        appearance: none;
+      }
+
+      .shield-toggle {
+        color: #000 !important;
+        font-size: 7.5pt !important;
+      }
+
+      .prot-badge {
+        background: transparent !important;
+        border: 1px solid #777 !important;
+        color: #000 !important;
+        font-size: 7pt !important;
+      }
+
+      .prot-badge strong {
+        color: #000 !important;
+      }
+
+      .prot-badge-speed strong {
+        color: #000 !important;
+      }
+
+      .protection-warning {
+        display: none !important;
+      }
+
       .weapon-rules-note,
       .weapon-ammunition {
         color: #000 !important;
@@ -1494,10 +1606,51 @@
       }
 
       const ARMOR_TABLE = [
-        { id: 'none', name: 'Sans armure', acBonus: 0 },
-        { id: 'leather', name: 'Cuir', acBonus: 2 },
-        { id: 'hide', name: 'Peau', acBonus: 3 }
+        { id: 'none', name: 'Sans armure', acBonus: 0, penalty: 0, speedMod: 0, fumbleDie: 'd4', cost: 'gratuit' },
+        { id: 'padded', name: 'Matelassée', acBonus: 1, penalty: 0, speedMod: 0, fumbleDie: 'd8', cost: '5 po' },
+        { id: 'leather', name: 'Cuir', acBonus: 2, penalty: -1, speedMod: 0, fumbleDie: 'd8', cost: '20 po' },
+        { id: 'studded_leather', name: 'Cuir clouté', acBonus: 3, penalty: -2, speedMod: 0, fumbleDie: 'd8', cost: '45 po' },
+        { id: 'hide', name: 'Peau', acBonus: 3, penalty: -3, speedMod: 0, fumbleDie: 'd12', cost: '30 po' },
+        { id: 'scale_mail', name: 'Écailles', acBonus: 4, penalty: -4, speedMod: -1.5, fumbleDie: 'd12', cost: '80 po' },
+        { id: 'chainmail', name: 'Cotte de mailles', acBonus: 5, penalty: -5, speedMod: -1.5, fumbleDie: 'd12', cost: '150 po' },
+        { id: 'banded_mail', name: 'Clibanion', acBonus: 6, penalty: -6, speedMod: -1.5, fumbleDie: 'd16', cost: '250 po' },
+        { id: 'half_plate', name: 'Armure de plates', acBonus: 7, penalty: -7, speedMod: -3, fumbleDie: 'd16', cost: '550 po' },
+        { id: 'full_plate', name: 'Harnois', acBonus: 8, penalty: -8, speedMod: -3, fumbleDie: 'd16', cost: '1 200 po' }
       ];
+
+      const SHIELD_DATA = {
+        name: 'Bouclier',
+        acBonus: 1,
+        penalty: -1,
+        speedMod: 0,
+        fumbleDie: 'd8',
+        cost: '10 po'
+      };
+
+      const FUMBLE_DIE_ORDER = ['d4', 'd8', 'd12', 'd16'];
+
+      function getWorstFumbleDie(die1, die2) {
+        if (!die2) return die1 || 'd4';
+        if (!die1) return die2 || 'd4';
+        const index1 = FUMBLE_DIE_ORDER.indexOf(die1);
+        const index2 = FUMBLE_DIE_ORDER.indexOf(die2);
+        return FUMBLE_DIE_ORDER[Math.max(index1, index2)];
+      }
+
+      function getBaseSpeed(race, stats, luckySign) {
+        let base = (race === 'Nain' || race === 'Halfelin') ? 6 : 9;
+        if (luckySign && luckySign.roll === 30 && stats && stats.luck) {
+          base += stats.luck.mod * 1.5;
+          base = Math.max(1.5, base);
+        }
+        return base;
+      }
+
+      function calculateEffectiveSpeed(baseSpeed, armorId) {
+        const armor = getArmorById(armorId);
+        const speedMod = armor ? (armor.speedMod || 0) : 0;
+        return Math.max(1.5, baseSpeed + speedMod);
+      }
 
       const RULE_WEAPONS = [
         { id: 'arbalete', name: 'Arbalète', damage: '1d6', attackType: 'ranged', ammunitionType: 'carreaux', twoHanded: true },
@@ -1583,6 +1736,7 @@
           char.knownLanguages.every(language => LANGUAGE_NAMES.has(language)) &&
           new Set(char.knownLanguages).size === char.knownLanguages.length &&
           ARMOR_TABLE.some(armor => armor.id === char.armorId) &&
+          (char.hasShield === undefined || typeof char.hasShield === 'boolean') &&
           isCoinPurseFormat(char.coinPurse)
         );
       }
@@ -1614,10 +1768,26 @@
         }
       }
 
-      function calculateArmorClass(stats, luckySign, armorId) {
+      function calculateArmorClass(stats, luckySign, armorId, hasShield = false) {
         const armor = getArmorById(armorId);
-        const luckBonus = luckySign.roll === 23 ? stats.luck.mod : 0;
-        return 10 + stats.agility.mod + armor.acBonus + luckBonus;
+        const luckBonus = (luckySign && luckySign.roll === 23) ? stats.luck.mod : 0;
+        const shieldBonus = hasShield ? SHIELD_DATA.acBonus : 0;
+        return 10 + stats.agility.mod + armor.acBonus + shieldBonus + luckBonus;
+      }
+
+      function normalizeCharacterProtection(char) {
+        if (!char) return;
+        if (!char.armorId || !ARMOR_TABLE.some(a => a.id === char.armorId)) {
+          char.armorId = 'none';
+        }
+        if (typeof char.hasShield !== 'boolean') {
+          char.hasShield = false;
+        }
+        if (char.baseSpeed === undefined) {
+          char.baseSpeed = getBaseSpeed(char.race, char.stats, char.luckySign);
+        }
+        char.speed = calculateEffectiveSpeed(char.baseSpeed, char.armorId);
+        char.ac = calculateArmorClass(char.stats, char.luckySign, char.armorId, char.hasShield);
       }
 
       const SAVE_MODIFIER_SOURCES = {
@@ -1960,14 +2130,11 @@
         const copperRoll = rollSum(5, 12);
         const copperPieces = copperRoll.total;
 
-        let speed = (occupation.race === 'Nain' || occupation.race === 'Halfelin') ? 6 : 9;
-        if (luckySign.roll === 30) {
-          speed += stats.luck.mod * 1.5;
-          speed = Math.max(1.5, speed);
-        }
-
+        const baseSpeed = getBaseSpeed(occupation.race, stats, luckySign);
         const armorId = occupation.armorId || 'none';
-        const ac = calculateArmorClass(stats, luckySign, armorId);
+        const hasShield = false;
+        const speed = calculateEffectiveSpeed(baseSpeed, armorId);
+        const ac = calculateArmorClass(stats, luckySign, armorId, hasShield);
 
         let initiative = stats.agility.mod;
         if (luckySign.roll === 24) {
@@ -2004,6 +2171,7 @@
           maxHp,
           hpBaseRoll,
           ac,
+          baseSpeed,
           speed,
           initiative,
           saves,
@@ -2022,6 +2190,7 @@
             ammunition
           },
           armorId,
+          hasShield,
           tradeGoods: occupation.cartContents
             ? `${occupation.goods} (${cartContents})`
             : occupation.goods,
@@ -2214,10 +2383,14 @@
               const needsCoinMigration = characters.some(char =>
                 char && char.coinPurse && (char.coinPurse.pe === undefined || char.coinPurse.pp === undefined)
               );
+              const needsShieldMigration = characters.some(char =>
+                char && (char.hasShield === undefined || char.baseSpeed === undefined)
+              );
               characters.forEach(normalizeCharacterLuck);
               characters.forEach(normalizeCharacterCoins);
+              characters.forEach(normalizeCharacterProtection);
               this.characters = characters;
-              if (needsLuckMigration || needsCoinMigration) this.saveState();
+              if (needsLuckMigration || needsCoinMigration || needsShieldMigration) this.saveState();
             }
           } catch (e) {
             console.warn('Erreur lors du chargement des personnages depuis le stockage local', e);
@@ -2380,6 +2553,38 @@
           );
         }
 
+        changeArmor(id, armorId) {
+          const char = this.characters.find(c => c.id === id);
+          if (!char) return;
+          const armor = ARMOR_TABLE.find(a => a.id === armorId);
+          if (!armor) {
+            this.showRollToast('Armure inconnue', 'Changement impossible');
+            return;
+          }
+          char.armorId = armorId;
+          normalizeCharacterProtection(char);
+          this.saveState();
+          this.render();
+          this.showRollToast(
+            'Armure changée',
+            armor.name,
+            `CA : ${char.ac} | Pénalité : ${armor.penalty + (char.hasShield ? SHIELD_DATA.penalty : 0)}`
+          );
+        }
+
+        toggleShield(id, hasShield) {
+          const char = this.characters.find(c => c.id === id);
+          if (!char) return;
+          char.hasShield = Boolean(hasShield);
+          normalizeCharacterProtection(char);
+          this.saveState();
+          this.render();
+          this.showRollToast(
+            char.hasShield ? 'Bouclier équipé (+1 CA)' : 'Bouclier retiré',
+            `CA actuelle : ${char.ac}`
+          );
+        }
+
         showNextTip() {
           if (!this.appTip) return;
           this.tipIndex = (this.tipIndex + 1) % APP_TIPS.length;
@@ -2527,6 +2732,7 @@
                 }
                 imported.forEach(normalizeCharacterLuck);
                 imported.forEach(normalizeCharacterCoins);
+                imported.forEach(normalizeCharacterProtection);
                 this.characters = imported;
                 this.saveState();
                 this.render();
@@ -2569,8 +2775,13 @@
           const statusInfo = this.getDerivedStatus(char);
           const racialTraits = this.getRacialTraits(char.race, char.stats.intelligence.score, char.luckySign.roll);
           const armor = getArmorById(char.armorId);
+          const hasShield = Boolean(char.hasShield);
+          const totalPenalty = armor.penalty + (hasShield ? SHIELD_DATA.penalty : 0);
+          const fumbleDie = hasShield ? getWorstFumbleDie(armor.fumbleDie, SHIELD_DATA.fumbleDie) : armor.fumbleDie;
+          const speedMod = armor.speedMod || 0;
           const knownLanguages = Array.isArray(char.knownLanguages) ? char.knownLanguages : [];
           const ruleWeapon = findRuleWeapon(char.weapon);
+          const isTwoHanded = Boolean(ruleWeapon && ruleWeapon.twoHanded);
           const startingWeapon = char.startingWeapon || char.weapon;
           const startingRuleWeapon = findRuleWeapon(startingWeapon);
           const includeStartingOption = !startingRuleWeapon || !ruleWeapon;
@@ -2740,9 +2951,30 @@
         <!-- Protection -->
         <div class="card-section">
           <div class="section-label">🛡️ Protection</div>
-          <div class="protection-row">
-            <span class="protection-info">${armor.name}</span>
-            <span class="protection-bonus">${formatModifier(armor.acBonus)} CA</span>
+          <div class="protection-controls">
+            <div class="protection-select-wrap">
+              <select class="armor-select" aria-label="Armure équipée" title="Choisir une armure">
+                ${ARMOR_TABLE.map(a => `<option value="${a.id}" ${char.armorId === a.id ? 'selected' : ''}>${this.escapeHtml(a.name)} (${formatModifier(a.acBonus)} CA)</option>`).join('')}
+              </select>
+            </div>
+            <label class="shield-toggle" title="Bouclier (+1 CA, pénalité -1, dé de maladresse d8)">
+              <input type="checkbox" class="shield-checkbox" ${hasShield ? 'checked' : ''} />
+              <span>Bouclier (+1 CA)</span>
+            </label>
+          </div>
+          ${(hasShield && isTwoHanded) ? `<div class="protection-warning" title="Les règles stipulent que les boucliers ne peuvent pas être employés avec des armes à deux mains.">⚠️ Incompatible avec une arme à deux mains</div>` : ''}
+          <div class="protection-stats-badges">
+            <span class="prot-badge" title="Pénalité aux tests d'escalade, de saut, d'équilibre, de natation et de discrétion">
+              Pénalité : <strong>${totalPenalty !== 0 ? formatModifier(totalPenalty) : '0'}</strong>
+            </span>
+            <span class="prot-badge" title="Dé lancé en cas de maladresse au combat (1 naturel)">
+              Maladresse : <strong>${fumbleDie}</strong>
+            </span>
+            ${speedMod !== 0 ? `
+              <span class="prot-badge prot-badge-speed" title="Impact de l'armure sur le déplacement">
+                Mvt : <strong>${speedMod} m</strong>
+              </span>
+            ` : ''}
           </div>
         </div>
 
@@ -2813,6 +3045,14 @@
 
           card.querySelector('.weapon-select').addEventListener('change', (event) => {
             this.changeWeapon(char.id, event.target.value);
+          });
+
+          card.querySelector('.armor-select').addEventListener('change', (event) => {
+            this.changeArmor(char.id, event.target.value);
+          });
+
+          card.querySelector('.shield-checkbox').addEventListener('change', (event) => {
+            this.toggleShield(char.id, event.target.checked);
           });
 
           const bindKeyboardActivation = (element, handler) => {
