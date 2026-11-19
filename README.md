@@ -1,6 +1,6 @@
-# ⚔️ DCC RPG - Générateur d'Entonnoir (Niveau 0)
+# ⚔️ DCC RPG - Générateur d'Entonnoir (Niveaux 0 à 10)
 
-Application web **100% autonome dans un seul fichier** pour créer et gérer des personnages de **Niveau 0** pour le jeu de rôle **Dungeon Crawl Classics** (DCC RPG) en français.
+Application web **100% autonome dans un seul fichier** pour créer et gérer des personnages de **Niveau 0**, puis des **aventuriers de niveau 1 à 10**, pour le jeu de rôle **Dungeon Crawl Classics** (DCC RPG) en français.
 
 ---
 
@@ -37,11 +37,38 @@ Le fichier **[`index.html`](index.html)** regroupe **tout le HTML, le CSS et le 
   * Catalogue d'astuces contextuelles, renouvelées après chaque action sur une fiche.
 * **Chaîne de dés DCC intégrée :**
   * Lanceur de dés avec tous les dés bizarres de DCC : $d3, d4, d5, d6, d7, d8, d10, d12, d14, d16, d20, d24, d30, d100$.
-* **Impression & PDF optimisés (4 par page A4) :**
-  * Cliquez sur **Imprimer / PDF** (ou `Ctrl+P`) : la mise en page passe automatiquement en noir et blanc haute lisibilité, formatée en grille $2 \times 2$ prête à découper, sans les boutons de l'interface web.
+* **Impression & PDF optimisés :**
+  * Cliquez sur **Imprimer / PDF** (ou `Ctrl+P`) : seul l'onglet actif est imprimé, en noir et blanc haute lisibilité, sans les boutons de l'interface web.
+  * Onglet **Niveau 0** : 4 fiches par page A4 (grille $2 \times 2$ prête à découper).
+  * Onglet **Aventuriers** : 2 fiches par page A4 (grille $1 \times 2$) ; les blocs de classe restent lisibles.
 * **Sauvegarde & Persistance :**
   * Sauvegarde automatique dans le navigateur (`LocalStorage`).
-  * Boutons d'export et d'import au format **JSON**.
+  * Boutons d'export et d'import au format **JSON** (l'import **fusionne** avec les fiches existantes, voir plus bas).
+
+## 🛡️ Aventuriers (niveaux 1 à 10)
+
+Les survivants de l'entonnoir peuvent devenir de vrais aventuriers.
+
+* **Onglets :** **Niveau 0** (les paysans) et **Aventuriers** (niveau 1 et plus). Chaque onglet affiche son effectif ; l'impression suit l'onglet actif.
+* **Assistant de passage de niveau :** un personnage de niveau 0 avec **10 PX** peut passer niveau 1 (bouton ⬆ sur sa fiche), puis chaque niveau suivant jusqu'au 10 selon la table des PX. L'assistant guide les choix : classe (selon la race et l'alignement), dieu du clerc, voie du voleur, sorts du clerc **choisis** (sans tirage), sorts du mage et de l'elfe **tirés au hasard** (la liste reste éditable à la main sur la fiche), puis le jet de points de vie. Tous les tirages sont affichés avec leur détail (dé, résultat brut, modificateurs). Aucun personnage mort ou agonisant ne peut monter de niveau.
+* **Fiche d'aventurier :** dés d'action multiples, bonus d'attaque, dé de haut fait et table des coups critiques propres à la classe, jets de sauvegarde, initiative, Chance (brûler de la Chance), armure et bouclier, PX, PV (avec l'historique des dés de PV en infobulle) et titre libre à partir du niveau 6.
+* **Fonctionnalités par classe :**
+  * **Guerrier** : dé de haut fait d'armes, critique 19-20, initiative + niveau, arme fétiche de Chance, critiques et maladresses propres.
+  * **Nain** : dé de haut fait d'armes, coup de bouclier, infravision 18 m, talents souterrains.
+  * **Halfelin** : combat à deux armes, don de Chance aux alliés, +2 par point de Chance brûlé.
+  * **Voleur** : compétences (outils de voleur), voie d'allégeance, dé de Chance supplémentaire par point brûlé.
+  * **Clerc** : sorts, renvoi des impies, imposition des mains, aide divine, sacrifice, plage de défaveur et table de défaveur.
+  * **Mage** : sorts connus, lancement avec le dé d'incantation, magie mercurielle, patron, familier, corruption, brûlesort.
+  * **Elfe** : sorts de mage, sort fétiche, capacités raciales (immunité au sommeil, infravision, détection des passages secrets).
+* **Agonie et mort :** à 0 PV un aventurier est *agonisant* (bouton « Round suivant ») ; tout gain de PV le sauve (avec −1 END définitif). Une fois mort, le bouton **Récupérer le corps** tente la récupération (test de Chance, une seule tentative). Le statut *Étourdi* (−4 aux jets) se lève par un bouton dédié.
+* **Nouvelle journée :** un bouton ☀ restaure la plage de défaveur, les sorts perdus, le brûlesort et la Chance quand les règles le prévoient.
+* **Import fusionné :** importer une sauvegarde **ajoute** les fiches nouvelles et, pour une fiche de même `id`, demande confirmation avant de l'écraser. Les anciennes sauvegardes (niveau 0 uniquement) se chargent sans migration : tout apparaît dans l'onglet Niveau 0.
+
+**Limites :**
+
+* L'effet des sorts n'est pas décrit dans l'application : il se lit dans le livre, à la page indiquée sur la fiche.
+* Il n'existe pas de bouton « tout effacer » : supprimez les fiches une par une avec 🗑️.
+* Si la sauvegarde du navigateur est illisible ou invalide, une copie du contenu est conservée sous la clé `dcc_rpg_funnel_roster_v2_backup` du `LocalStorage` (la clé principale est `dcc_rpg_funnel_roster_v2`).
 
 ## 📝 Notes partagées (conçues, à implémenter)
 
@@ -61,4 +88,5 @@ Consulter les documents de conception :
 ## 📁 Organisation
 
 * **`index.html`** : **Le fichier principal tout-en-un** (contient le HTML + le CSS + le JavaScript). C'est le seul fichier dont vous avez besoin au quotidien !
+* **`tests/`** : tests des règles (`node --test tests/*.test.mjs`), réservés au développement.
 * **`conception-fonctionnelle-notes.md`** et **`conception-technique-notes.md`** : documents de conception validés pour la future fonctionnalité de prise de notes partagées.
