@@ -1,6 +1,6 @@
 # Agent Instructions — DCC Assistant
 
-> **Agent Directive:** Trust these instructions completely. Do not spend time searching, grepping, or re-exploring the repository unless information here is missing or an unexpected error occurs. When researching game rules, **always use `Dungeon Crawl Classics - Francais.md` (Markdown)**; never attempt to parse or read the `.pdf` file. **Zero implicit decisions & Strict Phased Workflow:** Tout développement doit obligatoirement suivre le processus en 3 phases séquentielles (Phase 1 : Analyse & Clarification → Phase 2 : Plan technique → Phase 3 : Spécification détaillée des changements en Markdown). Ne jamais toucher au code sans validation explicite des phases et fichiers Markdown correspondants.
+> **Agent Directive:** Trust these instructions completely. Do not spend time searching, grepping, or re-exploring the repository unless information here is missing or an unexpected error occurs. When researching game rules, **always use `Dungeon Crawl Classics - Francais.md` (Markdown)**; never attempt to parse or read the `.pdf` file. **Tous les documents générés (notes, spécifications, conceptions, comptes-rendus de phase) doivent obligatoirement être créés et stockés dans le répertoire `notes/`.** **Zero implicit decisions & Strict Phased Workflow:** Tout développement doit obligatoirement suivre le processus en 3 phases séquentielles (Phase 1 : Analyse & Clarification → Phase 2 : Plan technique → Phase 3 : Spécification détaillée des changements en Markdown). Ne jamais toucher au code sans validation explicite des phases et fichiers Markdown correspondants (tous stockés dans `notes/`).
 
 ---
 
@@ -38,7 +38,8 @@
 > 3. **External libraries:** Any future external dependency (e.g. GUN/SEA for the planned shared notes feature) must be imported via HTTPS CDN `<script>` tags, never npm modules.
 > 4. **Gitignore rule:** `.gitignore` ignores `Dungeon Crawl Classics - Francais.pdf`. The `.agents/` folder and `AGENTS.md` are tracked.
 > 5. **Rulebook format — Markdown ONLY:** Always consult and work with the rules using the Markdown file (`Dungeon Crawl Classics - Francais.md`). **Never use or parse the PDF (`Dungeon Crawl Classics - Francais.pdf`)**. The Markdown file contains the complete, search-ready official rules and avoids heavy/unreliable PDF extraction.
-> 6. **Zero implicit decisions & Strict 3-Phase Workflow:** Pour tout développement, évolution ou modification, **AUCUN code ne doit être touché** tant que le processus par phase n'a pas été formellement validé. Vous devez poser toutes les questions nécessaires pour supprimer tout doute ou incertitude, expliquer les problèmes, exposer les options et attendre les décisions explicites de l'utilisateur. Chaque phase se conclut par l'écriture d'un fichier Markdown dédié.
+> 6. **Zero implicit decisions & Strict 3-Phase Workflow:** Pour tout développement, évolution ou modification, **AUCUN code ne doit être touché** tant que le processus par phase n'a pas été formellement validé. Vous devez poser toutes les questions nécessaires pour supprimer tout doute ou incertitude, expliquer les problèmes, exposer les options et attendre les décisions explicites de l'utilisateur. Chaque phase se conclut par l'écriture d'un fichier Markdown dédié placé obligatoirement dans le répertoire `notes/`.
+> 7. **Emplacement des documents :** Tous les documents générés (notes, spécifications, analyses, plans techniques, fiches de conception) doivent obligatoirement être enregistrés dans le répertoire `notes/`.
 
 ---
 
@@ -49,10 +50,9 @@
 .
 ├── index.html                           # THE APPLICATION: HTML + CSS + JS in a single file (~7,950 lines)
 ├── tests/                               # Node built-in tests of the pure rules (`node --test tests/*.test.mjs`); helpers.mjs loads DCC_RULES in a vm
+├── notes/                               # All generated documents, specs, analysis, and conception notes (MANDATORY)
 ├── package.json                         # Project metadata only ("name": "dcc-assistant", "type": "module")
 ├── README.md                            # User documentation & feature list
-├── conception-fonctionnelle-notes.md    # Functional specifications for upcoming P2P Shared Notes feature
-├── conception-technique-notes.md        # Technical specifications for upcoming P2P Shared Notes (GUN/SEA, WebRTC)
 ├── .gitignore                           # Git ignore rules (ignores Dungeon Crawl Classics - Francais.pdf)
 ├── .agents/
 │   ├── AGENTS.md                        # Agent instructions (this file)
@@ -96,7 +96,7 @@ Tout développement ou modification du projet doit impérativement respecter les
   * Poser systématiquement des questions de clarification jusqu'à éliminer 100% des doutes.
   * **Zéro décision implicite :** expliquer le problème, exposer les options/alternatives concrètes avec leurs avantages/inconvénients, et attendre la décision explicite de l'utilisateur.
   * **Ne toucher à aucun code applicatif.**
-* **Livrable obligatoire :** À la fin de cette phase, rédaction d'un fichier Markdown documentant l'analyse du besoin, les choix arrêtés par l'utilisateur, et la description précise de ce qui est à développer.
+* **Livrable obligatoire :** À la fin de cette phase, rédaction d'un fichier Markdown documentant l'analyse du besoin, les choix arrêtés par l'utilisateur, et la description précise de ce qui est à développer (placé obligatoirement dans `notes/`).
 
 ### Phase 2 : Plan de développement
 * **Objectif :** Rédiger un plan de développement technique détaillé.
@@ -104,14 +104,14 @@ Tout développement ou modification du projet doit impérativement respecter les
   * Poser des questions sur l'architecture, le CSS, le HTML ou le JS jusqu'à supprimer tout doute ou incertitude.
   * **Zéro décision implicite :** expliquer les contraintes techniques, exposer les options de conception et attendre la décision de l'utilisateur.
   * **Ne toucher à aucun code applicatif.**
-* **Livrable obligatoire :** À la fin de cette phase, rédaction d'un fichier Markdown documentant le plan technique détaillé, l'architecture retenue, les choix techniques effectués et le découpage précis des étapes de développement.
+* **Livrable obligatoire :** À la fin de cette phase, rédaction d'un fichier Markdown documentant le plan technique détaillé, l'architecture retenue, les choix techniques effectués et le découpage précis des étapes de développement (placé obligatoirement dans `notes/`).
 
 ### Phase 3 : Description détaillée des changements
 * **Objectif :** Décrire précisément et de manière exhaustive l'ensemble des modifications à apporter dans le code.
 * **Règles :**
   * Documenter les changements exacts (fichiers cibles, numéros de lignes approximatifs, blocs CSS/HTML/JS, contenu avant/après, gestion des cas limites et responsive).
   * Ce document doit être rédigé avec un niveau de rigueur et de précision tel qu'il peut être transmis directement à un agent IA pour exécuter la tâche de manière autonome et sans ambiguïté.
-* **Livrable obligatoire :** Rédaction d'un fichier Markdown contenant la spécification détaillée des modifications de code.
+* **Livrable obligatoire :** Rédaction d'un fichier Markdown contenant la spécification détaillée des modifications de code (placé obligatoirement dans `notes/`).
 
 ---
 
