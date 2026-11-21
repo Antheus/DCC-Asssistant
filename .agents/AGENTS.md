@@ -1,6 +1,6 @@
 # Agent Instructions — DCC Assistant
 
-> **Agent Directive:** Trust these instructions completely. Do not spend time searching, grepping, or re-exploring the repository unless information here is missing or an unexpected error occurs. When researching game rules, **always use `Dungeon Crawl Classics - Francais.md` (Markdown)**; never attempt to parse or read the `.pdf` file. **Zero implicit decisions on evolutions:** For any feature request or evolution, always ask clarifying questions, suggest options, and clear all doubts before implementing.
+> **Agent Directive:** Trust these instructions completely. Do not spend time searching, grepping, or re-exploring the repository unless information here is missing or an unexpected error occurs. When researching game rules, **always use `Dungeon Crawl Classics - Francais.md` (Markdown)**; never attempt to parse or read the `.pdf` file. **Zero implicit decisions & Strict Phased Workflow:** Tout développement doit obligatoirement suivre le processus en 3 phases séquentielles (Phase 1 : Analyse & Clarification → Phase 2 : Plan technique → Phase 3 : Spécification détaillée des changements en Markdown). Ne jamais toucher au code sans validation explicite des phases et fichiers Markdown correspondants.
 
 ---
 
@@ -38,7 +38,7 @@
 > 3. **External libraries:** Any future external dependency (e.g. GUN/SEA for the planned shared notes feature) must be imported via HTTPS CDN `<script>` tags, never npm modules.
 > 4. **Gitignore rule:** `.gitignore` ignores `Dungeon Crawl Classics - Francais.pdf`. The `.agents/` folder and `AGENTS.md` are tracked.
 > 5. **Rulebook format — Markdown ONLY:** Always consult and work with the rules using the Markdown file (`Dungeon Crawl Classics - Francais.md`). **Never use or parse the PDF (`Dungeon Crawl Classics - Francais.pdf`)**. The Markdown file contains the complete, search-ready official rules and avoids heavy/unreliable PDF extraction.
-> 6. **Zero implicit decisions — Clarify & Propose Options:** For each evolution or feature request, you MUST ask all clarifying questions necessary for thorough understanding and implementation before writing any code. Systematically present concrete options/alternatives. Never make implicit decisions or assumptions; any doubt must be completely cleared and aligned with the user prior to implementation.
+> 6. **Zero implicit decisions & Strict 3-Phase Workflow:** Pour tout développement, évolution ou modification, **AUCUN code ne doit être touché** tant que le processus par phase n'a pas été formellement validé. Vous devez poser toutes les questions nécessaires pour supprimer tout doute ou incertitude, expliquer les problèmes, exposer les options et attendre les décisions explicites de l'utilisateur. Chaque phase se conclut par l'écriture d'un fichier Markdown dédié.
 
 ---
 
@@ -86,21 +86,48 @@
 
 ---
 
-## 4. Development Workflow & Change Verification
+## 4. Development Workflow by Phases (Mandatory)
 
-When making changes or adding features:
-1. **Clarify before coding:** Ask all clarifying questions needed, submit implementation options, and ensure all ambiguity is resolved with the user. No implicit decisions.
-2. **Edit `index.html`:** Keep HTML, CSS, and JS strictly within their designated sections.
-3. **Run JS syntax check:**
+Tout développement ou modification du projet doit impérativement respecter les **3 phases séquentielles** suivantes. Il est formellement interdit de sauter une phase ou de toucher au code de l'application (`index.html`) sans autorisation explicite de l'utilisateur.
+
+### Phase 1 : Compréhension et analyse du besoin
+* **Objectif :** Comprendre la demande en profondeur et supprimer toute incertitude ou zone d'ombre.
+* **Règles :**
+  * Poser systématiquement des questions de clarification jusqu'à éliminer 100% des doutes.
+  * **Zéro décision implicite :** expliquer le problème, exposer les options/alternatives concrètes avec leurs avantages/inconvénients, et attendre la décision explicite de l'utilisateur.
+  * **Ne toucher à aucun code applicatif.**
+* **Livrable obligatoire :** À la fin de cette phase, rédaction d'un fichier Markdown documentant l'analyse du besoin, les choix arrêtés par l'utilisateur, et la description précise de ce qui est à développer.
+
+### Phase 2 : Plan de développement
+* **Objectif :** Rédiger un plan de développement technique détaillé.
+* **Règles :**
+  * Poser des questions sur l'architecture, le CSS, le HTML ou le JS jusqu'à supprimer tout doute ou incertitude.
+  * **Zéro décision implicite :** expliquer les contraintes techniques, exposer les options de conception et attendre la décision de l'utilisateur.
+  * **Ne toucher à aucun code applicatif.**
+* **Livrable obligatoire :** À la fin de cette phase, rédaction d'un fichier Markdown documentant le plan technique détaillé, l'architecture retenue, les choix techniques effectués et le découpage précis des étapes de développement.
+
+### Phase 3 : Description détaillée des changements
+* **Objectif :** Décrire précisément et de manière exhaustive l'ensemble des modifications à apporter dans le code.
+* **Règles :**
+  * Documenter les changements exacts (fichiers cibles, numéros de lignes approximatifs, blocs CSS/HTML/JS, contenu avant/après, gestion des cas limites et responsive).
+  * Ce document doit être rédigé avec un niveau de rigueur et de précision tel qu'il peut être transmis directement à un agent IA pour exécuter la tâche de manière autonome et sans ambiguïté.
+* **Livrable obligatoire :** Rédaction d'un fichier Markdown contenant la spécification détaillée des modifications de code.
+
+---
+
+### Exécution du code (Si et seulement si expressément demandée par l'utilisateur)
+Lorsque l'utilisateur valide explicitement le passage au code après les phases documentées :
+1. **Édition de `index.html` :** Respecter strictement la structure en fichier unique (CSS, HTML et JS dans leurs sections respectives).
+2. **Contrôle syntaxique JS :**
    ```bash
-   node -e 'const fs=require("fs"),vm=require("vm"),h=fs.readFileSync("index.html","utf8"),s=h.match(/<script>([\s\S]*?)<\/script>/)[1];new vm.Script(s);console.log("JS Syntax OK");'
+   node -e "const fs=require('fs'),vm=require('vm'),h=fs.readFileSync('index.html','utf8'),s=h.match(/<script>([\s\S]*?)<\/script>/)[1];new vm.Script(s);console.log('JS Syntax OK');"
    ```
-4. **Run HTML structure check:**
+3. **Contrôle structurel HTML :**
    ```bash
-   python3 -c 'from html.parser import HTMLParser;p=HTMLParser();p.feed(open("index.html",encoding="utf-8").read());print("HTML OK")'
+   python -c "from html.parser import HTMLParser;p=HTMLParser();p.feed(open('index.html',encoding='utf-8').read());print('HTML OK')"
    ```
-5. **Run unit tests:**
+4. **Exécution des tests de non-régression :**
    ```bash
    node --test tests/*.test.mjs
    ```
-6. **Confirm git diff:** Ensure no spurious whitespace or duplicate tags at end of file (`</body></html>` must appear once).
+5. **Vérification du git diff :** S'assurer de l'absence de modifications parasites, de duplications de balises ou de trailing whitespace.
