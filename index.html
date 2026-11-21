@@ -85,6 +85,56 @@
       font-style: italic;
     }
 
+    .app-version-wrapper {
+      position: relative;
+      display: inline;
+      cursor: help;
+    }
+
+    .app-version-wrapper .version-tooltip {
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      top: 130%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1c1c24;
+      border: 1px solid var(--accent-gold);
+      color: var(--text-light);
+      border-radius: 6px;
+      padding: 0.6rem 0.8rem;
+      font-size: 0.75rem;
+      font-family: var(--font-sans);
+      font-style: normal;
+      font-weight: normal;
+      white-space: pre-line;
+      width: max-content;
+      max-width: 320px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+      z-index: 100;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      pointer-events: none;
+      line-height: 1.4;
+      text-align: left;
+    }
+
+    .app-version-wrapper .version-tooltip::after {
+      content: "";
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: transparent transparent var(--accent-gold) transparent;
+    }
+
+    .app-version-wrapper:hover .version-tooltip,
+    .app-version-wrapper:focus-within .version-tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
     .actions-toolbar {
       display: flex;
       flex-wrap: wrap;
@@ -1817,6 +1867,180 @@
       }
     }
 
+    /* ==========================================================================
+       Mode Édition des Fiches (Niveau 0 & Aventuriers)
+       ========================================================================== */
+    .card-header-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-left: auto;
+    }
+
+    .btn-edit-card,
+    .btn-save-edit,
+    .btn-cancel-edit {
+      padding: 0.2rem 0.5rem;
+      font-size: 0.75rem;
+      line-height: 1.2;
+      border-radius: 3px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .char-card.char-card-editing {
+      border: 2px solid var(--accent-gold) !important;
+      box-shadow: 0 0 14px rgba(212, 175, 55, 0.4), inset 0 0 8px rgba(212, 175, 55, 0.1);
+      background: linear-gradient(to bottom, #24222a, #1a1921);
+    }
+
+    .badge-editing {
+      display: inline-block;
+      background: var(--accent-gold);
+      color: #111;
+      font-size: 0.65rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+    }
+
+    .edit-form-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    .edit-form-section {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid #3d3b45;
+      border-radius: 4px;
+      padding: 0.55rem 0.7rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .edit-section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.78rem;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+      padding-bottom: 0.2rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .edit-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      align-items: center;
+    }
+
+    .edit-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      flex: 1 1 110px;
+    }
+
+    .edit-field-sm {
+      flex: 0 1 65px;
+    }
+
+    .edit-field-full {
+      flex: 1 1 100%;
+    }
+
+    .edit-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .edit-input,
+    .edit-select,
+    .edit-textarea {
+      background: #141318;
+      color: var(--text-light);
+      border: 1px solid #4a4755;
+      border-radius: 3px;
+      padding: 0.28rem 0.4rem;
+      font-family: inherit;
+      font-size: 0.82rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .edit-input:focus,
+    .edit-select:focus,
+    .edit-textarea:focus {
+      outline: none;
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
+    }
+
+    .edit-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.35rem;
+    }
+
+    .edit-spells-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-height: 220px;
+      overflow-y: auto;
+      padding: 0.4rem;
+      background: #111015;
+      border: 1px solid #333;
+      border-radius: 3px;
+    }
+
+    .edit-spell-level-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .edit-spell-level-title {
+      font-size: 0.72rem;
+      color: var(--accent-gold);
+      font-weight: bold;
+    }
+
+    .edit-spells-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 0.25rem;
+    }
+
+    .edit-spell-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .edit-spell-checkbox input {
+      accent-color: var(--accent-gold);
+    }
+
+    .edit-coins-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
     @page {
       margin: 8mm;
     }
@@ -2289,6 +2513,16 @@
         line-height: 1.4;
       }
 
+      .app-version-wrapper .version-tooltip {
+        max-width: 260px;
+        left: 0;
+        transform: none;
+      }
+
+      .app-version-wrapper .version-tooltip::after {
+        left: 1.5rem;
+      }
+
       .actions-toolbar {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2415,8 +2649,10 @@
     <div class="header-container">
       <div class="title-group">
         <h1>⚔️ DCC RPG • L'Entonnoir &amp; Aventuriers</h1>
-        <p>Générateur &amp; Gestionnaire officiel, niveaux 0 à 10 (VF Akileos) <span class="app-version"
-            style="font-size: 0.85em; opacity: 0.8; font-weight: bold; color: var(--accent-gold);">v1.0.2</span></p>
+        <p>Générateur &amp; Gestionnaire officiel, niveaux 0 à 10 (VF Akileos) <span class="app-version-wrapper" tabindex="0">v<span class="app-version"
+            style="font-size: 0.85em; opacity: 0.8; font-weight: bold; color: var(--accent-gold);">1.0.2</span>
+          <span class="version-tooltip">Version initiale</span>
+          </span></p>
       </div>
 
       <div class="actions-toolbar">
@@ -2428,6 +2664,9 @@
         </button>
         <button id="btnGenSixteen" class="btn btn-secondary" title="Générer 16 paysans pour toute une table de jeu">
           <span>🎲</span> Table entière (16)
+        </button>
+        <button id="btnNewAdventurer" class="btn btn-gold" title="Créer un nouvel aventurier de niveau 1+" hidden>
+          <span>➕</span> Nouvel aventurier
         </button>
         <button id="btnPrint" class="btn btn-secondary"
           title="Imprimer l’onglet actif ou l’enregistrer en PDF">
@@ -2502,7 +2741,10 @@
     <div id="tabAdventurers" role="tabpanel" aria-labelledby="tabBtnAdventurers" hidden>
       <div id="adventurerEmptyState" class="empty-state" style="display: none;">
         <h2>Aucun aventurier</h2>
-        <p>Aucun aventurier : un survivant avec 10 PX peut passer au niveau 1 depuis l'onglet Niveau 0.</p>
+        <p>Aucun aventurier : un survivant avec 10 PX peut passer au niveau 1 depuis l'onglet Niveau 0, ou vous pouvez en créer un directement.</p>
+        <button type="button" id="btnEmptyNewAdventurer" class="btn btn-gold" style="margin-top: 1rem;">
+          <span>➕</span> Créer un aventurier
+        </button>
       </div>
       <div id="adventurerGrid" class="roster-grid">
         <!-- Les fiches d'aventuriers sont injectées ici -->
@@ -4432,6 +4674,69 @@
         return char;
       }
 
+      function createBlankAdventurer(customProps = {}) {
+        const id = 'char_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+        const stats = {
+          strength: { score: 10, mod: 0 },
+          agility: { score: 10, mod: 0 },
+          stamina: { score: 10, mod: 0 },
+          personality: { score: 10, mod: 0 },
+          intelligence: { score: 10, mod: 0 },
+          luck: { score: 10, initialScore: 10, mod: 0 }
+        };
+        const weapon = {
+          name: 'Épée courte',
+          damage: '1d6',
+          attackType: 'melee',
+          twoHanded: false
+        };
+        const sign = LUCKY_SIGNS[0] || {
+          roll: 1,
+          name: "Âpre hiver",
+          description: "Tous les jets d'attaque"
+        };
+
+        const char = {
+          id,
+          name: 'Nouvel Aventurier',
+          race: 'Humain',
+          className: 'warrior',
+          level: 1,
+          customTitle: '',
+          alignment: 'Neutre',
+          xp: 10,
+          currentHp: 10,
+          maxHp: 10,
+          ac: 10,
+          speed: 9,
+          baseSpeed: 9,
+          armorId: 'none',
+          hasShield: false,
+          stats,
+          weapon,
+          startingWeapon: weapon,
+          luckySign: {
+            roll: sign.roll,
+            name: sign.name,
+            description: sign.description,
+            modifier: 0
+          },
+          knownLanguages: ['Commun'],
+          coinPurse: { pc: 0, pa: 0, pe: 0, po: 10, pp: 0 },
+          startingItem: 'Sac à dos, torche (2)',
+          notes: '',
+          classData: {},
+          daily: defaultDaily(),
+          hpHistory: [{ level: 1, die: 'd10', roll: 10, mod: 0, gain: 10 }],
+          levelHistory: [{ level: 1, className: 'warrior', at: new Date().toISOString() }],
+          ...customProps
+        };
+
+        normalizeCharacterProtection(char);
+        syncLegacyStatus(char);
+        return normalizeAdventurer(char);
+      }
+
       // Bonus de Chance des augures de naissance sur les jets d'attaque et de dégâts (mêlée / distance).
       function getAugurCombatLuck(signRoll, luckMod) {
         const packHunter = signRoll === 9 ? luckMod : 0;
@@ -5233,6 +5538,8 @@
         constructor() {
           this.characters = [];
           this.storageKey = 'dcc_rpg_funnel_roster_v2';
+          this.editingCharacterIds = new Set();
+          this.characterSnapshots = new Map();
           this.tipIndex = -1;
           this.toastTimeout = null;
           this.activeTab = 'funnel';
@@ -5311,11 +5618,13 @@
           this.btnGenOne = document.getElementById('btnGenOne');
           this.btnGenFour = document.getElementById('btnGenFour');
           this.btnGenSixteen = document.getElementById('btnGenSixteen');
+          this.btnNewAdventurer = document.getElementById('btnNewAdventurer');
           this.tabFunnel = document.getElementById('tabFunnel');
           this.tabAdventurers = document.getElementById('tabAdventurers');
           this.tabButtons = Array.from(document.querySelectorAll('.tab-btn'));
           this.adventurerGrid = document.getElementById('adventurerGrid');
           this.adventurerEmptyState = document.getElementById('adventurerEmptyState');
+          this.btnEmptyNewAdventurer = document.getElementById('btnEmptyNewAdventurer');
           this.countLabelEl = document.getElementById('countLabel');
           this.aliveLabelEl = document.getElementById('aliveLabel');
           this.tabCountFunnel = document.getElementById('tabCountFunnel');
@@ -5332,6 +5641,12 @@
           this.btnGenOne.addEventListener('click', () => this.addCharacter());
           this.btnGenFour.addEventListener('click', () => this.addBatch(4));
           this.btnGenSixteen.addEventListener('click', () => this.addBatch(16));
+          if (this.btnNewAdventurer) {
+            this.btnNewAdventurer.addEventListener('click', () => this.handleNewAdventurer());
+          }
+          if (this.btnEmptyNewAdventurer) {
+            this.btnEmptyNewAdventurer.addEventListener('click', () => this.handleNewAdventurer());
+          }
 
           this.tabButtons.forEach(btn => {
             btn.addEventListener('click', () => this.setActiveTab(btn.dataset.tab));
@@ -6484,6 +6799,9 @@
           this.tabFunnel.hidden = isAdv;
           this.tabAdventurers.hidden = !isAdv;
           [this.btnGenOne, this.btnGenFour, this.btnGenSixteen].forEach(btn => { btn.hidden = isAdv; });
+          if (this.btnNewAdventurer) {
+            this.btnNewAdventurer.hidden = !isAdv;
+          }
 
           this.emptyState.style.display = !isAdv && funnel.length === 0 ? 'block' : 'none';
           this.adventurerEmptyState.style.display = isAdv && adventurers.length === 0 ? 'block' : 'none';
@@ -6672,6 +6990,16 @@
           const initiativeDie = getWeaponInitiativeDie(char.weapon);
           syncLegacyStatus(char);
 
+          const isEditing = this.editingCharacterIds.has(char.id);
+          if (isEditing) {
+            const card = document.createElement('div');
+            card.className = `char-card char-card-editing status-${statusInfo.code}`;
+            card.dataset.id = char.id;
+            card.innerHTML = this.renderCharacterCardEdit(char, statusInfo);
+            this.bindCharacterEditControls(card, char);
+            return card;
+          }
+
           const levelUpCheck = canLevelUp(char);
 
           const card = document.createElement('div');
@@ -6701,6 +7029,9 @@
               </select>
             </label>
             <span class="badge-status status-${statusInfo.code}">${this.escapeHtml(statusInfo.label)}</span>
+            <div class="card-header-actions">
+              <button type="button" class="btn btn-secondary btn-sm btn-edit-card" title="Modifier cette fiche">✏️ Modifier</button>
+            </div>
           </div>
           ${racialTraits.length ? `<div class="lucky-desc"><strong>Capacités raciales :</strong> ${racialTraits.map(({ name, description }) => `<span class="racial-trait" tabindex="0" title="${this.escapeHtml(description)}">${this.escapeHtml(name)}</span>`).join(' ; ')}</div>` : ''}
           <div class="known-languages"><strong>Langues connues :</strong> ${knownLanguages.length ? knownLanguages.map(language => this.escapeHtml(language)).join(', ') : 'Non renseignées'}</div>
@@ -6864,6 +7195,9 @@
           card.querySelector('.btn-level-up').addEventListener('click', () => this.openLevelUpWizard(char.id));
           card.querySelector('.btn-reroll').addEventListener('click', () => this.rerollCharacter(char.id));
           card.querySelector('.btn-delete').addEventListener('click', () => this.deleteCharacter(char.id));
+
+          const editBtn = card.querySelector('.btn-edit-card');
+          if (editBtn) editBtn.addEventListener('click', () => this.startEditing(char.id));
 
           return card;
         }
@@ -7668,6 +8002,17 @@
           const row = getClassRow(char);
           const statusInfo = this.getDerivedStatus(char);
           const code = statusInfo.code;
+
+          const isEditing = this.editingCharacterIds.has(char.id);
+          if (isEditing) {
+            const card = document.createElement('div');
+            card.className = `char-card adventurer-card char-card-editing status-${code}`;
+            card.dataset.id = char.id;
+            card.innerHTML = this.renderAdventurerCardEdit(char, statusInfo);
+            this.bindAdventurerEditControls(card, char);
+            return card;
+          }
+
           const racialTraits = this.getRacialTraits(char.race, char.stats.intelligence.score, char.luckySign.roll);
           const knownLanguages = Array.isArray(char.knownLanguages) ? char.knownLanguages : [];
           const saves = getAdventurerSaves(char);
@@ -7756,6 +8101,9 @@
           <div class="card-subline">
             <span class="char-alignment">${esc(char.alignment)}${allegiance ? ` · ${esc(allegiance)}` : ''} · ${esc(char.race)}</span>
             <span class="badge-status status-${code}">${esc(statusInfo.label)}</span>
+            <div class="card-header-actions">
+              <button type="button" class="btn btn-secondary btn-sm btn-edit-card" data-id="${char.id}" title="Modifier cette fiche">✏️ Modifier</button>
+            </div>
           </div>
           ${racialTraits.length ? `<div class="lucky-desc"><strong>Capacités raciales :</strong> ${racialTraits.map(({ name, description }) => `<span class="racial-trait" tabindex="0" title="${esc(description)}">${esc(name)}</span>`).join(' ; ')}</div>` : ''}
           <div class="known-languages"><strong>Langues connues :</strong> ${knownLanguages.length ? knownLanguages.map(l => esc(l)).join(', ') : 'Non renseignées'}</div>
@@ -7901,8 +8249,779 @@
           onClick('.btn-new-day', () => this.newDay(char.id));
           onClick('.btn-level-up', () => this.openLevelUpWizard(char.id));
           onClick('.btn-delete', () => this.deleteCharacter(char.id));
+          onClick('.btn-edit-card', () => this.startEditing(char.id));
 
           return card;
+        }
+
+        // ---------- Mode Édition (Niveau 0 & Aventuriers) ----------
+
+        startEditing(charId) {
+          const char = this.findCharacter(charId);
+          if (!char) return;
+          this.characterSnapshots.set(charId, structuredClone(char));
+          this.editingCharacterIds.add(charId);
+          this.render();
+        }
+
+        cancelEditing(charId) {
+          const char = this.findCharacter(charId);
+          if (char && char._isNew) {
+            this.characters = this.characters.filter(c => c.id !== charId);
+          } else if (this.characterSnapshots.has(charId)) {
+            const snapshot = this.characterSnapshots.get(charId);
+            this.replaceCharacter(snapshot);
+          }
+          this.characterSnapshots.delete(charId);
+          this.editingCharacterIds.delete(charId);
+          this.saveState();
+          this.render();
+        }
+
+        handleNewAdventurer() {
+          const newAdv = createBlankAdventurer();
+          newAdv._isNew = true;
+          this.characters.push(newAdv);
+          this.characterSnapshots.set(newAdv.id, structuredClone(newAdv));
+          this.editingCharacterIds.add(newAdv.id);
+          this.setActiveTab('adventurers');
+          this.saveState();
+          this.render();
+          setTimeout(() => {
+            const cardEl = this.adventurerGrid.querySelector(`[data-id="${newAdv.id}"]`);
+            if (cardEl) cardEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 50);
+        }
+
+        renderCharacterCardEdit(char, statusInfo) {
+          const esc = (v) => this.escapeHtml(v);
+          const stats = char.stats;
+          const luck = stats.luck;
+          const knownLangs = Array.isArray(char.knownLanguages) ? char.knownLanguages.join(', ') : 'Commun';
+          const purse = char.coinPurse || { pc: 0, pa: 0, pe: 0, po: 0, pp: 0 };
+
+          const luckyOptions = LUCKY_SIGNS.map(s =>
+            `<option value="${s.roll}" ${char.luckySign && char.luckySign.roll === s.roll ? 'selected' : ''}>${s.roll}. ${esc(s.name)} (${esc(s.description)})</option>`
+          ).join('');
+
+          const armorOptions = ARMOR_TABLE.map(a =>
+            `<option value="${a.id}" ${char.armorId === a.id ? 'selected' : ''}>${esc(a.name)} (+${a.acBonus} CA, malus ${a.penalty})</option>`
+          ).join('');
+
+          const ruleWeapon = findRuleWeapon(char.weapon);
+          const curWeaponId = ruleWeapon ? ruleWeapon.id : '';
+          const weaponOptions = [
+            `<option value="" ${!curWeaponId ? 'selected' : ''}>Arme libre / personnalisée</option>`,
+            ...RULE_WEAPONS.map(w =>
+              `<option value="${w.id}" ${curWeaponId === w.id ? 'selected' : ''}>${esc(w.name)} (${esc(w.damage)})</option>`
+            )
+          ].join('');
+
+          return `
+        <div class="card-header">
+          <input type="text" class="card-name-input edit-name" value="${esc(char.name)}" placeholder="Nom du personnage" aria-label="Nom" />
+          <div class="card-subline" style="margin-top: 0.35rem;">
+            <span class="badge-editing">Mode Édition</span>
+            <div class="card-header-actions">
+              <button type="button" class="btn btn-primary btn-sm btn-save-edit" title="Enregistrer les modifications">💾 Terminer</button>
+              <button type="button" class="btn btn-secondary btn-sm btn-cancel-edit" title="Annuler">❌ Annuler</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="edit-form-container">
+          <!-- Identité -->
+          <div class="edit-form-section">
+            <div class="edit-section-title">👤 Identité & Origines</div>
+            <div class="edit-row">
+              <div class="edit-field">
+                <span class="edit-label">Race</span>
+                <select class="edit-select edit-race">
+                  ${['Humain', 'Elfe', 'Nain', 'Halfelin'].map(r => `<option value="${r}" ${char.race === r ? 'selected' : ''}>${r}</option>`).join('')}
+                </select>
+              </div>
+              <div class="edit-field">
+                <span class="edit-label">Métier / Titre</span>
+                <input type="text" class="edit-input edit-occupation" value="${esc(char.occupation || '')}" placeholder="Métier d'origine" />
+              </div>
+              <div class="edit-field">
+                <span class="edit-label">Alignement</span>
+                <select class="edit-select edit-alignment">
+                  ${ALIGNMENTS.map(al => `<option value="${al}" ${char.alignment === al ? 'selected' : ''}>${al}</option>`).join('')}
+                </select>
+              </div>
+              <div class="edit-field edit-field-full">
+                <span class="edit-label">Langues connues (séparées par des virgules)</span>
+                <input type="text" class="edit-input edit-languages" value="${esc(knownLangs)}" placeholder="ex. Commun, Nain" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Vitales & Stats -->
+          <div class="edit-form-section">
+            <div class="edit-section-title">❤️ Vitales & Caractéristiques</div>
+            <div class="edit-row">
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">PV Actuels</span>
+                <input type="number" class="edit-input edit-current-hp" value="${char.currentHp ?? char.maxHp}" min="0" max="999" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">PV Max</span>
+                <input type="number" class="edit-input edit-max-hp" value="${char.maxHp}" min="1" max="999" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">Vitesse (m)</span>
+                <input type="number" class="edit-input edit-speed" value="${char.baseSpeed ?? char.speed ?? 9}" min="1" max="60" step="1" />
+              </div>
+            </div>
+            <div class="edit-row" style="margin-top: 0.35rem;">
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">FOR</span>
+                <input type="number" class="edit-input edit-stat-strength" value="${stats.strength.score}" min="3" max="24" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">AGI</span>
+                <input type="number" class="edit-input edit-stat-agility" value="${stats.agility.score}" min="3" max="24" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">END</span>
+                <input type="number" class="edit-input edit-stat-stamina" value="${stats.stamina.score}" min="3" max="24" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">PRE</span>
+                <input type="number" class="edit-input edit-stat-personality" value="${stats.personality.score}" min="3" max="24" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">INT</span>
+                <input type="number" class="edit-input edit-stat-intelligence" value="${stats.intelligence.score}" min="3" max="24" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">CHA Act.</span>
+                <input type="number" class="edit-input edit-stat-luck-score" value="${luck.score}" min="1" max="24" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">CHA Init.</span>
+                <input type="number" class="edit-input edit-stat-luck-init" value="${luck.initialScore ?? luck.score}" min="1" max="24" />
+              </div>
+            </div>
+            <div class="edit-row" style="margin-top: 0.35rem;">
+              <div class="edit-field edit-field-full">
+                <span class="edit-label">Signe porte-bonheur</span>
+                <select class="edit-select edit-lucky-sign">
+                  ${luckyOptions}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Combat & Protection -->
+          <div class="edit-form-section">
+            <div class="edit-section-title">⚔️ Protection & Armes</div>
+            <div class="edit-row">
+              <div class="edit-field">
+                <span class="edit-label">Armure</span>
+                <select class="edit-select edit-armor">
+                  ${armorOptions}
+                </select>
+              </div>
+              <div class="edit-field edit-field-sm" style="justify-content: flex-end; padding-bottom: 0.25rem;">
+                <label style="display:flex; align-items:center; gap:0.35rem; font-size:0.8rem; cursor:pointer;">
+                  <input type="checkbox" class="edit-shield" ${char.hasShield ? 'checked' : ''} />
+                  Bouclier (+1)
+                </label>
+              </div>
+            </div>
+            <div class="edit-row">
+              <div class="edit-field">
+                <span class="edit-label">Arme du catalogue</span>
+                <select class="edit-select edit-weapon-select">
+                  ${weaponOptions}
+                </select>
+              </div>
+              <div class="edit-field">
+                <span class="edit-label">Nom arme personnalisé</span>
+                <input type="text" class="edit-input edit-weapon-name" value="${esc(char.weapon && char.weapon.name || '')}" placeholder="ex. Gourdin clouté" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">Dégâts</span>
+                <input type="text" class="edit-input edit-weapon-damage" value="${esc(char.weapon && char.weapon.damage || '1d4')}" placeholder="ex. 1d6" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Bourse & Inventaire -->
+          <div class="edit-form-section">
+            <div class="edit-section-title">🎒 Bourse, Équipement & Notes</div>
+            <div class="edit-row">
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">Pièces de Cuivre (PC)</span>
+                <input type="number" class="edit-input edit-coin-pc" value="${purse.pc ?? 0}" min="0" />
+              </div>
+            </div>
+            <div class="edit-row">
+              <div class="edit-field edit-field-full">
+                <span class="edit-label">Équipement & Marchandise de départ</span>
+                <textarea class="edit-textarea edit-starting-item" rows="2">${esc(char.startingItem || '')}</textarea>
+              </div>
+              <div class="edit-field edit-field-full">
+                <span class="edit-label">Notes libres</span>
+                <textarea class="edit-textarea edit-notes" rows="2">${esc(char.notes || '')}</textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+          `;
+        }
+
+        bindCharacterEditControls(card, char) {
+          card.querySelector('.btn-save-edit').addEventListener('click', () => this.saveCharacterEdit(char.id, card));
+          card.querySelector('.btn-cancel-edit').addEventListener('click', () => this.cancelEditing(char.id));
+
+          const wpnSelect = card.querySelector('.edit-weapon-select');
+          if (wpnSelect) {
+            wpnSelect.addEventListener('change', () => {
+              const ruleWpn = RULE_WEAPONS.find(w => w.id === wpnSelect.value);
+              if (ruleWpn) {
+                card.querySelector('.edit-weapon-name').value = ruleWpn.name;
+                card.querySelector('.edit-weapon-damage').value = ruleWpn.damage;
+              }
+            });
+          }
+        }
+
+        saveCharacterEdit(charId, card) {
+          const char = this.findCharacter(charId);
+          if (!char) return;
+
+          const val = (sel) => card.querySelector(sel) ? card.querySelector(sel).value.trim() : '';
+          const num = (sel, def = 0) => {
+            const el = card.querySelector(sel);
+            const n = el ? parseInt(el.value, 10) : def;
+            return Number.isSafeInteger(n) ? n : def;
+          };
+          const checked = (sel) => card.querySelector(sel) ? card.querySelector(sel).checked : false;
+
+          char.name = val('.edit-name') || 'Paysan sans nom';
+          char.race = val('.edit-race') || 'Humain';
+          char.occupation = val('.edit-occupation') || 'Fermier';
+          char.alignment = val('.edit-alignment') || 'Neutre';
+
+          const langs = val('.edit-languages');
+          char.knownLanguages = langs ? langs.split(',').map(s => s.trim()).filter(Boolean) : ['Commun'];
+
+          const stats = char.stats;
+          ['strength', 'agility', 'stamina', 'personality', 'intelligence'].forEach(key => {
+            const s = Math.max(3, Math.min(24, num(`.edit-stat-${key}`, 10)));
+            stats[key] = { score: s, mod: getModifier(s) };
+          });
+
+          const luckScore = Math.max(1, Math.min(24, num('.edit-stat-luck-score', 10)));
+          const luckInit = Math.max(luckScore, Math.min(24, num('.edit-stat-luck-init', luckScore)));
+          stats.luck = { score: luckScore, initialScore: luckInit, mod: getModifier(luckScore) };
+
+          const signRoll = num('.edit-lucky-sign', 1);
+          const foundSign = LUCKY_SIGNS.find(s => s.roll === signRoll) || LUCKY_SIGNS[0];
+          char.luckySign = {
+            roll: foundSign.roll,
+            name: foundSign.name,
+            description: foundSign.description,
+            modifier: stats.luck.mod
+          };
+
+          char.maxHp = Math.max(1, num('.edit-max-hp', 4));
+          char.currentHp = Math.min(char.maxHp, Math.max(0, num('.edit-current-hp', char.maxHp)));
+          char.baseSpeed = Math.max(1, num('.edit-speed', 9));
+
+          char.armorId = val('.edit-armor') || 'none';
+          char.hasShield = checked('.edit-shield');
+
+          const ruleWpn = RULE_WEAPONS.find(w => w.id === val('.edit-weapon-select'));
+          char.weapon = {
+            name: val('.edit-weapon-name') || (ruleWpn ? ruleWpn.name : 'Gourdin'),
+            damage: val('.edit-weapon-damage') || (ruleWpn ? ruleWpn.damage : '1d4'),
+            attackType: ruleWpn ? ruleWpn.attackType : 'melee',
+            twoHanded: ruleWpn ? Boolean(ruleWpn.twoHanded) : false
+          };
+
+          if (!char.coinPurse) char.coinPurse = { pc: 0, pa: 0, pe: 0, po: 0, pp: 0 };
+          char.coinPurse.pc = Math.max(0, num('.edit-coin-pc', 0));
+
+          char.startingItem = val('.edit-starting-item');
+          char.notes = val('.edit-notes');
+
+          normalizeCharacterProtection(char);
+          syncLegacyStatus(char);
+
+          delete char._isNew;
+          this.characterSnapshots.delete(charId);
+          this.editingCharacterIds.delete(charId);
+
+          this.saveState();
+          this.render();
+          this.showRollToast('Fiche modifiée', this.escapeHtml(char.name), 'Enregistrée avec succès');
+        }
+
+        renderAdventurerCardEdit(char, statusInfo) {
+          const esc = (v) => this.escapeHtml(v);
+          const stats = char.stats;
+          const luck = stats.luck;
+          const knownLangs = Array.isArray(char.knownLanguages) ? char.knownLanguages.join(', ') : 'Commun';
+          const purse = char.coinPurse || { pc: 0, pa: 0, pe: 0, po: 0, pp: 0 };
+          const classData = char.classData || {};
+
+          const classOptions = Object.keys(CLASSES).map(cid =>
+            `<option value="${cid}" ${char.className === cid ? 'selected' : ''}>${esc(CLASSES[cid].label)}</option>`
+          ).join('');
+
+          const luckyOptions = LUCKY_SIGNS.map(s =>
+            `<option value="${s.roll}" ${char.luckySign && char.luckySign.roll === s.roll ? 'selected' : ''}>${s.roll}. ${esc(s.name)} (${esc(s.description)})</option>`
+          ).join('');
+
+          const armorOptions = ARMOR_TABLE.map(a =>
+            `<option value="${a.id}" ${char.armorId === a.id ? 'selected' : ''}>${esc(a.name)} (+${a.acBonus} CA, malus ${a.penalty})</option>`
+          ).join('');
+
+          const ruleWeapon = findRuleWeapon(char.weapon);
+          const curWeaponId = ruleWeapon ? ruleWeapon.id : '';
+          const weaponOptions = [
+            `<option value="" ${!curWeaponId ? 'selected' : ''}>Arme libre / personnalisée</option>`,
+            ...RULE_WEAPONS.map(w =>
+              `<option value="${w.id}" ${curWeaponId === w.id ? 'selected' : ''}>${esc(w.name)} (${esc(w.damage)})</option>`
+            )
+          ].join('');
+
+          // Clerc
+          const deities = DEITIES[char.alignment] || [];
+          const deityOptions = deities.map(d =>
+            `<option value="${d.id}" ${classData.deity === d.id ? 'selected' : ''}>${esc(d.name)}</option>`
+          ).join('');
+
+          // Patron (magicien / elfe)
+          const patronOptions = [
+            '<option value="">Aucun patron</option>',
+            ...PATRONS.map(p =>
+              `<option value="${p.id}" ${classData.patron === p.id ? 'selected' : ''}>${esc(p.name)}</option>`
+            )
+          ].join('');
+
+          // Sorts pour magicien / elfe ou clerc
+          const isArcane = char.className === 'wizard' || char.className === 'elf';
+          const isDivine = char.className === 'cleric';
+          const knownSpellIds = new Set(Array.isArray(classData.spells) ? classData.spells.map(s => s.id) : []);
+
+          let spellsCheckboxesHtml = '';
+          if (isArcane || isDivine) {
+            const spellTable = isArcane ? WIZARD_SPELLS : CLERIC_SPELLS;
+            const spellLevelsHtml = [];
+            for (let lvl = 1; lvl <= 5; lvl++) {
+              const list = spellTable[lvl] || [];
+              if (!list.length) continue;
+              const listHtml = list.map(s => `
+                <label class="edit-spell-checkbox">
+                  <input type="checkbox" class="edit-spell-item" data-spell-id="${esc(s.id)}" data-level="${lvl}" ${knownSpellIds.has(s.id) ? 'checked' : ''} />
+                  <span>${esc(s.name)}${s.page ? ` (p.${s.page})` : ''}</span>
+                </label>
+              `).join('');
+              spellLevelsHtml.push(`
+                <div class="edit-spell-level-group">
+                  <div class="edit-spell-level-title">Sorts de niveau ${lvl}</div>
+                  <div class="edit-spells-grid">${listHtml}</div>
+                </div>
+              `);
+            }
+            spellsCheckboxesHtml = `
+              <div class="edit-form-section">
+                <div class="edit-section-title">✨ Sorts connus (${isArcane ? 'Magie arcanique' : 'Magie divine'})</div>
+                <div class="edit-spells-container">
+                  ${spellLevelsHtml.join('')}
+                </div>
+              </div>
+            `;
+          }
+
+          // Guerrier / Nain arme chanceuse
+          const isWarriorOrDwarf = char.className === 'warrior' || char.className === 'dwarf';
+          let luckyWeaponHtml = '';
+          if (isWarriorOrDwarf) {
+            luckyWeaponHtml = `
+              <div class="edit-field">
+                <span class="edit-label">Arme de prédilection (augure)</span>
+                <select class="edit-select edit-lucky-weapon">
+                  <option value="">Aucune</option>
+                  ${RULE_WEAPONS.map(w => `<option value="${w.id}" ${classData.luckyWeapon === w.id ? 'selected' : ''}>${esc(w.name)}</option>`).join('')}
+                </select>
+              </div>
+            `;
+          }
+
+          return `
+        <div class="card-header">
+          <input type="text" class="card-name-input edit-name" value="${esc(char.name)}" placeholder="Nom de l'aventurier" aria-label="Nom" />
+          <div class="card-subline" style="margin-top: 0.35rem;">
+            <span class="badge-editing">Mode Édition</span>
+            <div class="card-header-actions">
+              <button type="button" class="btn btn-primary btn-sm btn-save-edit" title="Enregistrer les modifications">💾 Terminer</button>
+              <button type="button" class="btn btn-secondary btn-sm btn-cancel-edit" title="Annuler">❌ Annuler</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="edit-form-container">
+          <!-- Identité & Classe -->
+          <div class="edit-form-section">
+            <div class="edit-section-title">👤 Identité & Classe</div>
+            <div class="edit-row">
+              <div class="edit-field">
+                <span class="edit-label">Classe</span>
+                <select class="edit-select edit-class">
+                  ${classOptions}
+                </select>
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">Niveau</span>
+                <select class="edit-select edit-level">
+                  ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(lvl => `<option value="${lvl}" ${char.level === lvl ? 'selected' : ''}>${lvl}</option>`).join('')}
+                </select>
+              </div>
+              <div class="edit-field">
+                <span class="edit-label">Alignement</span>
+                <select class="edit-select edit-alignment">
+                  ${ALIGNMENTS.map(al => `<option value="${al}" ${char.alignment === al ? 'selected' : ''}>${al}</option>`).join('')}
+                </select>
+              </div>
+              <div class="edit-field">
+                <span class="edit-label">Race</span>
+                <select class="edit-select edit-race">
+                  ${['Humain', 'Nain', 'Elfe', 'Halfelin'].map(r => `<option value="${r}" ${char.race === r ? 'selected' : ''}>${r}</option>`).join('')}
+                </select>
+              </div>
+            </div>
+            <div class="edit-row">
+              <div class="edit-field">
+                <span class="edit-label">Titre personnalisé (laisser vide pour titre officiel)</span>
+                <input type="text" class="edit-input edit-custom-title" value="${esc(char.customTitle || '')}" placeholder="Titre libre..." />
+              </div>
+              <div class="edit-field">
+                <span class="edit-label">Langues connues (séparées par des virgules)</span>
+                <input type="text" class="edit-input edit-languages" value="${esc(knownLangs)}" placeholder="ex. Commun, Elfique" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Vitales & XP -->
+          <div class="edit-form-section">
+            <div class="edit-section-title">❤️ Vitales & Expérience</div>
+            <div class="edit-row">
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">PV Actuels</span>
+                <input type="number" class="edit-input edit-current-hp" value="${char.currentHp ?? char.maxHp}" min="0" max="999" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">PV Max</span>
+                <input type="number" class="edit-input edit-max-hp" value="${char.maxHp}" min="1" max="999" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">PX</span>
+                <input type="number" class="edit-input edit-xp" value="${char.xp}" min="0" max="9999" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">Vitesse (m)</span>
+                <input type="number" class="edit-input edit-speed" value="${char.baseSpeed ?? char.speed ?? 9}" min="1" max="60" step="1" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Caractéristiques -->
+          <div class="edit-form-section">
+            <div class="edit-section-title">🎲 Caractéristiques</div>
+            <div class="edit-row">
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">FOR</span>
+                <input type="number" class="edit-input edit-stat-strength" value="${stats.strength.score}" min="3" max="24" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">AGI</span>
+                <input type="number" class="edit-input edit-stat-agility" value="${stats.agility.score}" min="3" max="24" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">END</span>
+                <input type="number" class="edit-input edit-stat-stamina" value="${stats.stamina.score}" min="3" max="24" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">PRE</span>
+                <input type="number" class="edit-input edit-stat-personality" value="${stats.personality.score}" min="3" max="24" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">INT</span>
+                <input type="number" class="edit-input edit-stat-intelligence" value="${stats.intelligence.score}" min="3" max="24" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">CHA Act.</span>
+                <input type="number" class="edit-input edit-stat-luck-score" value="${luck.score}" min="1" max="24" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">CHA Init.</span>
+                <input type="number" class="edit-input edit-stat-luck-init" value="${luck.initialScore ?? luck.score}" min="1" max="24" />
+              </div>
+            </div>
+            <div class="edit-row" style="margin-top: 0.35rem;">
+              <div class="edit-field edit-field-full">
+                <span class="edit-label">Signe porte-bonheur</span>
+                <select class="edit-select edit-lucky-sign">
+                  ${luckyOptions}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Protection & Armes -->
+          <div class="edit-form-section">
+            <div class="edit-section-title">⚔️ Protection & Armes</div>
+            <div class="edit-row">
+              <div class="edit-field">
+                <span class="edit-label">Armure</span>
+                <select class="edit-select edit-armor">
+                  ${armorOptions}
+                </select>
+              </div>
+              <div class="edit-field edit-field-sm" style="justify-content: flex-end; padding-bottom: 0.25rem;">
+                <label style="display:flex; align-items:center; gap:0.35rem; font-size:0.8rem; cursor:pointer;">
+                  <input type="checkbox" class="edit-shield" ${char.hasShield ? 'checked' : ''} />
+                  Bouclier (+1)
+                </label>
+              </div>
+            </div>
+            <div class="edit-row">
+              <div class="edit-field">
+                <span class="edit-label">Arme du catalogue</span>
+                <select class="edit-select edit-weapon-select">
+                  ${weaponOptions}
+                </select>
+              </div>
+              <div class="edit-field">
+                <span class="edit-label">Nom arme personnalisé</span>
+                <input type="text" class="edit-input edit-weapon-name" value="${esc(char.weapon && char.weapon.name || '')}" placeholder="ex. Épée à deux mains" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">Dégâts</span>
+                <input type="text" class="edit-input edit-weapon-damage" value="${esc(char.weapon && char.weapon.damage || '1d6')}" placeholder="ex. 1d8" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Spécifique de classe (Clerc, Magicien, Elfe, Guerrier) -->
+          ${isDivine || isArcane || isWarriorOrDwarf ? `
+          <div class="edit-form-section">
+            <div class="edit-section-title">📜 Données de classe (${esc(CLASSES[char.className].label)})</div>
+            <div class="edit-row">
+              ${isDivine ? `
+              <div class="edit-field">
+                <span class="edit-label">Divinité</span>
+                <select class="edit-select edit-deity">
+                  ${deityOptions.length ? deityOptions : '<option value="">Aucune divinité</option>'}
+                </select>
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">Plage de défaveur</span>
+                <input type="number" class="edit-input edit-disapproval" value="${(char.daily && char.daily.disapprovalRange) || 1}" min="1" max="20" />
+              </div>
+              ` : ''}
+              ${isArcane ? `
+              <div class="edit-field">
+                <span class="edit-label">Patron surnaturel</span>
+                <select class="edit-select edit-patron">
+                  ${patronOptions}
+                </select>
+              </div>
+              ` : ''}
+              ${luckyWeaponHtml}
+            </div>
+          </div>
+          ` : ''}
+
+          ${spellsCheckboxesHtml}
+
+          <!-- Bourse & Inventaire -->
+          <div class="edit-form-section">
+            <div class="edit-section-title">💰 Bourse, Équipement & Notes</div>
+            <div class="edit-coins-row">
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">PC (cuivre)</span>
+                <input type="number" class="edit-input edit-coin-pc" value="${purse.pc ?? 0}" min="0" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">PA (argent)</span>
+                <input type="number" class="edit-input edit-coin-pa" value="${purse.pa ?? 0}" min="0" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">PE (électrum)</span>
+                <input type="number" class="edit-input edit-coin-pe" value="${purse.pe ?? 0}" min="0" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">PO (or)</span>
+                <input type="number" class="edit-input edit-coin-po" value="${purse.po ?? 0}" min="0" />
+              </div>
+              <div class="edit-field edit-field-sm">
+                <span class="edit-label">PP (platine)</span>
+                <input type="number" class="edit-input edit-coin-pp" value="${purse.pp ?? 0}" min="0" />
+              </div>
+            </div>
+            <div class="edit-row">
+              <div class="edit-field edit-field-full">
+                <span class="edit-label">Bagages & Équipement</span>
+                <textarea class="edit-textarea edit-starting-item" rows="2">${esc(char.startingItem || '')}</textarea>
+              </div>
+              <div class="edit-field edit-field-full">
+                <span class="edit-label">Notes / Faits d'armes</span>
+                <textarea class="edit-textarea edit-notes" rows="2">${esc(char.notes || '')}</textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+          `;
+        }
+
+        bindAdventurerEditControls(card, char) {
+          card.querySelector('.btn-save-edit').addEventListener('click', () => this.saveAdventurerEdit(char.id, card));
+          card.querySelector('.btn-cancel-edit').addEventListener('click', () => this.cancelEditing(char.id));
+
+          const wpnSelect = card.querySelector('.edit-weapon-select');
+          if (wpnSelect) {
+            wpnSelect.addEventListener('change', () => {
+              const ruleWpn = RULE_WEAPONS.find(w => w.id === wpnSelect.value);
+              if (ruleWpn) {
+                card.querySelector('.edit-weapon-name').value = ruleWpn.name;
+                card.querySelector('.edit-weapon-damage').value = ruleWpn.damage;
+              }
+            });
+          }
+
+          const classSelect = card.querySelector('.edit-class');
+          if (classSelect) {
+            classSelect.addEventListener('change', () => {
+              char.className = classSelect.value;
+              card.innerHTML = this.renderAdventurerCardEdit(char, this.getDerivedStatus(char));
+              this.bindAdventurerEditControls(card, char);
+            });
+          }
+        }
+
+        saveAdventurerEdit(charId, card) {
+          const char = this.findCharacter(charId);
+          if (!char) return;
+
+          const val = (sel) => card.querySelector(sel) ? card.querySelector(sel).value.trim() : '';
+          const num = (sel, def = 0) => {
+            const el = card.querySelector(sel);
+            const n = el ? parseInt(el.value, 10) : def;
+            return Number.isSafeInteger(n) ? n : def;
+          };
+          const checked = (sel) => card.querySelector(sel) ? card.querySelector(sel).checked : false;
+
+          char.name = val('.edit-name') || 'Aventurier sans nom';
+          char.className = val('.edit-class') || 'warrior';
+          char.level = Math.max(1, Math.min(10, num('.edit-level', 1)));
+          char.alignment = val('.edit-alignment') || 'Neutre';
+          char.race = val('.edit-race') || (CLASSES[char.className] && CLASSES[char.className].race) || 'Humain';
+          char.customTitle = val('.edit-custom-title');
+
+          const langs = val('.edit-languages');
+          char.knownLanguages = langs ? langs.split(',').map(s => s.trim()).filter(Boolean) : ['Commun'];
+
+          const stats = char.stats;
+          ['strength', 'agility', 'stamina', 'personality', 'intelligence'].forEach(key => {
+            const s = Math.max(3, Math.min(24, num(`.edit-stat-${key}`, 10)));
+            stats[key] = { score: s, mod: getModifier(s) };
+          });
+
+          const luckScore = Math.max(1, Math.min(24, num('.edit-stat-luck-score', 10)));
+          const luckInit = Math.max(luckScore, Math.min(24, num('.edit-stat-luck-init', luckScore)));
+          stats.luck = { score: luckScore, initialScore: luckInit, mod: getModifier(luckScore) };
+
+          const signRoll = num('.edit-lucky-sign', 1);
+          const foundSign = LUCKY_SIGNS.find(s => s.roll === signRoll) || LUCKY_SIGNS[0];
+          char.luckySign = {
+            roll: foundSign.roll,
+            name: foundSign.name,
+            description: foundSign.description,
+            modifier: stats.luck.mod
+          };
+
+          char.maxHp = Math.max(1, num('.edit-max-hp', 10));
+          char.currentHp = Math.min(char.maxHp, Math.max(0, num('.edit-current-hp', char.maxHp)));
+          char.xp = Math.max(0, num('.edit-xp', XP_THRESHOLDS[char.level] || 10));
+          char.baseSpeed = Math.max(1, num('.edit-speed', 9));
+
+          if (char.currentHp > 0) {
+            delete char.dead;
+            delete char.dying;
+          } else if (char.currentHp <= 0 && !char.dying && !char.dead) {
+            char.dead = { at: new Date().toISOString(), recoveryAttempted: false };
+          }
+
+          char.armorId = val('.edit-armor') || 'none';
+          char.hasShield = checked('.edit-shield');
+
+          const ruleWpn = RULE_WEAPONS.find(w => w.id === val('.edit-weapon-select'));
+          char.weapon = {
+            name: val('.edit-weapon-name') || (ruleWpn ? ruleWpn.name : 'Épée courte'),
+            damage: val('.edit-weapon-damage') || (ruleWpn ? ruleWpn.damage : '1d6'),
+            attackType: ruleWpn ? ruleWpn.attackType : 'melee',
+            twoHanded: ruleWpn ? Boolean(ruleWpn.twoHanded) : false
+          };
+
+          if (!char.classData || typeof char.classData !== 'object') char.classData = {};
+          if (char.className === 'cleric') {
+            char.classData.deity = val('.edit-deity') || null;
+            if (!char.daily) char.daily = defaultDaily();
+            char.daily.disapprovalRange = Math.max(1, Math.min(20, num('.edit-disapproval', 1)));
+          } else if (char.className === 'wizard' || char.className === 'elf') {
+            char.classData.patron = val('.edit-patron') || null;
+          } else if (char.className === 'warrior' || char.className === 'dwarf') {
+            char.classData.luckyWeapon = val('.edit-lucky-weapon') || null;
+          }
+
+          if (char.className === 'wizard' || char.className === 'elf' || char.className === 'cleric') {
+            const spellBoxes = card.querySelectorAll('.edit-spell-item:checked');
+            const existingSpells = Array.isArray(char.classData.spells) ? char.classData.spells : [];
+            const existingMap = new Map(existingSpells.map(s => [s.id, s]));
+            char.classData.spells = Array.from(spellBoxes).map(box => {
+              const id = box.dataset.spellId;
+              const level = parseInt(box.dataset.level, 10);
+              if (existingMap.has(id)) {
+                return existingMap.get(id);
+              }
+              return { id, level };
+            });
+          }
+
+          if (!char.coinPurse) char.coinPurse = { pc: 0, pa: 0, pe: 0, po: 0, pp: 0 };
+          ['pc', 'pa', 'pe', 'po', 'pp'].forEach(coin => {
+            char.coinPurse[coin] = Math.max(0, num(`.edit-coin-${coin}`, 0));
+          });
+
+          char.startingItem = val('.edit-starting-item');
+          char.notes = val('.edit-notes');
+
+          if (!Array.isArray(char.hpHistory) || char.hpHistory.length === 0) {
+            const hitDie = CLASSES[char.className] ? CLASSES[char.className].hitDie : 8;
+            char.hpHistory = [{ level: char.level, die: 'd' + hitDie, roll: char.maxHp, mod: stats.stamina.mod, gain: char.maxHp }];
+          }
+          if (!Array.isArray(char.levelHistory) || char.levelHistory.length === 0) {
+            char.levelHistory = [{ level: char.level, className: char.className, at: new Date().toISOString() }];
+          }
+
+          normalizeCharacterProtection(char);
+          syncLegacyStatus(char);
+          normalizeAdventurer(char);
+
+          delete char._isNew;
+          this.characterSnapshots.delete(charId);
+          this.editingCharacterIds.delete(charId);
+
+          this.saveState();
+          this.render();
+          this.showRollToast('Fiche modifiée', this.escapeHtml(char.name), 'Enregistrée avec succès');
         }
 
         // Attaque de la fiche : `options` permet de réutiliser le jet pour l'attaque sournoise du voleur
@@ -8116,6 +9235,7 @@
         getArmorCheckPenalty, getAttackProfile, rollAdventurerAttack, getAdventurerSaves, getAdventurerInitiative,
         getSkillCheckProfile, rollSkillCheck, burnLuck, giveHalflingLuck, getHalflingTwoWeaponProfile, rollShieldBash,
         canLevelUp, getAllowedClasses, rollClassHitPoints, applyLevelUp, normalizeAdventurer, validateCharacterData, chooseBackupKey,
+        createBlankAdventurer,
         CRIT_TABLES, CRIT_FOOTNOTES, FUMBLE_TABLE, TURN_UNHOLY_TABLE, LAY_ON_HANDS_TABLE, LAY_ON_HANDS_CONDITIONS,
         MERCURIAL_TABLE, CORRUPTION_TABLES, DISAPPROVAL_TABLE, TWO_WEAPON_TABLE, TWO_WEAPON_CRIT_NOTE,
         WIZARD_SPELLS, CLERIC_SPELLS, PATRONS,
